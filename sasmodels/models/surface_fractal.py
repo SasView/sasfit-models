@@ -34,7 +34,7 @@ The scattering intensity $I(q)$ is calculated as
     V = \frac{4}{3}\pi R^3
 
 where $R$ is the radius of the building block, $D_S$ is the **surface** fractal
-dimension,$\zeta$ is the cut-off length, $\rho_{solvent}$ is the scattering
+dimension,| \zeta\|  is the cut-off length, $\rho_{solvent}$ is the scattering
 length density of the solvent,
 and $\rho_{particle}$ is the scattering length density of particles.
 
@@ -44,12 +44,8 @@ and $\rho_{particle}$ is the scattering length density of particles.
     details)
 
 
-.. figure:: img/surface_fractal_1d.jpg
-
-    1D plot using the default values.
-
-Reference
----------
+References
+----------
 
 D Mildner and P Hall, *J. Phys. D: Appl. Phys.*, 19 (1986) 1535-1545
 
@@ -90,28 +86,23 @@ parameters = [["radius",        "Ang", 10.0, [0, inf],   "",
              ]
 # pylint: enable=bad-whitespace, line-too-long
 
-source = ["lib/sph_j1c.c", "lib/lanczos_gamma.c", "surface_fractal.c"]
+source = ["lib/sph_j1c.c", "lib/sas_gamma.c", "surface_fractal.c"]
 
 demo = dict(scale=1, background=0,
             radius=10, surface_dim=2.0, cutoff_length=500)
-
-oldname = 'SurfaceFractalModel'
-oldpars = dict(radius='radius',
-               surface_dim='surface_dim',
-               cutoff_length='co_length')
 
 tests = [
     # Accuracy tests based on content in test/utest_other_models.py
     [{'radius': 10.0,
       'surface_dim': 2.0,
       'cutoff_length': 500.0,
-     }, 0.05, 301428.65916],
+     }, 0.05, 301428.66016],
 
     # Additional tests with larger range of parameters
     [{'radius': 1.0,
       'surface_dim': 1.0,
       'cutoff_length': 10.0,
-     }, 0.332070182643, 1125.00321004],
+     }, 0.332070182643, 1125.00421004],
 
     [{'radius': 3.5,
       'surface_dim': 0.1,
@@ -123,5 +114,5 @@ tests = [
       'surface_dim': 1.0,
       'cutoff_length': 33.0,
       'scale': 0.1,
-     }, 0.51, 2.50020147004],
+     }, 0.51, 2.50120147004],
     ]

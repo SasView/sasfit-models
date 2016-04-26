@@ -14,9 +14,11 @@ second term is a Lorentzian function describing scattering from polymer chains
 (exponent = m). This second term characterizes the polymer/solvent interactions
 and therefore the thermodynamics. The two multiplicative factors A and C, the
 incoherent background B and the two exponents n and m are used as fitting
-parameters. The final parameter &xi; is a correlation length for the polymer
-chains. Note that when m=2 this functional form becomes the familiar Lorentzian
-function.
+parameters. (Respectively $porod\_scale$, $lorentz\_scale$, $background$, $exponent\_p$ and 
+$exponent\_l$ in the parameter list.) The remaining parameter \ |xi|\  is a correlation 
+length for the polymer chains. Note that when m=2 this functional form becomes the 
+familiar Lorentzian function. Some interpretation of the values of A and C may be 
+possible depending on the values of m and n.
 
 For 2D data: The 2D scattering intensity is calculated in the same way as 1D,
 where the q vector is defined as
@@ -24,11 +26,9 @@ where the q vector is defined as
 .. math::
     q = \sqrt{q_x^2 + q_y^2}
 
-.. figure:: img/correlation_length_1d.jpg
+References
+----------
 
-    1D plot using the default values (w/500 data points).
-
-REFERENCE
 B Hammouda, D L Ho and S R Kline, Insight into Clustering in
 Poly(ethylene oxide) Solutions, Macromolecules, 37 (2004) 6932-6937
 """
@@ -46,9 +46,9 @@ category = "shape-independent"
 parameters = [
               ["lorentz_scale", "", 10.0, [0, inf], "", "Lorentzian Scaling Factor"],
               ["porod_scale", "", 1e-06, [0, inf], "", "Porod Scaling Factor"],
-              ["cor_length", "Ang", 50.0, [0, inf], "", "Correlation length"],
-              ["exponent_p", "", 3.0, [0, inf], "", "Porod Exponent"],
-              ["exponent_l", "1/Ang^2", 2.0, [0, inf], "", "Lorentzian Exponent"],
+              ["cor_length", "Ang", 50.0, [0, inf], "", "Correlation length, xi, in Lorentzian"],
+              ["exponent_p", "", 3.0, [0, inf], "", "Porod Exponent, n, in q^-n"],
+              ["exponent_l", "1/Ang^2", 2.0, [0, inf], "", "Lorentzian Exponent, m, in 1/( 1 + (q.xi)^m)"],
              ]
 # pylint: enable=bad-continuation, line-too-long
 
@@ -74,14 +74,6 @@ demo = dict(lorentz_scale=10.0, porod_scale=1.0e-06, cor_length=50.0,
             exponent_p=3.0, exponent_l=2.0, background=0.1,
            )
 
-# For testing against the old sasview models, include the converted parameter
-# names and the target sasview model name.
-oldname = 'CorrLengthModel'
-
-oldpars = dict(lorentz_scale='scale_l', porod_scale='scale_p',
-               cor_length='length_l', exponent_p='exponent_p',
-               exponent_l='exponent_l')
-
 tests = [[{}, 0.001, 1009.98],
-         [{}, 0.150141, 0.174645],
-         [{}, 0.442528, 0.0203957]]
+         [{}, 0.150141, 0.175645],
+         [{}, 0.442528, 0.0213957]]

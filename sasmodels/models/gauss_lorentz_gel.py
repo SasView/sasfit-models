@@ -1,8 +1,9 @@
 r"""
 This model calculates the scattering from a gel structure,
 but typically a physical rather than chemical network.
-It is modeled as a sum of a low-q exponential decay plus
-a lorentzian at higher-q values.
+It is modeled as a sum of a low-q exponential decay (which happens to
+give a functional form similar to Guinier scattering, so interpret with 
+care) plus a Lorentzian at higher-q values. See also the gel_fit model.
 
 Definition
 ----------
@@ -15,9 +16,9 @@ The scattering intensity I(q) is calculated as (Eqn. 5 from the reference)
 
 $\Xi$ is the length scale of the static correlations in the gel,
 which can be attributed to the "frozen-in" crosslinks.
-$\xi is the dynamic correlation length, which can be attributed to the
+\ |xi|\  is the dynamic correlation length, which can be attributed to the
 fluctuating polymer chains between crosslinks.
-$IG(0)$ and $IL(0)$ are the scaling factors for each of these structures.
+$I_G(0)$ and $I_L(0)$ are the scaling factors for each of these structures.
 Think carefully about how these map to your particular system!
 
 .. note::
@@ -31,11 +32,6 @@ where the $q$ vector is defined as
 .. math::
 
     q = \sqrt{q_x^2 + q_y^2}
-
-
-.. figure:: img/gauss_lorentz_gel_1d.jpg
-
-    1D plot using the default values (w/500 data point).
 
 
 References
@@ -116,14 +112,6 @@ demo = dict(scale=1, background=0.1,
             lorentz_scale_factor=50.0,
             dynamic_cor_length=20.0)
 
-oldname = "GaussLorentzGelModel"
-
-oldpars = dict(background='background',
-               gauss_scale_factor='scale_g',
-               static_cor_length='stat_colength',
-               lorentz_scale_factor='scale_l',
-               dynamic_cor_length='dyn_colength')
-
 tests = [
 
     # Accuracy tests based on content in test/utest_extra_models.py
@@ -131,37 +119,38 @@ tests = [
       'static_cor_length':   100.0,
       'lorentz_scale_factor': 50.0,
       'dynamic_cor_length':   20.0,
-     }, 0.001, 149.481],
+     }, 0.001, 149.482],
 
     [{'gauss_scale_factor':  100.0,
       'static_cor_length':   100.0,
       'lorentz_scale_factor': 50.0,
       'dynamic_cor_length':   20.0,
-     }, 0.105363, 9.1903],
+     }, 0.105363, 9.1913],
 
     [{'gauss_scale_factor':  100.0,
       'static_cor_length':   100.0,
       'lorentz_scale_factor': 50.0,
       'dynamic_cor_length':   20.0,
-     }, 0.441623, 0.632811],
+     }, 0.441623, 0.633811],
 
     # Additional tests with larger range of parameters
     [{'gauss_scale_factor':  10.0,
       'static_cor_length':  100.0,
       'lorentz_scale_factor': 3.0,
       'dynamic_cor_length':   1.0,
-     }, 0.1, 2.9702970297],
+     }, 0.1, 2.9712970297],
 
     [{'gauss_scale_factor':  10.0,
       'static_cor_length':  100.0,
       'lorentz_scale_factor': 3.0,
       'dynamic_cor_length':   1.0,
       'background':         100.0
-     }, 5.0, 100.115384615],
+     }, 5.0, 100.116384615],
 
     [{'gauss_scale_factor':  10.0,
       'static_cor_length':  100.0,
       'lorentz_scale_factor': 3.0,
       'dynamic_cor_length':   1.0,
+      'background':           0.0,
      }, 200., 7.49981250469e-05],
     ]

@@ -1,7 +1,7 @@
 # cylinder model
 # Note: model title and parameter table are inserted automatically
 r"""
-The form factor is normalized by the particle volume.
+The form factor is normalized by the particle volume V = \piR^2L.
 
 Definition
 ----------
@@ -18,8 +18,8 @@ where
 .. math::
 
     F(q) = 2 (\Delta \rho) V
-           \frac{\sin \left(q\tfrac12 L\cos\alpha \right)}
-                {q\tfrac12 L \cos \alpha}
+           \frac{\sin \left(\tfrac12 qL\cos\alpha \right)}
+                {\tfrac12 qL \cos \alpha}
            \frac{J_1 \left(q R \sin \alpha\right)}{q R \sin \alpha}
 
 and $\alpha$ is the angle between the axis of the cylinder and $\vec q$, $V$
@@ -30,15 +30,15 @@ first order Bessel function.
 
 To provide easy access to the orientation of the cylinder, we define the
 axis of the cylinder using two angles $\theta$ and $\phi$. Those angles
-are defined in :num:`figure #cylinder-orientation`.
+are defined in :numref:`cylinder-angle-definition`.
 
-.. _cylinder-orientation:
+.. _cylinder-angle-definition:
 
-.. figure:: img/orientation.jpg
+.. figure:: img/cylinder_angle_definition.jpg
 
     Definition of the angles for oriented cylinders.
 
-.. figure:: img/orientation2.jpg
+.. figure:: img/cylinder_angle_projection.jpg
 
     Examples of the angles for oriented cylinders against the detector plane.
 
@@ -59,23 +59,10 @@ The $\theta$ and $\phi$ parameters are not used for the 1D output.
 Validation
 ----------
 
-Validation of our code was done by comparing the output of the 1D model
+Validation of the code was done by comparing the output of the 1D model
 to the output of the software provided by the NIST (Kline, 2006).
-:num:`Figure #cylinder-compare` shows a comparison of
-the 1D output of our model and the output of the NIST software.
-
-.. _cylinder-compare:
-
-.. figure:: img/cylinder_compare.jpg
-
-    Comparison of the SasView scattering intensity for a cylinder with the
-    output of the NIST SANS analysis software.
-    The parameters were set to: *scale* = 1.0, *radius* = 20 |Ang|,
-    *length* = 400 |Ang|, *contrast* = 3e-6 |Ang^-2|, and
-    *background* = 0.01 |cm^-1|.
-
-In general, averaging over a distribution of orientations is done by
-evaluating the following
+The implementation of the intensity for fully oriented cylinders was done
+by averaging over a uniform distribution of orientations using
 
 .. math::
 
@@ -85,22 +72,13 @@ evaluating the following
 
 where $p(\theta,\phi)$ is the probability distribution for the orientation
 and $P_0(q,\alpha)$ is the scattering intensity for the fully oriented
-system. Since we have no other software to compare the implementation of
-the intensity for fully oriented cylinders, we can compare the result of
-averaging our 2D output using a uniform distribution $p(\theta, \phi) = 1.0$.
-:num:`Figure #cylinder-crosscheck` shows the result of
-such a cross-check.
+system, and then comparing to the 1D result.
 
-.. _cylinder-crosscheck:
+References
+----------
 
-.. figure:: img/cylinder_crosscheck.jpg
+None
 
-    Comparison of the intensity for uniformly distributed cylinders
-    calculated from our 2D model and the intensity from the NIST SANS
-    analysis software.
-    The parameters used were: *scale* = 1.0, *radius* = 20 |Ang|,
-    *length* = 400 |Ang|, *contrast* = 3e-6 |Ang^-2|, and
-    *background* = 0.0 |cm^-1|.
 """
 
 import numpy as np
@@ -109,8 +87,8 @@ from numpy import pi, inf
 name = "cylinder"
 title = "Right circular cylinder with uniform scattering length density."
 description = """
-     f(q,alpha) = 2*(sld - solvent_sld)*V*sin(qLcos(alpha/2))
-                /[qLcos(alpha/2)]*J1(qRsin(alpha/2))/[qRsin(alpha)]
+     f(q,alpha) = 2*(sld - sld_solvent)*V*sin(qLcos(alpha)/2))
+                /[qLcos(alpha)/2]*J1(qRsin(alpha))/[qRsin(alpha)]
 
             P(q,alpha)= scale/V*f(q,alpha)^(2)+background
             V: Volume of the cylinder
@@ -128,7 +106,7 @@ category = "shape:cylinder"
 #             [ "name", "units", default, [lower, upper], "type", "description"],
 parameters = [["sld", "4e-6/Ang^2", 4, [-inf, inf], "",
                "Cylinder scattering length density"],
-              ["solvent_sld", "1e-6/Ang^2", 1, [-inf, inf], "",
+              ["sld_solvent", "1e-6/Ang^2", 1, [-inf, inf], "",
                "Solvent scattering length density"],
               ["radius", "Ang", 20, [0, inf], "volume",
                "Cylinder radius"],
@@ -140,7 +118,7 @@ parameters = [["sld", "4e-6/Ang^2", 4, [-inf, inf], "",
                "Out of plane angle"],
              ]
 
-source = ["lib/J1.c", "lib/gauss76.c", "cylinder.c"]
+source = ["lib/polevl.c","lib/sas_J1.c", "lib/gauss76.c", "cylinder.c"]
 
 def ER(radius, length):
     """
@@ -151,7 +129,7 @@ def ER(radius, length):
 
 # parameters for demo
 demo = dict(scale=1, background=0,
-            sld=6, solvent_sld=1,
+            sld=6, sld_solvent=1,
             radius=20, length=300,
             theta=60, phi=60,
             radius_pd=.2, radius_pd_n=9,
@@ -159,16 +137,11 @@ demo = dict(scale=1, background=0,
             theta_pd=10, theta_pd_n=5,
             phi_pd=10, phi_pd_n=5)
 
-# For testing against the old sasview models, include the converted parameter
-# names and the target sasview model name.
-oldname = 'CylinderModel'
-oldpars = dict(theta='cyl_theta', phi='cyl_phi', sld='sldCyl', solvent_sld='sldSolv')
-
-
 qx, qy = 0.2 * np.cos(2.5), 0.2 * np.sin(2.5)
-tests = [[{}, 0.2, 0.041761386790780453],
-         [{}, [0.2], [0.041761386790780453]],
-         [{'theta':10.0, 'phi':10.0}, (qx, qy), 0.03414647218513852],
-         [{'theta':10.0, 'phi':10.0}, [(qx, qy)], [0.03414647218513852]],
+tests = [[{}, 0.2, 0.042761386790780453],
+         [{}, [0.2], [0.042761386790780453]],
+         [{'theta':10.0, 'phi':10.0}, (qx, qy), 0.03514647218513852],
+         [{'theta':10.0, 'phi':10.0}, [(qx, qy)], [0.03514647218513852]],
         ]
 del qx, qy  # not necessary to delete, but cleaner
+# ADDED by:  RKH  ON: 18Mar2016 renamed sld's etc

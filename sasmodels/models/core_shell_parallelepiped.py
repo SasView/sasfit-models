@@ -21,7 +21,7 @@ The function calculated is the form factor of the rectangular solid below.
 The core of the solid is defined by the dimensions *A*, *B*, *C* such that
 *A* < *B* < *C*.
 
-.. image:: img/core_shell_parallelepiped.jpg
+.. image:: img/core_shell_parallelepiped_geometry.jpg
 
 There are rectangular "slabs" of thickness $t_A$ that add to the *A* dimension
 (on the *BC* faces). There are similar slabs on the *AC* $(=t_B)$ and *AB*
@@ -71,16 +71,16 @@ for *S(Q)* when *P(Q)* \* *S(Q)* is applied.
 
 To provide easy access to the orientation of the parallelepiped, we define the
 axis of the cylinder using three angles |theta|, |phi| and |bigpsi|.
-These angles are defined on Figure 2 of the :ref:`cylinder` model.
+(see :ref:`cylinder orientation <cylinder-angle-definition>`).
 The angle |bigpsi| is the rotational angle around the *long_c* axis against the
 *q* plane. For example, |bigpsi| = 0 when the *short_b* axis is parallel to the
 *x*-axis of the detector.
 
-.. figure:: img/parallelepiped_angles_definition.jpg
+.. figure:: img/parallelepiped_angle_definition.jpg
 
     Definition of the angles for oriented core-shell parallelepipeds.
 
-.. figure:: img/parallelepiped_angles_examples.jpg
+.. figure:: img/parallelepiped_angle_projection.jpg
 
     Examples of the angles for oriented core-shell parallelepipeds against the
     detector plane.
@@ -91,7 +91,8 @@ Validation
 The model uses the form factor calculations implemented in a c-library provided
 by the NIST Center for Neutron Research (Kline, 2006).
 
-REFERENCE
+References
+----------
 
 P Mittelbach and G Porod, *Acta Physica Austriaca*, 14 (1961) 185-211
 Equations (1), (13-14). (in German)
@@ -109,15 +110,15 @@ description = """
 category = "shape:parallelepiped"
 
 #             ["name", "units", default, [lower, upper], "type","description"],
-parameters = [["core_sld", "1e-6/Ang^2", 1, [-inf, inf], "",
+parameters = [["sld_core", "1e-6/Ang^2", 1, [-inf, inf], "",
                "Parallelepiped core scattering length density"],
-              ["arim_sld", "1e-6/Ang^2", 2, [-inf, inf], "",
+              ["sld_a", "1e-6/Ang^2", 2, [-inf, inf], "",
                "Parallelepiped A rim scattering length density"],
-              ["brim_sld", "1e-6/Ang^2", 4, [-inf, inf], "",
+              ["sld_b", "1e-6/Ang^2", 4, [-inf, inf], "",
                "Parallelepiped B rim scattering length density"],
-              ["crim_sld", "1e-6/Ang^2", 2, [-inf, inf], "",
+              ["sld_c", "1e-6/Ang^2", 2, [-inf, inf], "",
                "Parallelepiped C rim scattering length density"],
-              ["solvent_sld", "1e-6/Ang^2", 6, [-inf, inf], "",
+              ["sld_solvent", "1e-6/Ang^2", 6, [-inf, inf], "",
                "Solvent scattering length density"],
               ["a_side", "Ang", 35, [0, inf], "volume",
                "Shorter side of the parallelepiped"],
@@ -139,7 +140,7 @@ parameters = [["core_sld", "1e-6/Ang^2", 1, [-inf, inf], "",
                "Rotation angle around its own c axis against q plane"],
              ]
 
-source = ["lib/J1.c", "lib/gauss76.c", "core_shell_parallelepiped.c"]
+source = ["lib/gauss76.c", "core_shell_parallelepiped.c"]
 
 
 def ER(a_side, b_side, c_side, arim_thickness, brim_thickness, crim_thickness):
@@ -159,8 +160,8 @@ def ER(a_side, b_side, c_side, arim_thickness, brim_thickness, crim_thickness):
 
 # parameters for demo
 demo = dict(scale=1, background=0.0,
-            core_sld=1e-6, arim_sld=2e-6, brim_sld=4e-6,
-            crim_sld=2e-6, solvent_sld=6e-6,
+            sld_core=1e-6, sld_a=2e-6, sld_b=4e-6,
+            sld_c=2e-6, sld_solvent=6e-6,
             a_side=35, b_side=75, c_side=400,
             arim_thickness=10, brim_thickness=10, crim_thickness=10,
             theta=0, phi=0, psi=0,
@@ -174,20 +175,10 @@ demo = dict(scale=1, background=0.0,
             phi_pd=10, phi_pd_n=1,
             psi_pd=10, psi_pd_n=10)
 
-
-# For testing against the old sasview models, include the converted parameter
-# names and the target sasview model name.
-oldname = 'CSParallelepipedModel'
-oldpars = dict(theta='parallel_theta', phi='parallel_phi', psi='parallel_psi',
-               core_sld='sld_pcore', arim_sld='sld_rimA', brim_sld='sld_rimB',
-               crim_sld='sld_rimC', solvent_sld='sld_solv',
-               a_side='shortA', b_side='midB', c_side='longC',
-               arim_thickness='rimA', brim_thickness='rimB', crim_thickness='rimC')
-
 qx, qy = 0.2 * np.cos(2.5), 0.2 * np.sin(2.5)
-tests = [[{}, 0.2, 0.532149288477],
-         [{}, [0.2], [0.532149288477]],
-         [{'theta':10.0, 'phi':10.0}, (qx, qy), 0.031102135569],
-         [{'theta':10.0, 'phi':10.0}, [(qx, qy)], [0.031102135569]],
+tests = [[{}, 0.2, 0.533149288477],
+         [{}, [0.2], [0.533149288477]],
+         [{'theta':10.0, 'phi':10.0}, (qx, qy), 0.032102135569],
+         [{'theta':10.0, 'phi':10.0}, [(qx, qy)], [0.032102135569]],
         ]
 del qx, qy  # not necessary to delete, but cleaner

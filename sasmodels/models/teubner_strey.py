@@ -35,10 +35,6 @@ where the $q$ vector is defined as
     q = \sqrt{q_x^2 + q_y^2}
 
 
-.. figure:: img/teubner_strey_1d.jpg
-
-    1D plot using the default values (w/200 data point).
-
 References
 ----------
 
@@ -87,7 +83,4 @@ Iqxy.vectorized = True  # Iqxy accepts arrays of qx, qy values
 # VR defaults to 1.0
 
 demo = dict(scale=1, background=0, a2=0.1, c1=-30.0, c2=5000.0)
-oldname = "TeubnerStreyModel"
-oldpars = dict(a2='scale')
-
-tests = [[{}, 0.2, 0.144927536232]]
+tests = [[{}, 0.2, 0.145927536232]]

@@ -49,10 +49,11 @@ import unittest
 
 import numpy as np
 
-from .core import list_models, load_model_definition, load_model, HAVE_OPENCL
-from .core import make_kernel, call_kernel, call_ER, call_VR
+from .core import list_models, load_model_info, build_model, HAVE_OPENCL
+from .core import call_kernel, call_ER, call_VR
 from .exception import annotate_exception
 
+#TODO: rename to tests so that tab completion works better for models directory
 
 def make_suite(loaders, models):
     """
@@ -75,7 +76,7 @@ def make_suite(loaders, models):
         skip = []
     for model_name in models:
         if model_name in skip: continue
-        model_definition = load_model_definition(model_name)
+        model_info = load_model_info(model_name)
 
         #print('------')
         #print('found tests in', model_name)
@@ -84,12 +85,12 @@ def make_suite(loaders, models):
         # if ispy then use the dll loader to call pykernel
         # don't try to call cl kernel since it will not be
         # available in some environmentes.
-        is_py = callable(getattr(model_definition, 'Iq', None))
+        is_py = callable(model_info['Iq'])
 
         if is_py:  # kernel implemented in python
             test_name = "Model: %s, Kernel: python"%model_name
             test_method_name = "test_%s_python" % model_name
-            test = ModelTestCase(test_name, model_definition,
+            test = ModelTestCase(test_name, model_info,
                                  test_method_name,
                                  platform="dll",  # so that
                                  dtype="double")
@@ -103,7 +104,7 @@ def make_suite(loaders, models):
                 # correct for double precision are not tested using
                 # single precision.  The choice is determined by the
                 # presence of *single=False* in the model file.
-                test = ModelTestCase(test_name, model_definition,
+                test = ModelTestCase(test_name, model_info,
                                      test_method_name,
                                      platform="ocl", dtype=None)
                 #print("defining", test_name)
@@ -113,7 +114,7 @@ def make_suite(loaders, models):
             if 'dll' in loaders:
                 test_name = "Model: %s, Kernel: dll"%model_name
                 test_method_name = "test_%s_dll" % model_name
-                test = ModelTestCase(test_name, model_definition,
+                test = ModelTestCase(test_name, model_info,
                                      test_method_name,
                                      platform="dll",
                                      dtype="double")
@@ -131,10 +132,10 @@ def _hide_model_case_from_nosetests():
         functions, then runs the list of tests at the bottom of the model
         description file.
         """
-        def __init__(self, test_name, definition, test_method_name,
+        def __init__(self, test_name, model_info, test_method_name,
                      platform, dtype):
             self.test_name = test_name
-            self.definition = definition
+            self.info = model_info
             self.platform = platform
             self.dtype = dtype
 
@@ -143,16 +144,21 @@ def _hide_model_case_from_nosetests():
 
         def _runTest(self):
             smoke_tests = [
+                # test validity at reasonable values
                 [{}, 0.1, None],
                 [{}, (0.1, 0.1), None],
+                # test validity at q = 0
+                #[{}, 0.0, None],
+                #[{}, (0.0, 0.0), None],
+                # test that ER/VR will run if they exist
                 [{}, 'ER', None],
                 [{}, 'VR', None],
                 ]
 
-            tests = getattr(self.definition, 'tests', [])
+            tests = self.info['tests']
             try:
-                model = load_model(self.definition, dtype=self.dtype,
-                                   platform=self.platform)
+                model = build_model(self.info, dtype=self.dtype,
+                                    platform=self.platform)
                 for test in smoke_tests + tests:
                     self._run_one_test(model, test)
 
@@ -164,8 +170,8 @@ def _hide_model_case_from_nosetests():
                     #raise Exception("No test cases provided")
                     pass
 
-            except Exception as exc:
-                annotate_exception(exc, self.test_name)
+            except:
+                annotate_exception(self.test_name)
                 raise
 
         def _run_one_test(self, model, test):
@@ -185,14 +191,14 @@ def _hide_model_case_from_nosetests():
             elif isinstance(x[0], tuple):
                 Qx, Qy = zip(*x)
                 q_vectors = [np.array(Qx), np.array(Qy)]
-                kernel = make_kernel(model, q_vectors)
+                kernel = model.make_kernel(q_vectors)
                 actual = call_kernel(kernel, pars)
             else:
                 q_vectors = [np.array(x)]
-                kernel = make_kernel(model, q_vectors)
+                kernel = model.make_kernel(q_vectors)
                 actual = call_kernel(kernel, pars)
 
-            self.assertGreater(len(actual), 0)
+            self.assertTrue(len(actual) > 0)
             self.assertEqual(len(y), len(actual))
 
             for xi, yi, actual_yi in zip(x, y, actual):
@@ -200,8 +206,14 @@ def _hide_model_case_from_nosetests():
                     # smoke test --- make sure it runs and produces a value
                     self.assertTrue(np.isfinite(actual_yi),
                                     'invalid f(%s): %s' % (xi, actual_yi))
+                elif np.isnan(yi):
+                    self.assertTrue(np.isnan(actual_yi),
+                                    'f(%s): expected:%s; actual:%s'
+                                    % (xi, yi, actual_yi))
                 else:
-                    self.assertTrue(is_near(yi, actual_yi, 5),
+                    # is_near does not work for infinite values, so also test
+                    # for exact values.  Note that this will not
+                    self.assertTrue(yi==actual_yi or is_near(yi, actual_yi, 5),
                                     'f(%s); expected:%s; actual:%s'
                                     % (xi, yi, actual_yi))
 
@@ -221,7 +233,12 @@ def main():
 
     Returns 0 if success or 1 if any tests fail.
     """
-    import xmlrunner
+    try:
+        from xmlrunner import XMLTestRunner as TestRunner
+        test_args = { 'output': 'logs' }
+    except ImportError:
+        from unittest import TextTestRunner as TestRunner
+        test_args = { }
 
     models = sys.argv[1:]
     if models and models[0] == '-v':
@@ -249,7 +266,8 @@ def main():
 usage:
   python -m sasmodels.model_test [-v] [opencl|dll] model1 model2 ...
 
-If -v is included on the
+If -v is included on the command line, then use verboe output.
+
 If neither opencl nor dll is specified, then models will be tested with
 both opencl and dll; the compute target is ignored for pure python models.
 
@@ -259,8 +277,7 @@ If model1 is 'all', then all except the remaining models will be tested.
 
         return 1
 
-    #runner = unittest.TextTestRunner()
-    runner = xmlrunner.XMLTestRunner(output='logs', verbosity=verbosity)
+    runner = TestRunner(verbosity=verbosity, **test_args)
     result = runner.run(make_suite(loaders, models))
     return 1 if result.failures or result.errors else 0
 

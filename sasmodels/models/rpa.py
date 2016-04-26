@@ -42,9 +42,6 @@ The input parameters are the degrees of polymerization, the volume fractions,
 the specific volumes, and the neutron scattering length densities for each
 component.
 
-.. figure:: img/rpa_1d.jpg
-
-    1D plot using the default values (w/500 data points).
 
 References
 ----------
@@ -55,7 +52,7 @@ A Z Akcasu, R Klein and B Hammouda, *Macromolecules*, 26 (1993) 4136
 from numpy import inf
 
 name = "rpa"
-title = "Random Phase Approximation"
+title = "Random Phase Approximation - unfinished work in progress"
 description = """
 This formalism applies to multicomponent polymer mixtures in the
 homogeneous (mixed) phase region only.
@@ -132,13 +129,9 @@ HIDE_AB = set("Nb Phib vb Lb Kbc Kbd".split()).union(HIDE_A)
 def hidden(pars):
     case_num = pars.get("case_num", parameters[0][2])
     if case_num < 2:
-        return HIDE_A
-    elif case_num < 5:
         return HIDE_AB
+    elif case_num < 5:
+        return HIDE_A
     else:
         return HIDE_NONE
 
-oldname = 'RPAModel'
-oldpars = dict(
-    case_num="lcase_n",
-)

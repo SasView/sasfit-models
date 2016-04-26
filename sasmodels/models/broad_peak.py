@@ -16,9 +16,12 @@ The scattering intensity $I(q)$ is calculated as
 
 .. math::
 
-    I(q) = \frac{A}{q^n} + \frac{C}{1 + (q\xi)^m} + B
+    I(q) = \frac{A}{q^n} + \frac{C}{1 + (|q - q_0|\xi)^m} + B
 
 Here the peak position is related to the d-spacing as $q_o = 2\pi / d_o$.
+
+$A$ is the Porod law scale factor, $n$ the Porod exponent, $C$ is the Lorentzian 
+scale factor, $m$ the exponent of q, \ |xi|\  the screening length, and $B$ the flat background.
 
 For 2D data the scattering intensity is calculated in the same way as 1D,
 where the $q$ vector is defined as
@@ -27,10 +30,6 @@ where the $q$ vector is defined as
 
     q = \sqrt{q_x^2 + q_y^2}
 
-
-.. figure:: img/broad_peak_1d.jpg
-
-    1D plot using the default values (w/200 data point).
 
 References
 ----------
@@ -101,14 +100,8 @@ def Iqxy(qx, qy, *args):
     :return:     2D-Intensity
     """
     return Iq(sqrt(qx ** 2 + qy ** 2), *args)
-
 Iqxy.vectorized = True # Iqxy accepts an array of qx, qy values
 
 demo = dict(scale=1, background=0,
             porod_scale=1.0e-05, porod_exp=3,
             lorentz_scale=10, lorentz_length=50, peak_pos=0.1, lorentz_exp=2)
-
-oldname = "BroadPeakModel"
-oldpars = dict(porod_scale='scale_p', porod_exp='exponent_p',
-               lorentz_scale='scale_l', lorentz_length='length_l', peak_pos='q_peak',
-               lorentz_exp='exponent_l', scale=None)

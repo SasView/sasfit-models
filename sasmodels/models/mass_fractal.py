@@ -34,22 +34,19 @@ The scattering intensity $I(q)$ is calculated as
     V = \frac{4}{3}\pi R^3
 
 where $R$ is the radius of the building block, $D_m$ is the **mass** fractal
-dimension,$\zeta$ is the cut-off length, $\rho_{solvent}$ is the scattering
+dimension, | \zeta\|  is the cut-off length, $\rho_{solvent}$ is the scattering
 length density of the solvent,
 and $\rho_{particle}$ is the scattering length density of particles.
 
 .. note::
 
     The mass fractal dimension ( $D_m$ ) is only
-    valid if $0 < mass_dim < 6$. It is also only valid over a limited
+    valid if $0 < mass\_dim < 6$. It is also only valid over a limited
     $q$ range (see the reference for details).
 
-.. figure:: img/mass_fractal_1d.jpg
 
-    1D plot using the default values.
-
-Reference
----------
+References
+----------
 
 D Mildner and P Hall, *J. Phys. D: Appl. Phys.*,
 19 (1986) 1535-1545 Equation(9)
@@ -87,17 +84,12 @@ parameters = [["radius",        "Ang",  10.0, [0.0, inf], "", "Particle radius"]
              ]
 # pylint: enable=bad-whitespace, line-too-long
 
-source = ["lib/sph_j1c.c", "lib/lanczos_gamma.c", "mass_fractal.c"]
+source = ["lib/sph_j1c.c", "lib/sas_gamma.c", "mass_fractal.c"]
 
 demo = dict(scale=1, background=0,
             radius=10.0,
             mass_dim=1.9,
             cutoff_length=100.0)
-
-oldname = 'MassFractalModel'
-oldpars = dict(radius='radius',
-               mass_dim='mass_dim',
-               cutoff_length='co_length')
 
 tests = [
 
@@ -105,13 +97,13 @@ tests = [
     [{'radius':         10.0,
       'mass_dim':        1.9,
       'cutoff_length': 100.0,
-     }, 0.05, 279.59322],
+     }, 0.05, 279.59422],
 
     # Additional tests with larger range of parameters
     [{'radius':        2.0,
       'mass_dim':      3.3,
       'cutoff_length': 1.0,
-     }, 0.5, 1.29016774904],
+     }, 0.5, 1.29116774904],
 
     [{'radius':        1.0,
       'mass_dim':      1.3,
@@ -123,5 +115,5 @@ tests = [
       'mass_dim':      2.3,
       'cutoff_length': 1.0,
       'scale':        10.0,
-     }, 0.051, 11.6227966145],
+     }, 0.051, 11.6237966145],
     ]

@@ -1,5 +1,6 @@
 #power_law model
 #conversion of PowerLawAbsModel.py
+#converted by Steve King, Dec 2015
 
 r"""
 This model calculates a simple power law with a flat background.
@@ -18,9 +19,6 @@ Also note that unlike many other models, *scale* in this model
 is NOT explicitly related to a volume fraction. Be careful if
 combining this model with other models.
 
-.. figure:: img/power_law_1d.jpg
-
-    1D plot using the default values (w/200 data point).
 
 References
 ----------
@@ -58,11 +56,6 @@ Iqxy.vectorized = True # Iqxy accepts an array of qx, qy values
 demo = dict(scale=1.0,
             power=4.0,
             background=0.0)
-
-oldname = "PowerLawAbsModel"
-oldpars = dict(scale='scale',
-               power='m',
-               background='background')
 
 tests = [
     [{'scale': 1.0, 'power': 4.0, 'background' : 0.0},

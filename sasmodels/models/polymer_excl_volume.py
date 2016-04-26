@@ -67,7 +67,7 @@ The asymptotic limit is dominated by the first term
     \frac{m}{\left(QR_{g}\right)^m}\left[\frac{6}{(2\nu +1)(2\nu +2)} \right]^{m/2}
     \Gamma (m/2)
 
-The special case when $\nu=0.5$ (or $m=2/\nu=2$ ) corresponds to Gaussian chains for
+The special case when $\nu=0.5$ (or $m=1/\nu=2$ ) corresponds to Gaussian chains for
 which the form factor is given by the familiar Debye function.
 
 .. math::
@@ -81,13 +81,6 @@ where the $q$ vector is defined as
 
     q = \sqrt{q_x^2 + q_y^2}
 
-This example dataset is produced using 200 data points, $qmin=0.001Ang^{-1}$,
-$qmax=0.2Ang^{-1}$ and the default values
-
-.. figure:: img/polymer_excl_volume_1d.jpg
-
-    1D plot using the default values (w/500 data point).
-
 
 References
 ----------
@@ -99,8 +92,7 @@ Advances in Polym. Sci.* 106(1993) 87-133
 
 """
 
-from math import sqrt
-from numpy import inf, power
+from numpy import inf, power, sqrt
 from scipy.special import gammainc, gamma
 
 name = "polymer_excl_volume"
@@ -120,9 +112,7 @@ parameters = [["rg",        "Ang", 60.0, [0, inf],    "", "Radius of Gyration"],
 # pylint: enable=bad-whitespace, line-too-long
 
 
-def Iq(q,
-       rg=60.0,
-       porod_exp=3.0):
+def Iq(q, rg=60.0, porod_exp=3.0):
     """
     :param q:         Input q-value (float or [float, float])
     :param rg:        Radius of gyration
@@ -150,29 +140,19 @@ def Iqxy(qx, qy, *args):
     :param args: Remaining arguments
     :return:     2D-Intensity
     """
-
     return Iq(sqrt(qx**2 + qy**2), *args)
 
 Iqxy.vectorized = True  # Iqxy accepts an array of qx, qy values
 
 
-demo = dict(scale=1, background=0.0,
-            rg=60.0,
-            porod_exp=3.0)
-
-oldname = "PolymerExclVolume"
-oldpars = dict(background='background', scale='scale',
-               rg='rg',
-               porod_exp='m')
-
 tests = [
     # Accuracy tests based on content in test/polyexclvol_default_igor.txt
-    [{'rg': 60, 'porod_exp': 3.0}, 0.001, 0.998801],
-    [{'rg': 60, 'porod_exp': 3.0}, 0.105363, 0.0162751],
-    [{'rg': 60, 'porod_exp': 3.0}, 0.665075, 6.56261e-05],
+    [{'rg': 60, 'porod_exp': 3.0}, 0.001, 0.999801],
+    [{'rg': 60, 'porod_exp': 3.0}, 0.105363, 0.0172751],
+    [{'rg': 60, 'porod_exp': 3.0, 'background': 0.0}, 0.665075, 6.56261e-05],
 
     # Additional tests with larger range of parameters
-    [{'rg': 10, 'porod_exp': 4.0}, 0.1, 0.723436675809],
+    [{'rg': 10, 'porod_exp': 4.0}, 0.1, 0.724436675809],
     [{'rg': 2.2, 'porod_exp': 22.0, 'background': 100.0}, 5.0, 100.0],
     [{'rg': 1.1, 'porod_exp': 1, 'background': 10.0, 'scale': 1.25},
      20000., 10.0000712097]

@@ -1,16 +1,15 @@
 r"""
-An alternative version of $P(q)$ for the core-shell ellipsoid
-(see CoreShellEllipsoidModel), having as parameters the core axial ratio X
-and a shell thickness, which are more often what we would like to determine.
+An alternative version of $P(q)$ for the core_shell_ellipsoid
+having as parameters the core axial ratio X and a shell thickness, 
+which are more often what we would like to determine.
 
 This model is also better behaved when polydispersity is applied than the four
-independent radii in CoreShellEllipsoidModel.
+independent radii in core_shell_ellipsoid model.
 
 Definition
 ----------
 
-.. figure:: img/core_shell_ellipsoid_fig1.gif
-
+.. figure:: img/core_shell_ellipsoid_geometry.png
 
 The geometric parameters of this model are
 
@@ -52,7 +51,7 @@ or contain some other units conversion factor (for example, if you have SAXS dat
 References
 ----------
 
-R K Heenan, *Private communication*
+R K Heenan, 2015, reparametrised the core_shell_ellipsoid model
 
 """
 
@@ -69,12 +68,12 @@ description = """
         single particle scattering amplitude.
         [Parameters]:
         equat_core = equatorial radius of core,
-        x_core = polar radius of core,
+        x_core = ratio of core polar/equatorial radii,
         t_shell = equatorial radius of outer surface,
-        x_polar_shell = polar radius (revolution axis) of outer surface
-        core_sld = SLD_core
-        shell_sld = SLD_shell
-        solvent_sld = SLD_solvent
+        x_polar_shell = ratio of polar shell thickness to equatorial shell thickness,
+        sld_core = SLD_core
+        sld_shell = SLD_shell
+        sld_solvent = SLD_solvent
         background = Incoherent bkg
         scale =scale
         Note:It is the users' responsibility to ensure
@@ -89,12 +88,12 @@ category = "shape:ellipsoid"
 #             ["name", "units", default, [lower, upper], "type", "description"],
 parameters = [
     ["equat_core",    "Ang",       20,   [0, inf],    "volume",      "Equatorial radius of core"],
-    ["x_core",        "None",       3,   [0, inf],    "volume",      "Polar radius of core"],
-    ["t_shell",       "Ang",       30,   [0, inf],    "volume",      "Equatorial radius of shell"],
-    ["x_polar_shell", "",           1,   [0, inf],    "volume",      "Polar radius of shell"],
-    ["core_sld",      "1e-6/Ang^2", 2,   [-inf, inf], "",            "Core scattering length density"],
-    ["shell_sld",     "1e-6/Ang^2", 1,   [-inf, inf], "",            "Shell scattering length density"],
-    ["solvent_sld",   "1e-6/Ang^2", 6.3, [-inf, inf], "",            "Solvent scattering length density"],
+    ["x_core",        "None",       3,   [0, inf],    "volume",      "axial ratio of core, X = r_polar/r_equatorial"],
+    ["t_shell",       "Ang",       30,   [0, inf],    "volume",      "thickness of shell at equator"],
+    ["x_polar_shell", "",           1,   [0, inf],    "volume",      "ratio of thickness of shell at pole to that at equator"],
+    ["sld_core",      "1e-6/Ang^2", 2,   [-inf, inf], "",            "Core scattering length density"],
+    ["sld_shell",     "1e-6/Ang^2", 1,   [-inf, inf], "",            "Shell scattering length density"],
+    ["sld_solvent",   "1e-6/Ang^2", 6.3, [-inf, inf], "",            "Solvent scattering length density"],
     ["theta",         "degrees",    0,   [-inf, inf], "orientation", "Oblate orientation wrt incoming beam"],
     ["phi",           "degrees",    0,   [-inf, inf], "orientation", "Oblate orientation in the plane of the detector"],
     ]
@@ -103,27 +102,26 @@ parameters = [
 source = ["lib/sph_j1c.c", "lib/gfn.c", "lib/gauss76.c",
           "core_shell_ellipsoid_xt.c"]
 
+def ER(equat_core, x_core, t_shell, x_polar_shell):
+    """
+        Returns the effective radius used in the S*P calculation
+    """
+    from .ellipsoid import ER as ellipsoid_ER
+    polar_outer = equat_core*x_core + t_shell*x_polar_shell
+    equat_outer = equat_core + t_shell
+    return ellipsoid_ER(polar_outer, equat_outer)
+
+
 demo = dict(scale=0.05, background=0.001,
             equat_core=20.0,
             x_core=3.0,
             t_shell=30.0,
             x_polar_shell=1.0,
-            core_sld=2.0,
-            shell_sld=1.0,
-            solvent_sld=6.3,
+            sld_core=2.0,
+            sld_shell=1.0,
+            sld_solvent=6.3,
             theta=0,
             phi=0)
-
-oldname = 'CoreShellEllipsoidXTModel'
-
-oldpars = dict(x_polar_shell='XpolarShell',
-               x_core='X_core',
-               t_shell='T_shell',
-               core_sld='sld_core',
-               shell_sld='sld_shell',
-               solvent_sld='sld_solvent',
-               theta='axis_theta',
-               phi='axis_phi')
 
 q = 0.1
 phi = pi/6
@@ -136,9 +134,9 @@ tests = [
       'x_core': 0.1,
       't_shell': 50.0,
       'x_polar_shell': 0.2,
-      'core_sld': 2.0,
-      'shell_sld': 1.0,
-      'solvent_sld': 6.3,
+      'sld_core': 2.0,
+      'sld_shell': 1.0,
+      'sld_solvent': 6.3,
       'background': 0.001,
       'scale': 1.0,
      }, 1.0, 0.00189402],
@@ -150,9 +148,9 @@ tests = [
       'x_core': 200.0,
       't_shell': 54.0,
       'x_polar_shell': 3.0,
-      'core_sld': 20.0,
-      'shell_sld': 10.0,
-      'solvent_sld': 6.0,
+      'sld_core': 20.0,
+      'sld_shell': 10.0,
+      'sld_solvent': 6.0,
       'background': 0.0,
       'scale': 1.0,
      }, 0.01, 8688.53],
@@ -163,9 +161,9 @@ tests = [
       'x_core': 200.0,
       't_shell': 54.0,
       'x_polar_shell': 3.0,
-      'core_sld': 20.0,
-      'shell_sld': 10.0,
-      'solvent_sld': 6.0,
+      'sld_core': 20.0,
+      'sld_shell': 10.0,
+      'sld_solvent': 6.0,
       'background': 0.01,
       'scale': 0.01,
      }, (qx, qy), 0.0100002],

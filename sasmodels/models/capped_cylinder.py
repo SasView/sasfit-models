@@ -2,7 +2,7 @@ r"""
 Calculates the scattering from a cylinder with spherical section end-caps.
 Like :ref:`barbell`, this is a sphereocylinder with end caps that have a
 radius larger than that of the cylinder, but with the center of the end cap
-radius lying within the cylinder. This model simply becomes the a convex
+radius lying within the cylinder. This model simply becomes a convex
 lens when the length of the cylinder $L=0$. See the diagram for the details
 of the geometry and restrictions on parameter values.
 
@@ -68,33 +68,15 @@ and its radius of gyration is
     The requirement that $R \geq r$ is not enforced in the model!
     It is up to you to restrict this during analysis.
 
-:num:`Figure #capped-cylinder-1d` shows the output produced by
-a running the 1D capped cylinder model, using *qmin* = 0.001 |Ang^-1|,
-*qmax* = 0.7 |Ang^-1| and  the default values of the parameters.
-
-.. _capped-cylinder-1d:
-
-.. figure:: img/capped_cylinder_1d.jpg
-
-    1D plot using the default values (w/256 data point).
-
 The 2D scattering intensity is calculated similar to the 2D cylinder model.
-:num:`Figure #capped-cylinder-2d` shows the output for $\theta=45^\circ$
-and $\phi=0^\circ$ with default values for the other parameters.
 
-.. _capped-cylinder-2d:
-
-.. figure:: img/capped_cylinder_2d.jpg
-
-    2D plot (w/(256X265) data points).
-
-.. figure:: img/orientation.jpg
+.. figure:: img/cylinder_angle_definition.jpg
 
     Definition of the angles for oriented 2D cylinders.
 
-.. figure:: img/orientation2.jpg
+.. figure:: img/cylinder_angle_projection.jpg
 
-    Examples of the angles for oriented pp against the detector plane.
+    Examples of the angles for oriented 2D cylinders against the detector plane.
 
 References
 ----------
@@ -112,7 +94,7 @@ description = """That is, a sphereocylinder
     that of the cylinder and the center of the
     end cap radius lies within the cylinder.
     Note: As the length of cylinder -->0,
-    it becomes a ConvexLens.
+    it becomes a Convex Lens.
     It must be that radius <(=) cap_radius.
     [Parameters];
     scale: volume fraction of spheres,
@@ -121,13 +103,13 @@ description = """That is, a sphereocylinder
     length: length of the cylinder,
     cap_radius: radius of the semi-spherical cap,
     sld: SLD of the capped cylinder,
-    solvent_sld: SLD of the solvent.
+    sld_solvent: SLD of the solvent.
 """
 category = "shape:cylinder"
 # pylint: disable=bad-whitespace, line-too-long
 #             ["name", "units", default, [lower, upper], "type", "description"],
 parameters = [["sld",         "1e-6/Ang^2", 4, [-inf, inf], "",       "Cylinder scattering length density"],
-              ["solvent_sld", "1e-6/Ang^2", 1, [-inf, inf], "",       "Solvent scattering length density"],
+              ["sld_solvent", "1e-6/Ang^2", 1, [-inf, inf], "",       "Solvent scattering length density"],
               ["radius",      "Ang",       20, [0, inf],    "volume", "Cylinder radius"],
 
               # TODO: use an expression for cap radius with fixed bounds.
@@ -146,10 +128,10 @@ parameters = [["sld",         "1e-6/Ang^2", 4, [-inf, inf], "",       "Cylinder 
              ]
 # pylint: enable=bad-whitespace, line-too-long
 
-source = ["lib/J1.c", "lib/gauss76.c", "capped_cylinder.c"]
+source = ["lib/polevl.c", "lib/sas_J1.c", "lib/gauss76.c", "capped_cylinder.c"]
 
 demo = dict(scale=1, background=0,
-            sld=6, solvent_sld=1,
+            sld=6, sld_solvent=1,
             radius=260, cap_radius=290, length=290,
             theta=30, phi=15,
             radius_pd=.2, radius_pd_n=1,
@@ -157,9 +139,3 @@ demo = dict(scale=1, background=0,
             length_pd=.2, length_pd_n=10,
             theta_pd=15, theta_pd_n=45,
             phi_pd=15, phi_pd_n=1)
-oldname = 'CappedCylinderModel'
-oldpars = dict(sld='sld_capcyl',
-               solvent_sld='sld_solv',
-               length='len_cyl',
-               radius='rad_cyl',
-               cap_radius='rad_cap')

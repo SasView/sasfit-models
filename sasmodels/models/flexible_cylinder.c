@@ -9,8 +9,7 @@ double flexible_cylinder_kernel(double q, double length, double kuhn_length,
 
 double form_volume(double length, double kuhn_length, double radius)
 {
-
-      return 0.0;
+    return 1.0;
 }
 
 double flexible_cylinder_kernel(double q,
@@ -24,7 +23,7 @@ double flexible_cylinder_kernel(double q,
     const double cont = sld-solvent_sld;
     const double qr = q*radius;
     //const double crossSect = (2.0*J1(qr)/qr)*(2.0*J1(qr)/qr);
-    const double crossSect = J1c(qr);
+    const double crossSect = sas_J1c(qr);
     double flex = Sk_WR(q,length,kuhn_length);
     flex *= crossSect*crossSect;
     flex *= M_PI*radius*radius*length;

@@ -40,7 +40,7 @@ def load_data(filename):
     """
     Load data using a sasview loader.
     """
-    from sas.dataloader.loader import Loader
+    from sas.sascalc.dataloader.loader import Loader
     loader = Loader()
     data = loader.load(filename)
     if data is None:
@@ -177,8 +177,8 @@ class Data2D(object):
         self.qx_data, self.dqx_data = x, dx
         self.qy_data, self.dqy_data = y, dy
         self.data, self.err_data = z, dz
-        self.mask = (~np.isnan(z) if z is not None
-                     else np.ones_like(x) if x is not None
+        self.mask = (np.isnan(z) if z is not None
+                     else np.zeros_like(x, dtype='bool') if x is not None
                      else None)
         self.q_data = np.sqrt(x**2 + y**2)
         self.qmin = 1e-16
@@ -321,7 +321,7 @@ def plot_data(data, view='log', limits=None):
 
 
 def plot_theory(data, theory, resid=None, view='log',
-                use_data=True, limits=None):
+                use_data=True, limits=None, Iq_calc=None):
     """
     Plot theory calculation.
 
@@ -342,7 +342,8 @@ def plot_theory(data, theory, resid=None, view='log',
     elif hasattr(data, 'qx_data'):
         _plot_result2D(data, theory, resid, view, use_data, limits=limits)
     else:
-        _plot_result1D(data, theory, resid, view, use_data, limits=limits)
+        _plot_result1D(data, theory, resid, view, use_data,
+                       limits=limits, Iq_calc=Iq_calc)
 
 
 def protect(fn):
@@ -365,7 +366,8 @@ def protect(fn):
 
 
 @protect
-def _plot_result1D(data, theory, resid, view, use_data, limits=None):
+def _plot_result1D(data, theory, resid, view, use_data,
+                   limits=None, Iq_calc=None):
     """
     Plot the data and residuals for 1D data.
     """
@@ -375,11 +377,16 @@ def _plot_result1D(data, theory, resid, view, use_data, limits=None):
     use_data = use_data and data.y is not None
     use_theory = theory is not None
     use_resid = resid is not None
-    num_plots = (use_data or use_theory) + use_resid
+    use_calc = use_theory and Iq_calc is not None
+    num_plots = (use_data or use_theory) + use_calc + use_resid
+    non_positive_x = (data.x<=0.0).any()
 
     scale = data.x**4 if view == 'q4' else 1.0
 
     if use_data or use_theory:
+        if num_plots > 1:
+            plt.subplot(1, num_plots, 1)
+
         #print(vmin, vmax)
         all_positive = True
         some_present = False
@@ -388,31 +395,42 @@ def _plot_result1D(data, theory, resid, view, use_data, limits=None):
             mdata[~np.isfinite(mdata)] = masked
             if view is 'log':
                 mdata[mdata <= 0] = masked
-            plt.errorbar(data.x/10, scale*mdata, yerr=data.dy, fmt='.')
+            plt.errorbar(data.x, scale*mdata, yerr=data.dy, fmt='.')
             all_positive = all_positive and (mdata > 0).all()
             some_present = some_present or (mdata.count() > 0)
 
 
         if use_theory:
+            # Note: masks merge, so any masked theory points will stay masked,
+            # and the data mask will be added to it.
             mtheory = masked_array(theory, data.mask.copy())
             mtheory[~np.isfinite(mtheory)] = masked
             if view is 'log':
                 mtheory[mtheory <= 0] = masked
-            plt.plot(data.x/10, scale*mtheory, '-', hold=True)
+            plt.plot(data.x, scale*mtheory, '-', hold=True)
             all_positive = all_positive and (mtheory > 0).all()
             some_present = some_present or (mtheory.count() > 0)
 
         if limits is not None:
             plt.ylim(*limits)
 
-        if num_plots > 1:
-            plt.subplot(1, num_plots, 1)
-        plt.xscale('linear' if not some_present else view)
+        plt.xscale('linear' if not some_present or non_positive_x  else view)
         plt.yscale('linear'
                    if view == 'q4' or not some_present or not all_positive
                    else view)
-        plt.xlabel("$q$/nm$^{-1}$")
+        plt.xlabel("$q$/A$^{-1}$")
         plt.ylabel('$I(q)$')
+
+    if use_calc:
+        # Only have use_calc if have use_theory
+        plt.subplot(1, num_plots, 2)
+        qx, qy, Iqxy = Iq_calc
+        plt.pcolormesh(qx, qy[qy>0], np.log10(Iqxy[qy>0,:]))
+        plt.xlabel("$q_x$/A$^{-1}$")
+        plt.xlabel("$q_y$/A$^{-1}$")
+        plt.xscale('log')
+        plt.yscale('log')
+        #plt.axis('equal')
 
     if use_resid:
         mresid = masked_array(resid, data.mask.copy())
@@ -420,11 +438,11 @@ def _plot_result1D(data, theory, resid, view, use_data, limits=None):
         some_present = (mresid.count() > 0)
 
         if num_plots > 1:
-            plt.subplot(1, num_plots, (use_data or use_theory) + 1)
-        plt.plot(data.x/10, mresid, '-')
-        plt.xlabel("$q$/nm$^{-1}$")
+            plt.subplot(1, num_plots, use_calc + 2)
+        plt.plot(data.x, mresid, '-')
+        plt.xlabel("$q$/A$^{-1}$")
         plt.ylabel('residuals')
-        plt.xscale('linear' if not some_present else view)
+        plt.xscale('linear' if not some_present or non_positive_x else view)
 
 
 @protect
@@ -439,22 +457,34 @@ def _plot_result_sesans(data, theory, resid, use_data, limits=None):
     num_plots = (use_data or use_theory) + use_resid
 
     if use_data or use_theory:
+        is_tof = np.any(data.lam!=data.lam[0])
         if num_plots > 1:
             plt.subplot(1, num_plots, 1)
         if use_data:
-            plt.errorbar(data.x, data.y, yerr=data.dy)
+            if is_tof:
+                plt.errorbar(data.x, np.log(data.y)/(data.lam*data.lam), yerr=data.dy/data.y/(data.lam*data.lam))
+            else:
+                plt.errorbar(data.x, data.y, yerr=data.dy)
         if theory is not None:
-            plt.plot(data.x, theory, '-', hold=True)
+            if is_tof:
+                plt.plot(data.x, np.log(theory)/(data.lam*data.lam), '-', hold=True)
+            else:
+                plt.plot(data.x, theory, '-', hold=True)
         if limits is not None:
             plt.ylim(*limits)
-        plt.xlabel('spin echo length (nm)')
-        plt.ylabel('polarization (P/P0)')
+
+        plt.xlabel('spin echo length ({})'.format(data._xunit))
+        if is_tof:
+            plt.ylabel('(Log (P/P$_0$))/$\lambda^2$')
+        else:
+            plt.ylabel('polarization (P/P0)')
+
 
     if resid is not None:
         if num_plots > 1:
             plt.subplot(1, num_plots, (use_data or use_theory) + 1)
         plt.plot(data.x, resid, 'x')
-        plt.xlabel('spin echo length (nm)')
+        plt.xlabel('spin echo length ({})'.format(data._xunit))
         plt.ylabel('residuals (P/P0)')
 
 
@@ -547,15 +577,16 @@ def _plot_2d_signal(data, signal, vmin=None, vmax=None, view='log'):
     image[~valid | data.mask] = 0
     #plottable = Iq
     plottable = masked_array(image, ~valid | data.mask)
-    xmin, xmax = min(data.qx_data)/10, max(data.qx_data)/10
-    ymin, ymax = min(data.qy_data)/10, max(data.qy_data)/10
+    # Divide range by 10 to convert from angstroms to nanometers
+    xmin, xmax = min(data.qx_data), max(data.qx_data)
+    ymin, ymax = min(data.qy_data), max(data.qy_data)
     if view == 'log':
         vmin, vmax = np.log10(vmin), np.log10(vmax)
     plt.imshow(plottable.reshape(len(data.x_bins), len(data.y_bins)),
-               interpolation='nearest', aspect=1, origin='upper',
+               interpolation='nearest', aspect=1, origin='lower',
                extent=[xmin, xmax, ymin, ymax], vmin=vmin, vmax=vmax)
-    plt.xlabel("$q_x$/nm$^{-1}$")
-    plt.ylabel("$q_y$/nm$^{-1}$")
+    plt.xlabel("$q_x$/A$^{-1}$")
+    plt.ylabel("$q_y$/A$^{-1}$")
     return vmin, vmax
 
 def demo():

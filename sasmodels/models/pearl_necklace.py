@@ -5,14 +5,14 @@ rods (like strings - with a total mass *Mw* = *M* \* *m*\ :sub:`r` + *N* \* *m*\
 :sub:`s`, and the string segment length (or edge separation) *l*
 (= *A* - 2\ *R*)). *A* is the center-to-center pearl separation distance.
 
-.. figure:: img/pearl_fig.jpg
+.. figure:: img/pearl_necklace_geometry.jpg
 
     Pearl Necklace schematic
 
 Definition
 ----------
 
-The output of the scattering intensity function for the PearlNecklaceModel is
+The output of the scattering intensity function for the pearl_necklace is
 given by (Schweins, 2004)
 
 .. math::
@@ -47,11 +47,8 @@ pearl_necklace model are the following
 
 NB: *number_of_pearls* must be an integer.
 
-.. figure:: img/pearl_plot.jpg
-
-    1D plot using the default values (w/1000 data point).
-
-REFERENCE
+References
+----------
 
 R Schweins and K Huber, *Particle Scattering Factor of Pearl Necklace Chains*,
 *Macromol. Symp.* 211 (2004) 25-42 2004
@@ -60,7 +57,7 @@ R Schweins and K Huber, *Particle Scattering Factor of Pearl Necklace Chains*,
 from numpy import inf, pi
 
 name = "pearl_necklace"
-title = "Colloidal spheres chained together with o preferential orientation"
+title = "Colloidal spheres chained together with no preferential orientation"
 description = """
 Calculate form factor for Pearl Necklace Model
 [Macromol. Symp. 2004, 211, 25-42]
@@ -78,19 +75,19 @@ string_thickness: thickness (ie, diameter) of the string
 category = "shape:cylinder"
 
 #             ["name", "units", default, [lower, upper], "type","description"],
-parameters = [["radius", "Angstrom", 80.0, [0, inf], "volume",
+parameters = [["radius", "Ang", 80.0, [0, inf], "volume",
                "Mean radius of the chained spheres"],
-              ["edge_separation", "Angstrom", 350.0, [0, inf], "volume",
+              ["edge_separation", "Ang", 350.0, [0, inf], "volume",
                "Mean separation of chained particles"],
-              ["string_thickness", "Angstrom", 2.5, [0, inf], "volume",
+              ["string_thickness", "Ang", 2.5, [0, inf], "volume",
                "Thickness of the chain linkage"],
               ["number_of_pearls", "none", 3, [0, inf], "volume",
-               "Mean number of pearls in each necklace"],
-              ["sld", "Angstrom^2", 1.0, [-inf, inf], "",
+               "Number of pearls in the necklace (must be integer)"],
+              ["sld", "1e-6/Ang^2", 1.0, [-inf, inf], "",
                "Scattering length density of the chained spheres"],
-              ["string_sld", "Angstrom^2", 1.0, [-inf, inf], "",
+              ["sld_string", "1e-6/Ang^2", 1.0, [-inf, inf], "",
                "Scattering length density of the chain linkage"],
-              ["solvent_sld", "Angstrom^2", 6.3, [-inf, inf], "",
+              ["sld_solvent", "1e-6/Ang^2", 6.3, [-inf, inf], "",
                "Scattering length density of the solvent"],
              ]
 
@@ -119,20 +116,12 @@ def ER(radius, edge_separation, string_thickness, number_of_pearls):
 
 # parameters for demo
 demo = dict(scale=1, background=0, radius=80.0, edge_separation=350.0,
-            number_of_pearls=3, sld=1, solvent_sld=6.3, string_sld=1,
+            number_of_pearls=3, sld=1, sld_solvent=6.3, sld_string=1,
             string_thickness=2.5,
             radius_pd=.2, radius_pd_n=5,
             edge_separation_pd=25.0, edge_separation_pd_n=5,
             number_of_pearls_pd=0, number_of_pearls_pd_n=0,
             string_thickness_pd=0.2, string_thickness_pd_n=5,
            )
-
-# For testing against the old sasview models, include the converted parameter
-# names and the target sasview model name.
-oldname = 'PearlNecklaceModel'
-oldpars = dict(scale='scale', background='background', radius='radius',
-               number_of_pearls='num_pearls', solvent_sld='sld_solv',
-               string_thickness='thick_string', sld='sld_pearl',
-               string_sld='sld_string', edge_separation='edge_separation')
 
 tests = [[{}, 0.001, 17380.245], [{}, 'ER', 115.39502]]

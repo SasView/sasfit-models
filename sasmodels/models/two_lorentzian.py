@@ -1,7 +1,4 @@
 r"""
-This model calculates an empirical functional form for SAS data characterized
-by two Lorentzian-type functions.
-
 Definition
 ----------
 
@@ -24,22 +21,23 @@ where the $q$ vector is defined as
     q = \sqrt{q_x^2 + q_y^2}
 
 
-.. figure:: img/two_lorentzian.jpg
-
-    1D plot using the default values (w/500 data point).
-
 References
 ----------
 
 None.
 
+**Author:** NIST IGOR/DANSE **on:** pre 2010
+
+**Last Modified by:** Piotr rozyczko **on:** January 29, 2016
+
+**Last Reviewed by:** Paul Butler **on:** March 21, 2016
 """
 
-from math import sqrt
-from numpy import inf, power
+from numpy import inf, power, sqrt
 
 name = "two_lorentzian"
-title = "Two Lorentzian type peak"
+title = "This model calculates an empirical functional form for SAS data \
+characterized by two Lorentzian-type functions."
 description = """I(q) = scale_1/(1.0 + pow((q*length_1),exponent_1))
              + scale_2/(1.0 + pow((q*length_2),exponent_2) )+ background
 
@@ -115,15 +113,6 @@ demo = dict(scale=1, background=0.1,
             lorentz_scale_2=1,
             lorentz_length_2=10,
             lorentz_exp_2=2.0)
-
-oldname = "TwoLorentzianModel"
-oldpars = dict(background='background',
-               lorentz_scale_1='scale_1',
-               lorentz_scale_2='scale_2',
-               lorentz_length_1='length_1',
-               lorentz_length_2='length_2',
-               lorentz_exp_1='exponent_1',
-               lorentz_exp_2='exponent_2')
 
 tests = [
 

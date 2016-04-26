@@ -48,7 +48,7 @@ disappear on a log-log plot). Use tight bounds to keep the parameters to
 values that you know are physical (test them) and keep nudging them until
 the optimization does not hit the constraints.
 
-In sasview the effective radius will be calculated from the parameters
+In sasview the effective radius may be calculated from the parameters
 used in the form factor $P(q)$ that this $S(q)$ is combined with.
 
 For 2D data the scattering intensity is calculated in the same way
@@ -58,9 +58,6 @@ as 1D, where the $q$ vector is defined as
 
     q = \sqrt{q_x^2 + q_y^2}
 
-.. figure:: img/stickyhardsphere_1d.jpg
-
-    1D plot using the default values (in linear scale).
 
 References
 ----------
@@ -83,13 +80,14 @@ description = """\
         parameters used in P(Q).
 """
 category = "structure-factor"
+structure_factor = True
 
 single = False
 #             ["name", "units", default, [lower, upper], "type","description"],
 parameters = [
     #   [ "name", "units", default, [lower, upper], "type",
     #     "description" ],
-    ["effect_radius", "Ang", 50.0, [0, inf], "volume",
+    ["radius_effective", "Ang", 50.0, [0, inf], "volume",
      "effective radius of hard sphere"],
     ["volfraction", "", 0.2, [0, 0.74], "",
      "volume fraction of hard spheres"],
@@ -114,17 +112,17 @@ Iq = """
     onemineps = 1.0-perturb;
     eta = volfraction/onemineps/onemineps/onemineps;
 
-    sig = 2.0 * effect_radius;
+    sig = 2.0 * radius_effective;
     aa = sig/onemineps;
     etam1 = 1.0 - eta;
     etam1sq=etam1*etam1;
     //C
     //C  SOLVE QUADRATIC FOR LAMBDA
     //C
-    qa = eta/12.0;
-    qb = -1.0*(stickiness + eta/etam1);
+    qa = eta/6.0;
+    qb = stickiness + eta/etam1;
     qc = (1.0 + eta/2.0)/etam1sq;
-    radic = qb*qb - 4.0*qa*qc;
+    radic = qb*qb - 2.0*qa*qc;
     if(radic<0) {
         //if(x>0.01 && x<0.015)
         //    Print "Lambda unphysical - both roots imaginary"
@@ -132,8 +130,9 @@ Iq = """
         return(-1.0);
     }
     //C   KEEP THE SMALLER ROOT, THE LARGER ONE IS UNPHYSICAL
-    lam = (-1.0*qb-sqrt(radic))/(2.0*qa);
-    lam2 = (-1.0*qb+sqrt(radic))/(2.0*qa);
+    radic = sqrt(radic);
+    lam = (qb-radic)/qa;
+    lam2 = (qb+radic)/qa;
     if(lam2<lam) {
         lam = lam2;
     }
@@ -178,14 +177,12 @@ Iqxy = """
 # ER defaults to 0.0
 # VR defaults to 1.0
 
-oldname = 'StickyHSStructure'
-oldpars = dict()
-demo = dict(effect_radius=200, volfraction=0.2, perturb=0.05,
-            stickiness=0.2, effect_radius_pd=0.1, effect_radius_pd_n=40)
+demo = dict(radius_effective=200, volfraction=0.2, perturb=0.05,
+            stickiness=0.2, radius_effective_pd=0.1, radius_effective_pd_n=40)
 #
 tests = [
-        [ {'scale': 1.0, 'background' : 0.0, 'effect_radius' : 50.0, 'perturb' : 0.05, 'stickiness' : 0.2, 'volfraction' : 0.1,
-           'effect_radius_pd' : 0}, [0.001], [1.09718]]
+        [ {'scale': 1.0, 'background' : 0.0, 'radius_effective' : 50.0, 'perturb' : 0.05, 'stickiness' : 0.2, 'volfraction' : 0.1,
+           'radius_effective_pd' : 0}, [0.001, 0.003], [1.09718, 1.087830]]
         ]
 
 

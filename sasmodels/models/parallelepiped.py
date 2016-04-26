@@ -6,12 +6,12 @@ The form factor is normalized by the particle volume.
 Definition
 ----------
 
-| This model calculates the scattering from a rectangular parallelepiped (:num:`Figure #parallelepiped-image`).
+| This model calculates the scattering from a rectangular parallelepiped (:numref:`parallelepiped-image`).
 | If you need to apply polydispersity, see also :ref:`rectangular-prism`.
 
 .. _parallelepiped-image:
 
-.. figure:: img/parallelepiped.jpg
+.. figure:: img/parallelepiped_geometry.jpg
 
    Parallelepiped with the corresponding definition of sides.
 
@@ -98,11 +98,11 @@ $A$ along $z$ and $B$ along $x$.
 
 .. _parallelepiped-orientation:
 
-.. figure:: img/parallelepiped_angles_definition.jpg
+.. figure:: img/parallelepiped_angle_definition.jpg
 
     Definition of the angles for oriented parallelepipeds.
 
-.. figure:: img/parallelepiped_angles_examples.jpg
+.. figure:: img/parallelepiped_angle_projection.jpg
 
     Examples of the angles for oriented parallelepipeds against the detector plane.
 
@@ -142,20 +142,17 @@ Validation
 
 Validation of the code was done by comparing the output of the 1D calculation
 to the angular average of the output of a 2D calculation over all possible
-angles. The Figure below shows the comparison where the solid dot refers to
-averaged 2D while the line represents the result of the 1D calculation (for
-the averaging, 76, 180, 76 points are taken for the angles of $\theta$,
-$\phi$, and $\Psi$ respectively).
-
-.. _parallelepiped-compare:
-
-.. figure:: img/parallelepiped_compare.png
-
-   Comparison between 1D and averaged 2D.
+angles. 
 
 This model is based on form factor calculations implemented in a c-library
 provided by the NIST Center for Neutron Research (Kline, 2006).
 
+References
+----------
+
+P Mittelbach and G Porod, *Acta Physica Austriaca*, 14 (1961) 185-211
+
+R Nayuk and K Huber, *Z. Phys. Chem.*, 226 (2012) 837-854
 """
 
 import numpy as np
@@ -164,7 +161,7 @@ from numpy import pi, inf, sqrt
 name = "parallelepiped"
 title = "Rectangular parallelepiped with uniform scattering length density."
 description = """
-    I(q)= scale*V*(sld - solvent_sld)^2*P(q,alpha)+background
+    I(q)= scale*V*(sld - sld_solvent)^2*P(q,alpha)+background
         P(q,alpha) = integral from 0 to 1 of ...
            phi(mu*sqrt(1-sigma^2),a) * S(mu*c*sigma/2)^2 * dsigma
         with
@@ -181,7 +178,7 @@ category = "shape:parallelepiped"
 #             ["name", "units", default, [lower, upper], "type","description"],
 parameters = [["sld", "1e-6/Ang^2", 4, [-inf, inf], "",
                "Parallelepiped scattering length density"],
-              ["solvent_sld", "1e-6/Ang^2", 1, [-inf, inf], "",
+              ["sld_solvent", "1e-6/Ang^2", 1, [-inf, inf], "",
                "Solvent scattering length density"],
               ["a_side", "Ang", 35, [0, inf], "volume",
                "Shorter side of the parallelepiped"],
@@ -197,7 +194,7 @@ parameters = [["sld", "1e-6/Ang^2", 4, [-inf, inf], "",
                "Rotation angle around its own c axis against q plane"],
              ]
 
-source = ["lib/J1.c", "lib/gauss76.c", "parallelepiped.c"]
+source = ["lib/gauss76.c", "parallelepiped.c"]
 
 def ER(a_side, b_side, c_side):
     """
@@ -214,7 +211,7 @@ def ER(a_side, b_side, c_side):
 
 # parameters for demo
 demo = dict(scale=1, background=0,
-            sld=6.3e-6, solvent_sld=1.0e-6,
+            sld=6.3e-6, sld_solvent=1.0e-6,
             a_side=35, b_side=75, c_side=400,
             theta=45, phi=30, psi=15,
             a_side_pd=0.1, a_side_pd_n=10,
@@ -224,18 +221,10 @@ demo = dict(scale=1, background=0,
             phi_pd=10, phi_pd_n=1,
             psi_pd=10, psi_pd_n=10)
 
-# For testing against the old sasview models, include the converted parameter
-# names and the target sasview model name.
-oldname = 'ParallelepipedModel'
-oldpars = dict(theta='parallel_theta', phi='parallel_phi', psi='parallel_psi',
-               a_side='short_a', b_side='short_b', c_side='long_c',
-               sld='sldPipe', solvent_sld='sldSolv')
-
-
 qx, qy = 0.2 * np.cos(2.5), 0.2 * np.sin(2.5)
-tests = [[{}, 0.2, 0.17658004974],
-         [{}, [0.2], [0.17658004974]],
-         [{'theta':10.0, 'phi':10.0}, (qx, qy), 0.00460296014],
-         [{'theta':10.0, 'phi':10.0}, [(qx, qy)], [0.00460296014]],
+tests = [[{}, 0.2, 0.17758004974],
+         [{}, [0.2], [0.17758004974]],
+         [{'theta':10.0, 'phi':10.0}, (qx, qy), 0.00560296014],
+         [{'theta':10.0, 'phi':10.0}, [(qx, qy)], [0.00560296014]],
         ]
 del qx, qy  # not necessary to delete, but cleaner

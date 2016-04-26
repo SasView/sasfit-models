@@ -11,7 +11,7 @@ cylinders is given by (Kline, 2006)
 
 .. math::
 
-    P(q,\alpha) = \frac{\text{scale}}{V_s} F^2(q) + \text{background}
+    I(q,\alpha) = \frac{\text{scale}}{V_s} F^2(q) + \text{background}
 
 where
 
@@ -51,9 +51,8 @@ shell is given by $L+2T$. $J1$ is the first order Bessel function.
     Core shell cylinder schematic.
 
 To provide easy access to the orientation of the core-shell cylinder, we
-define the axis of the cylinder using two angles $\theta$ and $\phi$. As
-for the case of the cylinder, those angles are defined in
-:num:`figure #cylinder-orientation`.
+define the axis of the cylinder using two angles $\theta$ and $\phi$. 
+(see :ref:`cylinder model <cylinder-angle-definition>`)
 
 NB: The 2nd virial coefficient of the cylinder is calculated based on
 the radius and 2 length values, and used as the effective radius for
@@ -66,39 +65,18 @@ Validation
 
 Validation of our code was done by comparing the output of the 1D model to
 the output of the software provided by the NIST (Kline, 2006).
-:num:`Figure #core-shell-cylinder-1d` shows a comparison
-of the 1D output of our model and the output of the NIST software.
-
-.. _core-shell-cylinder-1d:
-
-.. figure:: img/core_shell_cylinder_1d.jpg
-
-    Comparison of the SasView scattering intensity for a core-shell cylinder
-    with the output of the NIST SANS analysis software. The parameters were
-    set to: *scale* = 1.0 |Ang|, *radius* = 20 |Ang|, *thickness* = 10 |Ang|,
-    *length* =400 |Ang|, *core_sld* =1e-6 |Ang^-2|, *shell_sld* = 4e-6 |Ang^-2|,
-    *solvent_sld* = 1e-6 |Ang^-2|, and *background* = 0.01 |cm^-1|.
 
 Averaging over a distribution of orientation is done by evaluating the
 equation above. Since we have no other software to compare the
-implementation of the intensity for fully oriented cylinders, we can
-compare the result of averaging our 2D output using a uniform
+implementation of the intensity for fully oriented cylinders, we
+compared the result of averaging our 2D output using a uniform
 distribution $p(\theta,\phi) = 1.0$.
-:num:`Figure #core-shell-cylinder-2d` shows the result
-of such a cross-check.
 
-.. _core-shell-cylinder-2d:
+Reference
+---------
+see, for example, Ian Livsey  J. Chem. Soc., Faraday Trans. 2, 1987,83, 1445-1452
 
-.. figure:: img/core_shell_cylinder_2d.jpg
-
-    Comparison of the intensity for uniformly distributed core-shell
-    cylinders calculated from our 2D model and the intensity from the
-    NIST SANS analysis software. The parameters used were: *scale* = 1.0,
-    *radius* = 20 |Ang|, *thickness* = 10 |Ang|, *length* = 400 |Ang|,
-    *core_sld* = 1e-6 |Ang^-2|, *shell_sld* = 4e-6 |Ang^-2|,
-    *solvent_sld* = 1e-6 |Ang^-2|, and *background* = 0.0 |cm^-1|.
-
-2013/11/26 - Description reviewed by Heenan, R.
+2016/03/18 - Description reviewed by RKH
 """
 
 from numpy import pi, inf
@@ -107,10 +85,10 @@ name = "core_shell_cylinder"
 title = "Right circular cylinder with a core-shell scattering length density profile."
 description = """
 P(q,alpha)= scale/Vs*f(q)^(2) + background,
-      where: f(q)= 2(core_sld - solvant_sld)
+      where: f(q)= 2(sld_core - solvant_sld)
         * Vc*sin[qLcos(alpha/2)]
         /[qLcos(alpha/2)]*J1(qRsin(alpha))
-        /[qRsin(alpha)]+2(shell_sld-solvent_sld)
+        /[qRsin(alpha)]+2(sld_shell-sld_solvent)
         *Vs*sin[q(L+T)cos(alpha/2)][[q(L+T)
         *cos(alpha/2)]*J1(q(R+T)sin(alpha))
         /q(R+T)sin(alpha)]
@@ -120,8 +98,8 @@ P(q,alpha)= scale/Vs*f(q)^(2) + background,
     Vs: the volume of the outer shell
     Vc: the volume of the core
     L: the length of the core
-        shell_sld: the scattering length density of the shell
-    solvent_sld: the scattering length density of the solvent
+        sld_shell: the scattering length density of the shell
+    sld_solvent: the scattering length density of the solvent
     background: the background
     T: the thickness
         R+T: is the outer radius
@@ -133,11 +111,11 @@ P(q,alpha)= scale/Vs*f(q)^(2) + background,
 category = "shape:cylinder"
 
 #             ["name", "units", default, [lower, upper], "type", "description"],
-parameters = [["core_sld", "1e-6/Ang^2", 4, [-inf, inf], "",
+parameters = [["sld_core", "1e-6/Ang^2", 4, [-inf, inf], "",
                "Cylinder core scattering length density"],
-              ["shell_sld", "1e-6/Ang^2", 4, [-inf, inf], "",
+              ["sld_shell", "1e-6/Ang^2", 4, [-inf, inf], "",
                "Cylinder shell scattering length density"],
-              ["solvent_sld", "1e-6/Ang^2", 1, [-inf, inf], "",
+              ["sld_solvent", "1e-6/Ang^2", 1, [-inf, inf], "",
                "Solvent scattering length density"],
               ["radius", "Ang", 20, [0, inf], "volume",
                "Cylinder core radius"],
@@ -151,7 +129,7 @@ parameters = [["core_sld", "1e-6/Ang^2", 4, [-inf, inf], "",
                "Out of plane angle"],
              ]
 
-source = ["lib/J1.c", "lib/gauss76.c", "core_shell_cylinder.c"]
+source = ["lib/polevl.c","lib/sas_J1.c", "lib/gauss76.c", "core_shell_cylinder.c"]
 
 def ER(radius, thickness, length):
     """
@@ -171,7 +149,7 @@ def VR(radius, thickness, length):
     return whole, whole - core
 
 demo = dict(scale=1, background=0,
-            core_sld=6, shell_sld=8, solvent_sld=1,
+            sld_core=6, sld_shell=8, sld_solvent=1,
             radius=45, thickness=25, length=340,
             theta=30, phi=15,
             radius_pd=.2, radius_pd_n=1,
@@ -179,5 +157,4 @@ demo = dict(scale=1, background=0,
             thickness_pd=.2, thickness_pd_n=10,
             theta_pd=15, theta_pd_n=45,
             phi_pd=15, phi_pd_n=1)
-oldname = 'CoreShellCylinderModel'
-oldpars = dict(theta='axis_theta', phi='axis_phi')
+# ADDED by:  RKH  ON: 18Mar2016 renamed sld's etc

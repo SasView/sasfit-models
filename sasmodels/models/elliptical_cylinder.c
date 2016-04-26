@@ -21,7 +21,8 @@ double _elliptical_cylinder_kernel(double q, double r_minor, double r_ratio, dou
     if (arg == 0.0){
         retval = 1.0;
     }else{
-        retval = 2.0*NR_BessJ1(arg)/arg;
+        //retval = 2.0*NR_BessJ1(arg)/arg;
+        retval = sas_J1c(arg);
     }
     return retval*retval ;
 }
@@ -85,7 +86,7 @@ double Iq(double q, double r_minor, double r_ratio, double length,
     answer *= delrho*delrho;
 
     const double vol = form_volume(r_minor, r_ratio, length);
-    return answer*vol*vol*1e-4;
+    return answer*vol*vol*1.0e-4;
 }
 
 
@@ -154,7 +155,8 @@ double Iqxy(double qx, double qy, double r_minor, double r_ratio, double length,
     if (qr==0){
       Be = 0.5;
     }else{
-      Be = NR_BessJ1(qr)/qr;
+      //Be = NR_BessJ1(qr)/qr;
+      Be = 0.5*sas_J1c(qr);
     }
 
     double Si;

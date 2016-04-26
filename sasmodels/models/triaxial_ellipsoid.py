@@ -35,14 +35,14 @@ where
 To provide easy access to the orientation of the triaxial ellipsoid,
 we define the axis of the cylinder using the angles $\theta$, $\phi$
 and $\psi$. These angles are defined on
-:num:`figure #triaxial-ellipsoid-angles`.
+:numref:`triaxial-ellipsoid-angles`.
 The angle $\psi$ is the rotational angle around its own $c$ axis
 against the $q$ plane. For example, $\psi = 0$ when the
 $a$ axis is parallel to the $x$ axis of the detector.
 
 .. _triaxial-ellipsoid-angles:
 
-.. figure:: img/triaxial_ellipsoid_angles.jpg
+.. figure:: img/triaxial_ellipsoid_angle_projection.jpg
 
     The angles for oriented ellipsoid.
 
@@ -57,26 +57,13 @@ calculated based on the polar radius $R_p = R_c$ and equatorial
 radius $R_e = \sqrt{R_a R_b}$, and used as the effective radius for
 $S(q)$ when $P(q) \cdot S(q)$ is applied.
 
-.. figure:: img/triaxial_ellipsoid_1d.jpg
-
-    1D plot using the default values (w/1000 data point).
-
 Validation
 ----------
 
 Validation of our code was done by comparing the output of the
 1D calculation to the angular average of the output of 2D calculation
 over all possible angles.
-:num:`Figure #triaxial-ellipsoid-comparison` shows the comparison where
-the solid dot refers to averaged 2D while the line represents the
-result of 1D calculation (for 2D averaging, 76, 180, and 76 points
-are taken for the angles of $\theta$, $\phi$, and $\psi$ respectively).
 
-.. _triaxial-ellipsoid-comparison:
-
-.. figure:: img/triaxial_ellipsoid_comparison.png
-
-    Comparison between 1D and averaged 2D.
 
 References
 ----------
@@ -103,7 +90,7 @@ parameters = [["sld", "1e-6/Ang^2", 4, [-inf, inf], "",
               ["solvent_sld", "1e-6/Ang^2", 1, [-inf, inf], "",
                "Solvent scattering length density"],
               ["req_minor", "Ang", 20, [0, inf], "volume",
-               "Minor equitorial radius"],
+               "Minor equatorial radius"],
               ["req_major", "Ang", 400, [0, inf], "volume",
                "Major equatorial radius"],
               ["rpolar", "Ang", 10, [0, inf], "volume",
@@ -116,7 +103,7 @@ parameters = [["sld", "1e-6/Ang^2", 4, [-inf, inf], "",
                "Out of plane angle"],
              ]
 
-source = ["lib/J1.c", "lib/sph_j1c.c", "lib/gauss76.c", "triaxial_ellipsoid.c"]
+source = ["lib/sph_j1c.c", "lib/gauss76.c", "triaxial_ellipsoid.c"]
 
 def ER(req_minor, req_major, rpolar):
     """
@@ -136,8 +123,3 @@ demo = dict(scale=1, background=0,
             theta_pd=15, theta_pd_n=45,
             phi_pd=15, phi_pd_n=1,
             psi_pd=15, psi_pd_n=1)
-oldname = 'TriaxialEllipsoidModel'
-oldpars = dict(theta='axis_theta', phi='axis_phi', psi='axis_psi',
-               sld='sldEll', solvent_sld='sldSolv',
-               req_minor='semi_axisA', req_major='semi_axisB',
-               rpolar='semi_axisC')

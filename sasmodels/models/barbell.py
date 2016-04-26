@@ -67,23 +67,13 @@ and its radius of gyration is
     The requirement that $R \geq r$ is not enforced in the model! It is
     up to you to restrict this during analysis.
 
-.. figure:: img/barbell_1d.jpg
+The 2D scattering intensity is calculated similar to the 2D cylinder model.
 
-    1D plot using the default values (w/256 data point).
-
-For 2D data, the scattering intensity is calculated similar to the 2D
-cylinder model.
-
-.. figure:: img/barbell_2d.jpg
-
-    2D plot (w/(256X265) data points) for $\theta = 45^\circ$ and
-    $\phi = 0^\circ$ with default values for the remaining parameters.
-
-.. figure:: img/orientation.jpg
+.. figure:: img/cylinder_angle_definition.jpg
 
     Definition of the angles for oriented 2D barbells.
 
-.. figure:: img/orientation2.jpg
+.. figure:: img/cylinder_angle_projection.jpg
 
     Examples of the angles for oriented pp against the detector plane.
 
@@ -110,8 +100,8 @@ description = """
 category = "shape:cylinder"
 # pylint: disable=bad-whitespace, line-too-long
 #             ["name", "units", default, [lower, upper], "type","description"],
-parameters = [["sld",         "4e-6/Ang^2",   4, [-inf, inf], "",            "Barbell scattering length density"],
-              ["solvent_sld", "1e-6/Ang^2",   1, [-inf, inf], "",            "Solvent scattering length density"],
+parameters = [["sld",         "1e-6/Ang^2",   4, [-inf, inf], "",            "Barbell scattering length density"],
+              ["sld_solvent", "1e-6/Ang^2",   1, [-inf, inf], "",            "Solvent scattering length density"],
               ["bell_radius", "Ang",         40, [0, inf],    "volume",      "Spherical bell radius"],
               ["radius",      "Ang",         20, [0, inf],    "volume",      "Cylindrical bar radius"],
               ["length",      "Ang",        400, [0, inf],    "volume",      "Cylinder bar length"],
@@ -120,11 +110,11 @@ parameters = [["sld",         "4e-6/Ang^2",   4, [-inf, inf], "",            "Ba
              ]
 # pylint: enable=bad-whitespace, line-too-long
 
-source = ["lib/J1.c", "lib/gauss76.c", "barbell.c"]
+source = ["lib/polevl.c", "lib/sas_J1.c", "lib/gauss76.c", "barbell.c"]
 
 # parameters for demo
 demo = dict(scale=1, background=0,
-            sld=6, solvent_sld=1,
+            sld=6, sld_solvent=1,
             bell_radius=40, radius=20, length=400,
             theta=60, phi=60,
             radius_pd=.2, radius_pd_n=5,
@@ -132,10 +122,3 @@ demo = dict(scale=1, background=0,
             theta_pd=15, theta_pd_n=0,
             phi_pd=15, phi_pd_n=0,
            )
-
-# For testing against the old sasview models, include the converted parameter
-# names and the target sasview model name.
-oldname = 'BarBellModel'
-oldpars = dict(sld='sld_barbell',
-               solvent_sld='sld_solv', bell_radius='rad_bell',
-               radius='rad_bar', length='len_bar')

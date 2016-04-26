@@ -38,10 +38,12 @@ and
 
 Note that the radius-of-gyration for a sphere of radius R is given by $R_g = R \sqrt(3/5)$.
 
-The cross-sectional radius-of-gyration for a randomly oriented cylinder
-of radius R is given by $R_g = R / \sqrt(2)$.
+For a cylinder of radius $R$ and length $L$,    $R_g^2 = \frac{L^2}{12} + \frac{R^2}{2}$
 
-The cross-sectional radius-of-gyration of a randomly oriented lamella
+from which the cross-sectional radius-of-gyration for a randomly oriented thin 
+cylinder is $R_g = R / \sqrt(2)$.
+
+and the cross-sectional radius-of-gyration of a randomly oriented lamella
 of thickness $T$ is given by $R_g = T / \sqrt(12)$.
 
 For 2D data: The 2D scattering intensity is calculated in the same way as 1D,
@@ -49,10 +51,6 @@ where the q vector is defined as
 
 .. math::
     q = \sqrt{q_x^2+q_y^2}
-
-.. figure:: img/guinier_porod_model.jpg
-
-    Guinier-Porod model for $R_g=100$ |Ang|, $s=1$, $m=3$, and $background=0.1$.
 
 
 Reference
@@ -123,8 +121,5 @@ def Iqxy(qx, qy, *args):
 Iqxy.vectorized = False # Iqxy accepts an array of qx, qy values
 
 demo = dict(scale=1.5, background=0.5, rg=60, s=1.0, m=3.0)
-
-oldname = "GuinierPorodModel"
-oldpars = dict(scale='scale', background='background', s='dim', m='m', rg='rg')
 
 tests = [[{'scale': 1.5, 'background':0.5}, 0.04, 5.290096890253155]]

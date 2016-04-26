@@ -21,10 +21,6 @@ where the $q$ vector is defined as
     q = \sqrt{q_x^2 + q_y^2}
 
 
-.. figure:: img/gaussian_peak_1d.jpg
-
-    1D plot using the default values (w/500 data points).
-
 References
 ----------
 
@@ -70,5 +66,3 @@ Iqxy = """
 # VR defaults to 1.0
 
 demo = dict(scale=1, background=0, q0=0.05, sigma=0.005)
-oldname = "PeakGaussModel"
-oldpars = dict(sigma='B')

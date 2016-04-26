@@ -82,12 +82,11 @@ def create_parameters(model_info, **kwargs):
 
     pars = {}
     for p in model_info['parameters']:
-        name, default, limits = p[0], p[2], p[3]
-        value = kwargs.pop(name, default)
-        pars[name] = Parameter.default(value, name=name, limits=limits)
+        value = kwargs.pop(p.name, p.default)
+        pars[p.name] = Parameter.default(value, name=p.name, limits=p.limits)
     for name in model_info['partype']['pd-2d']:
         for xpart, xdefault, xlimits in [
-                ('_pd', 0., limits),
+                ('_pd', 0., pars[name].limits),
                 ('_pd_n', 35., (0, 1000)),
                 ('_pd_nsigma', 3., (0, 10)),
             ]:
@@ -223,7 +222,7 @@ class Experiment(DataMixin):
         Plot the data and residuals.
         """
         data, theory, resid = self._data, self.theory(), self.residuals()
-        plot_theory(data, theory, resid, view)
+        plot_theory(data, theory, resid, view, Iq_calc = self.Iq_calc)
 
     def simulate_data(self, noise=None):
         """
@@ -238,6 +237,8 @@ class Experiment(DataMixin):
 
         Not Implemented.
         """
+        if self.data_type == "sesans":
+            np.savetxt(basename+".dat", np.array([self._data.x, self.theory()]).T)
         pass
 
     def __getstate__(self):

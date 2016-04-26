@@ -24,8 +24,7 @@ from __future__ import print_function
 
 import numpy as np
 
-from .core import load_model_definition, load_model, make_kernel
-from .core import call_kernel, call_ER, call_VR
+from .core import call_kernel, call_ER_VR
 from . import sesans
 from . import resolution
 from . import resolution2d
@@ -62,12 +61,15 @@ class DataMixin(object):
             self.data_type = 'sesans'
         elif hasattr(data, 'qx_data'):
             self.data_type = 'Iqxy'
+        elif getattr(data, 'oriented', False):
+            self.data_type = 'Iq-oriented'
         else:
             self.data_type = 'Iq'
 
         partype = model.info['partype']
 
         if self.data_type == 'sesans':
+            
             q = sesans.make_q(data.sample.zacceptance, data.Rmax)
             index = slice(None, None)
             res = None
@@ -76,7 +78,8 @@ class DataMixin(object):
             else:
                 Iq, dIq = None, None
             #self._theory = np.zeros_like(q)
-            q_vectors = [q]
+            q_vectors = [q]            
+            q_mono = sesans.make_all_q(data)
         elif self.data_type == 'Iqxy':
             if not partype['orientation'] and not partype['magnetic']:
                 raise ValueError("not 2D without orientation or magnetic parameters")
@@ -95,6 +98,7 @@ class DataMixin(object):
                                          nsigma=3.0, accuracy=accuracy)
             #self._theory = np.zeros_like(self.Iq)
             q_vectors = res.q_calc
+            q_mono = []
         elif self.data_type == 'Iq':
             index = (data.x >= data.qmin) & (data.x <= data.qmax)
             if data.y is not None:
@@ -112,19 +116,38 @@ class DataMixin(object):
             elif (getattr(data, 'dxl', None) is not None
                   and getattr(data, 'dxw', None) is not None):
                 res = resolution.Slit1D(data.x[index],
-                                        width=data.dxh[index],
-                                        height=data.dxw[index])
+                                        qx_width=data.dxw[index],
+                                        qy_width=data.dxl[index])
             else:
                 res = resolution.Perfect1D(data.x[index])
 
             #self._theory = np.zeros_like(self.Iq)
             q_vectors = [res.q_calc]
+            q_mono = []
+        elif self.data_type == 'Iq-oriented':
+            index = (data.x >= data.qmin) & (data.x <= data.qmax)
+            if data.y is not None:
+                index &= ~np.isnan(data.y)
+                Iq = data.y[index]
+                dIq = data.dy[index]
+            else:
+                Iq, dIq = None, None
+            if (getattr(data, 'dxl', None) is None
+                or getattr(data, 'dxw', None) is None):
+                raise ValueError("oriented sample with 1D data needs slit resolution")
+
+            res = resolution2d.Slit2D(data.x[index],
+                                      qx_width=data.dxw[index],
+                                      qy_width=data.dxl[index])
+            q_vectors = res.q_calc
+            q_mono = []
         else:
             raise ValueError("Unknown data type") # never gets here
 
         # Remember function inputs so we can delay loading the function and
         # so we can save/restore state
-        self._kernel_inputs = [v for v in q_vectors]
+        self._kernel_inputs = q_vectors
+        self._kernel_mono_inputs = q_mono
         self._kernel = None
         self.Iq, self.dIq, self.index = Iq, dIq, index
         self.resolution = res
@@ -136,7 +159,7 @@ class DataMixin(object):
         dy = self.dIq
         y = Iq + np.random.randn(*dy.shape) * dy
         self.Iq = y
-        if self.data_type == 'Iq':
+        if self.data_type in ('Iq', 'Iq-oriented'):
             self._data.dy[self.index] = dy
             self._data.y[self.index] = y
         elif self.data_type == 'Iqxy':
@@ -148,16 +171,27 @@ class DataMixin(object):
 
     def _calc_theory(self, pars, cutoff=0.0):
         if self._kernel is None:
-            self._kernel = make_kernel(self._model, self._kernel_inputs)  # pylint: disable=attribute-defined-outside-init
+            self._kernel = self._model.make_kernel(self._kernel_inputs)  # pylint: disable=attribute-dedata_type
+            self._kernel_mono = (self._model.make_kernel(self._kernel_mono_inputs)
+                                 if self._kernel_mono_inputs else None)
 
         Iq_calc = call_kernel(self._kernel, pars, cutoff=cutoff)
+        # TODO: may want to plot the raw Iq for other than oriented usans
+        self.Iq_calc = None
         if self.data_type == 'sesans':
-            result = sesans.hankel(self._data.x, self._data.lam * 1e-9,
-                                   self._data.sample.thickness / 10,
-                                   self._kernel_inputs[0], Iq_calc)
+            Iq_mono = (call_kernel(self._kernel_mono, pars, mono=True)
+                       if self._kernel_mono_inputs else None)
+            result = sesans.transform(self._data,
+                                   self._kernel_inputs[0], Iq_calc, 
+                                   self._kernel_mono_inputs, Iq_mono)
         else:
             result = self.resolution.apply(Iq_calc)
-        return result
+            if hasattr(self.resolution, 'nx'):
+                self.Iq_calc = (
+                    self.resolution.qx_calc, self.resolution.qy_calc,
+                    np.reshape(Iq_calc, (self.resolution.ny, self.resolution.nx))
+                )
+        return result        
 
 
 class DirectModel(DataMixin):
@@ -179,22 +213,11 @@ class DirectModel(DataMixin):
     def __call__(self, **pars):
         return self._calc_theory(pars, cutoff=self.cutoff)
 
-    def ER(self, **pars):
+    def ER_VR(self, **pars):
         """
-        Compute the equivalent radius for the model.
-
-        Return 0. if not defined.
+        Compute the equivalent radius and volume ratio for the model.
         """
-        return call_ER(self.model.info, pars)
-
-    def VR(self, **pars):
-        """
-        Compute the equivalent volume for the model, including polydispersity
-        effects.
-
-        Return 1. if not defined.
-        """
-        return call_VR(self.model.info, pars)
+        return call_ER_VR(self.model.info, pars)
 
     def simulate_data(self, noise=None, **pars):
         """
@@ -209,13 +232,14 @@ def main():
     """
     import sys
     from .data import empty_data1D, empty_data2D
+    from .core import load_model_info, build_model
 
     if len(sys.argv) < 3:
         print("usage: python -m sasmodels.direct_model modelname (q|qx,qy) par=val ...")
         sys.exit(1)
     model_name = sys.argv[1]
     call = sys.argv[2].upper()
-    if call not in ("ER", "VR"):
+    if call != "ER_VR":
         try:
             values = [float(v) for v in call.split(',')]
         except:
@@ -232,16 +256,14 @@ def main():
     else:
         data = empty_data1D([0.001])  # Data not used in ER/VR
 
-    model_definition = load_model_definition(model_name)
-    model = load_model(model_definition)
+    model_info = load_model_info(model_name)
+    model = build_model(model_info)
     calculator = DirectModel(data, model)
     pars = dict((k, float(v))
                 for pair in sys.argv[3:]
                 for k, v in [pair.split('=')])
-    if call == "ER":
-        print(calculator.ER(**pars))
-    elif call == "VR":
-        print(calculator.VR(**pars))
+    if call == "ER_VR":
+        print(calculator.ER_VR(**pars))
     else:
         Iq = calculator(**pars)
         print(Iq[0])

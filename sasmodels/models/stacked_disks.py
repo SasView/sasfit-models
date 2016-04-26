@@ -20,7 +20,7 @@ of the q vector which is defined as
 Definition
 ----------
 
-.. figure:: img/stacked_disks_fig1.gif
+.. figure:: img/stacked_disks_geometry.png
 
 The scattered intensity $I(q)$ is calculated as
 
@@ -64,37 +64,34 @@ where *d* = thickness of the layer (layer_thick),
     exp\left[ -k(q\cos{\alpha})^2\sigma_D/2\right]
 
 where *n* = the total number of the disc stacked (n_stacking),
-*D* = the next neighbor center-to-center distance (d-spacing),
+*D* = 2*(*d*+*h*)the next neighbor center-to-center distance (d-spacing),
 and $\sigma_D$ = the Gaussian standard deviation of the d-spacing (sigma_d).
 
-To provide easy access to the orientation of the stacked disks, we define
-the axis of the cylinder using two angles $\theta$ and $\varphi$.
-These angles are defined on Figure 2 of cylinder_model.
-
 .. note::
-    The 2nd virial coefficient of the cylinder is calculated based on the
+    Each assmebly in the stack is layer/core/layer, so the spacing of the cores
+    is core plus two layers. The 2nd virial coefficient of the cylinder is 
+    calculated based on the 
     *radius* and *length* = *n_stacking* * (*core_thick* + 2 * *layer_thick*)
     values, and used as the effective radius for $S(Q)$ when $P(Q) * S(Q)$
     is applied.
 
-.. figure:: img/stacked_disks_1d.jpg
+To provide easy access to the orientation of the stacked disks, we define
+the axis of the cylinder using two angles $\theta$ and $\varphi$.
 
-    1D plot using the default values (w/1000 data point).
-
-.. figure:: img/stacked_disks_fig2.jpg
+.. figure:: img/stacked_disks_angle_definition.jpg
 
     Examples of the angles for oriented stacked disks against
     the detector plane.
 
-.. figure:: img/stacked_disks_fig3.jpg
+.. figure:: img/stacked_disks_angle_projection.jpg
 
     Examples of the angles for oriented pp against the detector plane.
 
 Our model uses the form factor calculations implemented in a c-library provided
 by the NIST Center for Neutron Research (Kline, 2006)
 
-Reference
----------
+References
+----------
 
 A Guinier and G Fournet, *Small-Angle Scattering of X-Rays*, John Wiley and Sons, New York, 1955
 
@@ -102,6 +99,11 @@ O Kratky and G Porod, *J. Colloid Science*, 4, (1949) 35
 
 J S Higgins and H C Benoit, *Polymers and Neutron Scattering*, Clarendon, Oxford, 1994
 
+**Author:** NIST IGOR/DANSE **on:** pre 2010
+
+**Last Modified by:** Piotr Rozyczko **on:** February 18, 2016
+
+**Last Reviewed by:** Richard Heenan **on:** March 22, 2016
 """
 
 from numpy import inf
@@ -113,11 +115,11 @@ description = """\
     radius =  the radius of the disk
     core_thick = thickness of the core
     layer_thick = thickness of a layer
-    core_sld = the SLD of the core
-    layer_sld = the SLD of the layers
+    sld_core = the SLD of the core
+    sld_layer = the SLD of the layers
     n_stacking = the number of the disks
     sigma_d =  Gaussian STD of d-spacing
-    solvent_sld = the SLD of the solvent
+    sld_solvent = the SLD of the solvent
     """
 category = "shape:cylinder"
 
@@ -125,19 +127,19 @@ category = "shape:cylinder"
 #   ["name", "units", default, [lower, upper], "type","description"],
 parameters = [
     ["core_thick",  "Ang",        10.0, [0, inf],    "volume",      "Thickness of the core disk"],
-    ["layer_thick", "Ang",        10.0, [0, inf],    "volume",      "Thickness of the stacked disk"],
+    ["layer_thick", "Ang",        10.0, [0, inf],    "volume",      "Thickness of layer each side of core"],
     ["radius",      "Ang",        15.0, [0, inf],    "volume",      "Radius of the stacked disk"],
-    ["n_stacking",  "",            1.0, [0, inf],    "volume",      "Number of stacking"],
+    ["n_stacking",  "",            1.0, [0, inf],    "volume",      "Number of stacked layer/core/layer disks"],
     ["sigma_d",     "Ang",         0,   [0, inf],    "",            "GSD of disks sigma_d"],
-    ["core_sld",    "1e-6/Ang^2",  4,   [-inf, inf], "",            "Core scattering length density"],
-    ["layer_sld",   "1e-6/Ang^2",  0.0, [-inf, inf], "",            "Layer scattering length density"],
-    ["solvent_sld", "1e-6/Ang^2",  5.0, [-inf, inf], "",            "Solvent scattering length density"],
+    ["sld_core",    "1e-6/Ang^2",  4,   [-inf, inf], "",            "Core scattering length density"],
+    ["sld_layer",   "1e-6/Ang^2",  0.0, [-inf, inf], "",            "Layer scattering length density"],
+    ["sld_solvent", "1e-6/Ang^2",  5.0, [-inf, inf], "",            "Solvent scattering length density"],
     ["theta",       "degrees",     0,   [-inf, inf], "orientation", "Orientation of the stacked disk axis w/respect incoming beam"],
     ["phi",         "degrees",     0,   [-inf, inf], "orientation", "Orientation of the stacked disk in the plane of the detector"],
     ]
 # pylint: enable=bad-whitespace, line-too-long
 
-source = ["lib/gauss76.c", "lib/J1.c", "stacked_disks.c"]
+source = ["lib/polevl.c", "lib/sas_J1.c", "lib/gauss76.c", "stacked_disks.c"]
 
 demo = dict(background=0.001,
             scale=0.01,
@@ -146,27 +148,22 @@ demo = dict(background=0.001,
             radius=15.0,
             n_stacking=1,
             sigma_d=0,
-            core_sld=4,
-            layer_sld=0.0,
-            solvent_sld=5.0,
+            sld_core=4,
+            sld_layer=0.0,
+            sld_solvent=5.0,
             theta=0,
             phi=0)
 
-
-oldname = 'StackedDisksModel'
-
-oldpars = dict(theta='axis_theta',
-               phi='axis_phi')
-
 tests = [
-    # Accuracy tests based on content in test/utest_extra_models.py
+    # Accuracy tests based on content in test/utest_extra_models.py.
+    # Added 2 tests with n_stacked = 5 using SasView 3.1.2 - PDB
     [{'core_thick': 10.0,
       'layer_thick': 15.0,
       'radius': 3000.0,
       'n_stacking': 1.0,
       'sigma_d': 0.0,
-      'core_sld': 4.0,
-      'layer_sld': -0.4,
+      'sld_core': 4.0,
+      'sld_layer': -0.4,
       'solvent_sd': 5.0,
       'theta': 0.0,
       'phi': 0.0,
@@ -177,10 +174,38 @@ tests = [
     [{'core_thick': 10.0,
       'layer_thick': 15.0,
       'radius': 3000.0,
+      'n_stacking': 5.0,
+      'sigma_d': 0.0,
+      'sld_core': 4.0,
+      'sld_layer': -0.4,
+      'solvent_sd': 5.0,
+      'theta': 0.0,
+      'phi': 0.0,
+      'scale': 0.01,
+      'background': 0.001,
+     }, 0.001, 5065.12793824],
+
+    [{'core_thick': 10.0,
+      'layer_thick': 15.0,
+      'radius': 3000.0,
+      'n_stacking': 5.0,
+      'sigma_d': 0.0,
+      'sld_core': 4.0,
+      'sld_layer': -0.4,
+      'solvent_sd': 5.0,
+      'theta': 0.0,
+      'phi': 0.0,
+      'scale': 0.01,
+      'background': 0.001,
+     }, 0.164, 0.0127673597265],
+
+    [{'core_thick': 10.0,
+      'layer_thick': 15.0,
+      'radius': 3000.0,
       'n_stacking': 1.0,
       'sigma_d': 0.0,
-      'core_sld': 4.0,
-      'layer_sld': -0.4,
+      'sld_core': 4.0,
+      'sld_layer': -0.4,
       'solvent_sd': 5.0,
       'theta': 0.0,
       'phi': 0.0,
@@ -193,8 +218,8 @@ tests = [
       'radius': 3000.0,
       'n_stacking': 1.0,
       'sigma_d': 0.0,
-      'core_sld': 4.0,
-      'layer_sld': -0.4,
+      'sld_core': 4.0,
+      'sld_layer': -0.4,
       'solvent_sd': 5.0,
       'theta': 0.0,
       'phi': 0.0,
@@ -207,8 +232,8 @@ tests = [
       'radius': 3000.0,
       'n_stacking': 1.0,
       'sigma_d': 0.0,
-      'core_sld': 4.0,
-      'layer_sld': -0.4,
+      'sld_core': 4.0,
+      'sld_layer': -0.4,
       'solvent_sd': 5.0,
       'theta': 0.0,
       'phi': 0.0,
@@ -216,5 +241,5 @@ tests = [
       'background': 0.001,
      }, ([1.3, 1.57]), [0.0010039, 0.0010038]],
     ]
-
+# 21Mar2016   RKH notes that unit tests all have n_stacking=1, ought to test other values
 

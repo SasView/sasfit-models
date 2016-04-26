@@ -28,6 +28,8 @@ of the parallelepiped, |phi| is the angle between the scattering vector
 (lying in the *xy* plane) and the *y* axis, and
 
 .. math::
+  :nowrap:
+
   \begin{align}
   A_{P\Delta}(q) & =  A B C
     \left[\frac{\sin \bigl( q \frac{C}{2} \cos\theta \bigr)}
@@ -72,7 +74,9 @@ Validation
 Validation of the code was conducted by qualitatively comparing the output
 of the 1D model to the curves shown in (Nayuk, 2012).
 
-REFERENCES
+
+References
+----------
 
 R Nayuk and K Huber, *Z. Phys. Chem.*, 226 (2012) 837-854
 
@@ -83,7 +87,7 @@ from numpy import pi, inf, sqrt
 name = "hollow_rectangular_prism"
 title = "Hollow rectangular parallelepiped with uniform scattering length density."
 description = """
-    I(q)= scale*V*(sld - solvent_sld)^2*P(q,theta,phi)+background
+    I(q)= scale*V*(sld - sld_solvent)^2*P(q,theta,phi)+background
         P(q,theta,phi) = (2/pi/V^2) * double integral from 0 to pi/2 of ...
            (AP1-AP2)^2(q)*sin(theta)*dtheta*dphi
         AP1 = S(q*C*cos(theta)/2) * S(q*A*sin(theta)*sin(phi)/2) * S(q*B*sin(theta)*cos(phi)/2)
@@ -98,7 +102,7 @@ category = "shape:parallelepiped"
 #             ["name", "units", default, [lower, upper], "type","description"],
 parameters = [["sld", "1e-6/Ang^2", 6.3, [-inf, inf], "",
                "Parallelepiped scattering length density"],
-              ["solvent_sld", "1e-6/Ang^2", 1, [-inf, inf], "",
+              ["sld_solvent", "1e-6/Ang^2", 1, [-inf, inf], "",
                "Solvent scattering length density"],
               ["a_side", "Ang", 35, [0, inf], "volume",
                "Shorter side of the parallelepiped"],
@@ -110,7 +114,7 @@ parameters = [["sld", "1e-6/Ang^2", 6.3, [-inf, inf], "",
                "Thickness of parallelepiped"],
              ]
 
-source = ["lib/J1.c", "lib/gauss76.c", "hollow_rectangular_prism.c"]
+source = [ "lib/gauss76.c", "hollow_rectangular_prism.c"]
 
 def ER(a_side, b2a_ratio, c2a_ratio, thickness):
     """
@@ -143,19 +147,13 @@ def VR(a_side, b2a_ratio, c2a_ratio, thickness):
 
 # parameters for demo
 demo = dict(scale=1, background=0,
-            sld=6.3e-6, solvent_sld=1.0e-6,
+            sld=6.3e-6, sld_solvent=1.0e-6,
             a_side=35, b2a_ratio=1, c2a_ratio=1, thickness=1,
             a_side_pd=0.1, a_side_pd_n=10,
             b2a_ratio_pd=0.1, b2a_ratio_pd_n=1,
             c2a_ratio_pd=0.1, c2a_ratio_pd_n=1)
 
-# For testing against the old sasview models, include the converted parameter
-# names and the target sasview model name.
-oldname = 'RectangularHollowPrismModel'
-oldpars = dict(a_side='short_side', b2a_ratio='b2a_ratio', c_side='c2a_ratio',
-               thickness='thickness', sld='sldPipe', solvent_sld='sldSolv')
-
-tests = [[{}, 0.2, 0.76587283098],
-         [{}, [0.2], [0.76587283098]],
+tests = [[{}, 0.2, 0.76687283098],
+         [{}, [0.2], [0.76687283098]],
         ]
 

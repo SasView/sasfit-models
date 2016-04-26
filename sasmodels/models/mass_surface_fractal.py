@@ -41,15 +41,12 @@ and $\rho_{particle}$ is the scattering length density of particles.
 .. note::
 
     The surface ( $D_s$ ) and mass ( $D_m$ ) fractal dimensions are only
-    valid if $0 < surface_dim < 6$ , $0 < mass_dim < 6$ , and
-    $(surface_dim + mass_dim ) < 6$ .
+    valid if $0 < surface\_dim < 6$ , $0 < mass\_dim < 6$ , and
+    $(surface\_dim + mass\_dim ) < 6$ .
 
-.. figure:: img/mass_surface_fractal_1d.jpg
 
-    1D plot using the default values.
-
-Reference
----------
+References
+----------
 
 P Schmidt, *J Appl. Cryst.*, 24 (1991) 414-435 Equation(19)
 
@@ -100,13 +97,6 @@ demo = dict(scale=1, background=0,
             cluster_rg=86.7,
             primary_rg=4000.0)
 
-oldname = 'MassSurfaceFractal'
-oldpars = dict(radius='radius',
-               mass_dim='mass_dim',
-               surface_dim='surface_dim',
-               cluster_rg='cluster_rg',
-               primary_rg='primary_rg')
-
 tests = [
 
     # Accuracy tests based on content in test/utest_other_models.py
@@ -114,6 +104,7 @@ tests = [
       'surface_dim':   2.3,
       'cluster_rg':   86.7,
       'primary_rg': 4000.0,
+      'background':    0.0,
      }, 0.05, 1.77537e-05],
 
     # Additional tests with larger range of parameters
@@ -121,7 +112,7 @@ tests = [
       'surface_dim':   1.0,
       'cluster_rg':   90.0,
       'primary_rg': 4000.0,
-     }, 0.001, 0.18462699016],
+     }, 0.001, 0.18562699016],
 
     [{'mass_dim':      1.3,
       'surface_dim':   1.0,
@@ -135,5 +126,6 @@ tests = [
       'cluster_rg':   90.0,
       'primary_rg': 1000.0,
       'scale':        10.0,
+      'background':    0.0,
      }, 0.051, 0.000169548800377],
     ]

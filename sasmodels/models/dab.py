@@ -26,10 +26,6 @@ where the $q$ vector is defined as
 
 .. math:: q = \sqrt{q_x^2 + q_y^2}
 
-.. figure:: img/dab_1d.jpg
-
-   1D plot using the default values (w/200 data point).
-
 
 References
 ----------
@@ -79,5 +75,3 @@ Iqxy = """
 # VR defaults to 1.0
 
 demo = dict(scale=1, background=0, length=50)
-oldname = "DABModel"
-oldpars = dict(length='length')
