@@ -21,6 +21,8 @@ some additional information ,may need to be filled in
 #TODO: Add categroy as an input parameter?
 #TODO: Units
 #TODO: Form volume (and specify volume params)
+#TODO: Potentially change sasfit_ff_sphere to something from SASView
+#TODO: Don't read EMPTY parameter in
 
 __author__ = "Wojtek Potrzebowski"
 __maintainer__ = "Wojtek Potrzebowski"
@@ -109,20 +111,21 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     output_c_lines.append(c_intro_lines)
 
     #There a few different ways to extract parameters
-    #1. From define statement in the c file
+    #1. From sasfit_get_param
     for line in sasfit_lines:
-        #TODO: There are other define statements, so check if it is not failing
-        regm = search("#define", line)
+        regm = search("sasfit_get_param\(", line)
         if regm:
-            parameters.append(line[regm.end()+1:].split("\t")[0])
-    #2. From sasfit_get_param
+            params = line[regm.end():].strip(");\r\n").split(", ")
+            number_of_params = int(params[1])
+            parameters = map(lambda p : p.lstrip("&"),params[2:2+number_of_params])
+
+    #2. From define statement in the c file
     if len(parameters) == 0:
         for line in sasfit_lines:
-            regm = search("sasfit_get_param\(", line)
-            if regm:
-                params = line[regm.end():].strip(");\r\n").split(", ")
-                number_of_params = int(params[1])
-                parameters = map(lambda p : p.lstrip("&"),params[2:2+number_of_params])
+            #TODO: There are other define statements, so check if it is not failing
+            regm = search("#define", line)
+            if regm and search("param->", line):
+                parameters.append(line[regm.end()+1:].split("\t")[0])
 
     #But if 2 above don't work then read it from parameters definition
     if len(parameters) == 0:
@@ -130,7 +133,6 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
             param = pardef.split(":")[0]
             if param !="":
                 parameters.append(param)
-
     #And if this still doesn't work stop computation
     if len(parameters) == 0:
         exit()
@@ -233,8 +235,9 @@ if __name__=="__main__":
         model_name = options.output_file
     else:
         #Remove sasfit_ff prefix and .c suffix
-        model_name = options.sasfit_file.lstrip("../sasfit_ff_").rstrip(".c")
+        model_name = options.sasfit_file.rstrip(".c").lstrip("../sasfit_ff_")
 
+    print model_name, options.sasfit_file
     output_c_filename = "sasfit_"+model_name+".c"
     output_python_filename = "sasfit_"+model_name+".py"
 
