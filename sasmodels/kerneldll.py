@@ -47,10 +47,10 @@ from __future__ import print_function
 
 import sys
 import os
+from os.path import join as joinpath, split as splitpath, splitext
 import tempfile
 import ctypes as ct
 from ctypes import c_void_p, c_int, c_longdouble, c_double, c_float
-import _ctypes
 
 import numpy as np
 
@@ -77,17 +77,28 @@ elif os.name == 'nt':
             COMPILE = " ".join((CC, "/openmp", LN))
         else:
             COMPILE = " ".join((CC, LN))
-    else:
-        # fPIC is unused on windows
-        # COMPILE = "gcc -shared -fPIC -std=c99 -O2 -Wall %(source)s -o %(output)s -lm"
+    elif True:
+        # If MSVC compiler is not available, try using mingw
+        # fPIC is not needed on windows
         COMPILE = "gcc -shared -std=c99 -O2 -Wall %(source)s -o %(output)s -lm"
         if "SAS_OPENMP" in os.environ:
             COMPILE = COMPILE + " -fopenmp"
+    else:
+        # If MSVC compiler is not available, try using tinycc
+        from tinycc import TCC
+        COMPILE = TCC + " -shared -rdynamic -Wall %(source)s -o %(output)s"
 else:
     COMPILE = "cc -shared -fPIC -fopenmp -std=c99 -O2 -Wall %(source)s -o %(output)s -lm"
 
-# Assume the default location of module DLLs is within the sasmodel directory.
-DLL_PATH = os.path.join(os.path.split(os.path.realpath(__file__))[0], "models", "dll")
+# Windows-specific solution
+if os.name == 'nt':
+    # Assume the default location of module DLLs is in .sasmodels/compiled_models.
+    DLL_PATH = os.path.join(os.path.expanduser("~"), ".sasmodels", "compiled_models")
+    if not os.path.exists(DLL_PATH):
+        os.makedirs(DLL_PATH)
+else:
+    # Set up the default path for compiled modules.
+    DLL_PATH = tempfile.gettempdir()
 
 ALLOW_SINGLE_PRECISION_DLLS = True
 
@@ -96,7 +107,6 @@ def dll_path(model_info, dtype="double"):
     """
     Path to the compiled model defined by *model_info*.
     """
-    from os.path import join as joinpath, split as splitpath, splitext
     basename = splitext(splitpath(model_info['filename'])[1])[0]
     if np.dtype(dtype) == generate.F32:
         basename += "32"
@@ -104,6 +114,12 @@ def dll_path(model_info, dtype="double"):
         basename += "64"
     else:
         basename += "128"
+
+    # Hack to find precompiled dlls
+    path = joinpath(generate.DATA_PATH, '..', 'compiled_models', basename+'.so')
+    if os.path.exists(path):
+        return path
+
     return joinpath(DLL_PATH, basename+'.so')
 
 def make_dll(source, model_info, dtype="double"):
@@ -140,19 +156,25 @@ def make_dll(source, model_info, dtype="double"):
         tempfile_prefix = 'sas_' + model_info['name'] + '64_'
     else:
         tempfile_prefix = 'sas_' + model_info['name'] + '128_'
- 
-    source = generate.convert_type(source, dtype)
-    source_files = generate.model_sources(model_info) + [model_info['filename']]
+
     dll = dll_path(model_info, dtype)
 
-    #newest = max(os.path.getmtime(f) for f in source_files)
-    #if not os.path.exists(dll) or os.path.getmtime(dll) < newest:
     if not os.path.exists(dll):
-        # Replace with a proper temp file
+        need_recompile = True
+    elif getattr(sys, 'frozen', None) is not None:
+        # TODO: don't suppress time stamp
+        # Currently suppressing recompile when running in a frozen environment
+        need_recompile = False
+    else:
+        dll_time = os.path.getmtime(dll)
+        source_files = generate.model_sources(model_info) + [model_info['filename']]
+        newest_source = max(os.path.getmtime(f) for f in source_files)
+        need_recompile = dll_time < newest_source
+    if need_recompile:
         fid, filename = tempfile.mkstemp(suffix=".c", prefix=tempfile_prefix)
+        source = generate.convert_type(source, dtype)
         os.fdopen(fid, "w").write(source)
         command = COMPILE%{"source":filename, "output":dll}
-        print("Compile command: "+command)
         status = os.system(command)
         if status != 0 or not os.path.exists(dll):
             raise RuntimeError("compile failed.  File is in %r"%filename)
@@ -249,7 +271,6 @@ class DllModel(object):
             #libHandle = ct.c_void_p(dll._handle)
             del dll, self.dll
             self.dll = None
-            #_ctypes.FreeLibrary(libHandle)
             ct.windll.kernel32.FreeLibrary(libHandle)
         else:    
             pass 

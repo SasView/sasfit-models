@@ -209,11 +209,12 @@ from __future__ import print_function
 
 import sys
 from os.path import abspath, dirname, join as joinpath, exists, basename, \
-    splitext
+    splitext, isdir
 import re
 import string
 import warnings
 from collections import namedtuple
+import inspect
 
 import numpy as np
 
@@ -222,7 +223,29 @@ from .custom import load_custom_kernel_module
 PARAMETER_FIELDS = ['name', 'units', 'default', 'limits', 'type', 'description']
 Parameter = namedtuple('Parameter', PARAMETER_FIELDS)
 
-C_KERNEL_TEMPLATE_PATH = joinpath(dirname(__file__), 'kernel_template.c')
+def get_data_path(external_dir, target_file):
+    path = abspath(dirname(__file__))
+    if exists(joinpath(path, target_file)):
+        return path
+
+    # check next to exe/zip file
+    exepath = dirname(sys.executable)
+    path = joinpath(exepath, external_dir)
+    if exists(joinpath(path, target_file)):
+        return path
+
+    # check in py2app Contents/Resources
+    path = joinpath(exepath, '..', 'Resources', external_dir)
+    if exists(joinpath(path, target_file)):
+        return abspath(path)
+
+    raise RuntimeError('Could not find '+joinpath(external_dir, target_file))
+
+EXTERNAL_DIR = 'sasmodels-data'
+DATA_PATH = get_data_path(EXTERNAL_DIR, 'kernel_template.c')
+MODEL_PATH = joinpath(DATA_PATH, 'models')
+C_KERNEL_TEMPLATE_FILE = joinpath(DATA_PATH, 'kernel_template.c')
+
 
 F16 = np.dtype('float16')
 F32 = np.dtype('float32')
@@ -334,8 +357,7 @@ def model_sources(model_info):
     """
     Return a list of the sources file paths for the module.
     """
-    search_path = [dirname(model_info['filename']),
-                   abspath(joinpath(dirname(__file__), 'models'))]
+    search_path = [dirname(model_info['filename']), MODEL_PATH]
     return [_search(search_path, f) for f in model_info['source']]
 
 # Pragmas for enable OpenCL features.  Be sure to protect them so that they
@@ -455,11 +477,16 @@ def make_source(model_info):
     # Load template
     global C_KERNEL_TEMPLATE
     if C_KERNEL_TEMPLATE is None:
-        with open(C_KERNEL_TEMPLATE_PATH) as fid:
+        with open(C_KERNEL_TEMPLATE_FILE) as fid:
             C_KERNEL_TEMPLATE = fid.read()
 
     # Load additional sources
-    source = [open(f).read() for f in model_sources(model_info)]
+    source = [p
+              for f in model_sources(model_info)
+              # Add #line directives at the start of each file
+              for p in ('#line 1 "%s"'%f.replace('\\', '\\\\'), open(f).read())
+              ]
+    source.append('#line 133 "%s"'%C_KERNEL_TEMPLATE_FILE.replace('\\', '\\\\'))
 
     # Prepare defines
     defines = []
@@ -497,9 +524,13 @@ def make_source(model_info):
         fn = """\
 double form_volume(VOLUME_PARAMETER_DECLARATIONS);
 double form_volume(VOLUME_PARAMETER_DECLARATIONS) {
+#line %(line)d "%(file)s"
     %(body)s
 }
-""" % {'body':model_info['form_volume']}
+""" % {'body':model_info['form_volume'],
+       'file':model_info['filename'].replace('\\', '\\\\'),
+       'line':model_info['form_volume_line'],
+       }
         source.append(fn)
 
     # Fill in definitions for Iq parameters
@@ -526,9 +557,13 @@ double form_volume(VOLUME_PARAMETER_DECLARATIONS) {
         fn = """\
 double Iq(double q, IQ_PARAMETER_DECLARATIONS);
 double Iq(double q, IQ_PARAMETER_DECLARATIONS) {
+#line %(line)d "%(file)s"
     %(body)s
 }
-""" % {'body':model_info['Iq']}
+""" % {'body':model_info['Iq'],
+       'file':model_info['filename'].replace('\\', '\\\\'),
+       'line':model_info['Iq_line'],
+       }
         source.append(fn)
 
     # Fill in definitions for Iqxy parameters
@@ -555,9 +590,13 @@ double Iq(double q, IQ_PARAMETER_DECLARATIONS) {
         fn = """\
 double Iqxy(double qx, double qy, IQXY_PARAMETER_DECLARATIONS);
 double Iqxy(double qx, double qy, IQXY_PARAMETER_DECLARATIONS) {
+#line %(line)d "%(file)s"
     %(body)s
 }
-""" % {'body':model_info['Iqxy']}
+""" % {'body':model_info['Iqxy'],
+       'file':model_info['filename'].replace('\\', '\\\\'),
+       'line':model_info['Iqxy_line'],
+       }
         source.append(fn)
 
     # Need to know if we have a theta parameter for Iqxy; it is not there
@@ -655,6 +694,45 @@ def load_kernel_module(model_name):
         kernel_module = getattr(models, model_name, None)
     return kernel_module
 
+def find_source_lines(model_info, kernel_module):
+    """
+    Identify the location of the C source inside the model definition file.
+
+    This code runs through the source of the kernel module looking for
+    lines that start with 'Iq', 'Iqxy' or 'form_volume'.  Clearly there are
+    all sorts of reasons why this might not work (e.g., code commented out
+    in a triple-quoted line block, code built using string concatenation,
+    or code defined in the branch of an 'if' block), but it should work
+    properly in the 95% case, and getting the incorrect line number will
+    be harmless.
+    """
+    # Check if we need line numbers at all
+    if callable(model_info['Iq']):
+        return None
+
+    if (model_info['Iq'] is None
+        and model_info['Iqxy'] is None
+        and model_info['form_volume'] is None):
+        return
+
+    # Make sure we have harmless default values
+    model_info['Iqxy_line'] = 0
+    model_info['Iq_line'] = 0
+    model_info['form_volume_line'] = 0
+
+    # find the defintion lines for the different code blocks
+    try:
+        source = inspect.getsource(kernel_module)
+    except IOError:
+        return
+    for k, v in enumerate(source.split('\n')):
+        if v.startswith('Iqxy'):
+            model_info['Iqxy_line'] = k+1
+        elif v.startswith('Iq'):
+            model_info['Iq_line'] = k+1
+        elif v.startswith('form_volume'):
+            model_info['form_volume_line'] = k+1
+
 
 def make_model_info(kernel_module):
     """
@@ -725,6 +803,7 @@ def make_model_info(kernel_module):
     # Check for optional functions
     functions = "ER VR form_volume Iq Iqxy shape sesans".split()
     model_info.update((k, getattr(kernel_module, k, None)) for k in functions)
+    find_source_lines(model_info, kernel_module)
     return model_info
 
 section_marker = re.compile(r'\A(?P<first>[%s])(?P=first)*\Z'

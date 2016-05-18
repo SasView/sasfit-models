@@ -1,3 +1,4 @@
+#line 1 "kernel_template.c"
 // GENERATED CODE --- DO NOT EDIT ---
 // Code is produced by sasmodels.gen from sasmodels/models/MODEL.c
 
@@ -21,39 +22,33 @@
          inline double trunc(double x) { return x>=0?floor(x):-floor(-x); }
          inline double fmin(double x, double y) { return x>y ? y : x; }
          inline double fmax(double x, double y) { return x<y ? y : x; }
-         inline double isnan(double x) { return _isnan(x); }
+         #define isnan(x) _isnan(x)
+         #define isinf(x) (!_finite(x))
+         #define isfinite(x) _finite(x)
          #define NAN (std::numeric_limits<double>::quiet_NaN()) // non-signalling NaN
-         static double cephes_expm1(double x) {
-            // Adapted from the cephes math library.
-            // Copyright 1984 - 1992 by Stephen L. Moshier
-            if (x != x || x == 0.0) {
-               return x; // NaN and +/- 0
-            } else if (x < -0.5 || x > 0.5) {
-               return exp(x) - 1.0;
-            } else {
-               const double xsq = x*x;
-               const double p = (((
-                  +1.2617719307481059087798E-4)*xsq
-                  +3.0299440770744196129956E-2)*xsq
-                  +9.9999999999999999991025E-1);
-               const double q = ((((
-                  +3.0019850513866445504159E-6)*xsq
-                  +2.5244834034968410419224E-3)*xsq
-                  +2.2726554820815502876593E-1)*xsq
-                  +2.0000000000000000000897E0);
-               double r = x * p;
-               r =  r / (q - r);
-               return r+r;
-             }
-         }
-         #define expm1 cephes_expm1
+         #define INFINITY (std::numeric_limits<double>::infinity())
+         #define NEED_EXPM1
+         #define NEED_TGAMMA
      #else
          #define kernel extern "C"
      #endif
      inline void SINCOS(double angle, double &svar, double &cvar) { svar=sin(angle); cvar=cos(angle); }
 #  else
      #include <stdio.h>
-     #include <tgmath.h> // C99 type-generic math, so sin(float) => sinf
+     #if defined(__TINYC__)
+         #include <math.h>
+         inline double trunc(double x) { return x>=0?floor(x):-floor(-x); }
+         inline double fmin(double x, double y) { return x>y ? y : x; }
+         inline double fmax(double x, double y) { return x<y ? y : x; }
+         // TODO: test isnan
+         inline double _isnan(double x) { return x != x; } // hope this doesn't optimize away!
+         #undef isnan
+         #define isnan(x) _isnan(x)
+         #define NEED_EXPM1
+         #define NEED_TGAMMA
+     #else
+         #include <tgmath.h> // C99 type-generic math, so sin(float) => sinf
+     #endif
      // MSVC doesn't support C99, so no need for dllexport on C99 branch
      #define kernel
      #define SINCOS(angle,svar,cvar) do {const double _t_=angle; svar=sin(_t_);cvar=cos(_t_);} while (0)
@@ -71,6 +66,32 @@
 #  else
 #    define SINCOS(angle,svar,cvar) do {const double _t_=angle; svar=sin(_t_);cvar=cos(_t_);} while (0)
 #  endif
+#endif
+
+#if defined(NEED_EXPM1)
+   static double expm1(double x) {
+      // Adapted from the cephes math library.
+      // Copyright 1984 - 1992 by Stephen L. Moshier
+      if (x != x || x == 0.0) {
+         return x; // NaN and +/- 0
+      } else if (x < -0.5 || x > 0.5) {
+         return exp(x) - 1.0;
+      } else {
+         const double xsq = x*x;
+         const double p = (((
+            +1.2617719307481059087798E-4)*xsq
+            +3.0299440770744196129956E-2)*xsq
+            +9.9999999999999999991025E-1);
+         const double q = ((((
+            +3.0019850513866445504159E-6)*xsq
+            +2.5244834034968410419224E-3)*xsq
+            +2.2726554820815502876593E-1)*xsq
+            +2.0000000000000000000897E0);
+         double r = x * p;
+         r =  r / (q - r);
+         return r+r;
+       }
+   }
 #endif
 
 // Standard mathematical constants:
