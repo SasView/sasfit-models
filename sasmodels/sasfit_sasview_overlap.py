@@ -74,8 +74,11 @@ def generate_table(sasmodels_dict, sasfit_dict):
         if sasview_model in overlaping_models:
             descs_sv = sasview_dict[sasview_model][0].replace("\n"," ")
             descs_sv = descs_sv.replace("^"," ^ ")
-            descs_sv = descs_sv.replace("{","[")
-            descs_sv = descs_sv.replace("}","]")
+            descs_sf = descs_sf.replace("{",")")
+            descs_sf = descs_sf.replace("}",")")
+            descs_sv = descs_sv.replace("[","(")
+            descs_sv = descs_sv.replace("]",")")
+            descs_sv = descs_sv.replace("(x)","( x )")
             descs_sv = descs_sv.replace("|q-q0|","fabs(q-q0)")
             params_sv = []
             map( params_sv.extend, sasview_dict[sasview_model][1])
@@ -84,8 +87,11 @@ def generate_table(sasmodels_dict, sasfit_dict):
             sasfit_model = model_names_sv[sasview_model]
             descs_sf = sasfit_dict[sasfit_model][0].replace("\n"," ")
             descs_sf = descs_sf.replace("^"," ^ ")
-            descs_sf = descs_sf.replace("{","[")
-            descs_sf = descs_sf.replace("}","]")
+            descs_sf = descs_sf.replace("{",")")
+            descs_sf = descs_sf.replace("}",")")
+            descs_sv = descs_sv.replace("[","(")
+            descs_sv = descs_sv.replace("]",")")
+            descs_sv = descs_sv.replace("(x)","( x )")
             descs_sf = descs_sf.replace("|q-q0|","fabs(q-q0)")
 
             params_sf = []
@@ -100,8 +106,11 @@ def generate_table(sasmodels_dict, sasfit_dict):
         if sasview_model in nonoverlaping_sasview_models:
             descs = sasview_dict[sasview_model][0].replace("\n"," ")
             descs = descs.replace("^"," ^ ")
-            descs = descs.replace("{","[")
-            descs = descs.replace("}","]")
+            descs_sf = descs_sf.replace("{",")")
+            descs_sf = descs_sf.replace("}",")")
+            descs_sv = descs_sv.replace("[","(")
+            descs_sv = descs_sv.replace("]",")")
+            descs_sv = descs_sv.replace("(x)","( x )")
             descs = descs.replace("|q-q0|","fabs(q-q0)")
 
             params = []
@@ -116,8 +125,11 @@ def generate_table(sasmodels_dict, sasfit_dict):
         if not sasfit_model in overlaping_models:
             descs = sasfit_dict[sasfit_model][0].replace("\n"," ")
             descs = descs.replace("^"," ^ ")
-            descs = descs.replace("{","[")
-            descs = descs.replace("}","]")
+            descs_sf = descs_sf.replace("{",")")
+            descs_sf = descs_sf.replace("}",")")
+            descs_sv = descs_sv.replace("[","(")
+            descs_sv = descs_sv.replace("]",")")
+            descs_sv = descs_sv.replace("(x)","( x )")
             descs = descs.replace("|q-q0|","fabs(q-q0)")
 
             params = []
