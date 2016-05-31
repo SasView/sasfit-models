@@ -49,6 +49,7 @@ harmless, albeit annoying.
 """
 import os
 import warnings
+import logging
 
 import numpy as np
 
@@ -57,8 +58,22 @@ try:
     # Ask OpenCL for the default context so that we know that one exists
     cl.create_some_context(interactive=False)
 except Exception as exc:
-    warnings.warn(str(exc))
+    warnings.warn("OpenCL startup failed with ***"+str(exc)+"***; using C compiler instead")
     raise RuntimeError("OpenCL not available")
+
+# CRUFT: pyopencl < 2017.1  (as of June 2016 needs quotes around include path)
+def _quote_path(v):
+    """
+    Quote the path if it is not already quoted.
+
+    If v starts with '-', then assume that it is a -I option or similar
+    and do not quote it.  This is fragile:  -Ipath with space needs to
+    be quoted.
+    """
+    return '"'+v+'"' if v and ' ' in v and not v[0] in "\"'-" else v
+
+if hasattr(cl, '_DEFAULT_INCLUDE_OPTIONS'):
+    cl._DEFAULT_INCLUDE_OPTIONS = [_quote_path(v) for v in cl._DEFAULT_INCLUDE_OPTIONS]
 
 from pyopencl import mem_flags as mf
 from pyopencl.characterize import get_fast_inaccurate_build_options
@@ -148,6 +163,7 @@ def compile_model(context, source, dtype, fast=False):
     options = (get_fast_inaccurate_build_options(context.devices[0])
                if fast else [])
     program = cl.Program(context, source).build(options=options)
+    #print("done with "+program)
     return program
 
 
@@ -217,11 +233,12 @@ class GpuEnvironment(object):
         """
         Compile the program for the device in the given context.
         """
-        key = "%s-%s-%s"%(name, dtype, fast)
+        key = "%s-%s%s"%(name, dtype, ("-fast" if fast else ""))
         if key not in self.compiled:
-            #print("compiling",name)
-            dtype = np.dtype(dtype)
-            program = compile_model(self.get_context(dtype), source, dtype, fast)
+            context = self.get_context(dtype)
+            logging.info("building %s for OpenCL %s"
+                         % (key, context.devices[0].name.strip()))
+            program = compile_model(context, source, np.dtype(dtype), fast)
             self.compiled[key] = program
         return self.compiled[key]
 
