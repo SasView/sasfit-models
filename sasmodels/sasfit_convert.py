@@ -23,6 +23,7 @@ some additional information ,may need to be filled in
 #TODO: Form volume (and specify volume params)
 #TODO: Potentially change sasfit_ff_sphere to something from SASView
 #TODO: Don't read EMPTY parameter in
+#TODO: Add support for FQ and volume
 
 __author__ = "Wojtek Potrzebowski"
 __maintainer__ = "Wojtek Potrzebowski"
@@ -31,6 +32,10 @@ __email__ = "Wojciech.Potrzebowski@esss.se"
 import optparse
 from re import search
 from string import replace
+from string import capwords
+from string import rstrip
+from string import lstrip
+
 
 exclude_list = ["#include", "#define",
                 "sasfit_get_param",
@@ -49,8 +54,12 @@ def extract_parameters_definition( model_name, tcl_filename ):
     """
     tcl_lines = open(tcl_filename).readlines()
     parameters_definition = []
+    model_name_upper = "".join(map(lambda p : capwords(p),
+                                       model_name.split("_")))
+    print "Model name in TCL", model_name_upper, model_name
     for index, line in enumerate(tcl_lines):
-        if search(model_name+ " {", line) or search("\""+model_name+"\" {", line):
+        if search(model_name_upper+ " {", line) or search("\""
+                                    +model_name_upper+"\" {", line):
             model_def_index = index
     model_def_lines = tcl_lines[model_def_index+2:model_def_index+13]
     for def_line in model_def_lines:
@@ -139,17 +148,30 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     #Add paramters to excluded list, so they don't get redifned - shaky
     exclude_list.append("scalar "+", ".join(parameters))
 
-    header_Iq_line = "double Iq( double q,"
+    Iq_lines = "double Iq( double q,"
+    Fq_lines = "double Fq( double q, "
+    form_volume_lines = "double form_volume( "
     for line in sasfit_lines:
         line = line.strip()
         allowed = 1
 
         #Create a new header for Iq function
         if search("sasfit_ff_"+model_name, line) and not search("src", line):
-            for param in parameters[:-1]:
-                header_Iq_line+="\n\tdouble "+param+","
-            header_Iq_line+="\n\tdouble "+parameters[-1]+")\n"
-            output_c_lines.append(header_Iq_line)
+            if search("sasfit_ff_"+model_name+"_f", line):
+                for param in parameters[:-1]:
+                    Fq_lines+="\n\tdouble "+param+","
+                Fq_lines+="\n\tdouble "+parameters[-1]+")\n"
+                output_c_lines.append(Fq_lines)
+            elif search("sasfit_ff_"+model_name+"_v", line):
+                for param in parameters[:-1]:
+                    form_volume_lines+="\n\tdouble "+param+","
+                form_volume_lines+="\n\tdouble "+parameters[-1]+")\n"
+                output_c_lines.append(form_volume_lines)
+            else:
+                for param in parameters[:-1]:
+                    Iq_lines+="\n\tdouble "+param+","
+                Iq_lines+="\n\tdouble "+parameters[-1]+")\n"
+                output_c_lines.append(Iq_lines)
             allowed = 0
 
         for banned_term in exclude_list:
@@ -230,12 +252,15 @@ if __name__=="__main__":
 
     options, args = parser.parse_args()
 
-
+    exclude_model_terms = ["sasfit","ff","../",".."]
     if options.output_file:
         model_name = options.output_file
     else:
         #Remove sasfit_ff prefix and .c suffix
-        model_name = options.sasfit_file.rstrip(".c").lstrip("../sasfit_ff_")
+        model_name =  options.sasfit_file.split("/")[1]
+        model_name = "_".join([name_term for name_term in model_name.split("_")
+                               if name_term not in exclude_model_terms])
+        model_name = model_name.rstrip(".c")
 
     print model_name, options.sasfit_file
     output_c_filename = "sasfit_"+model_name+".c"
@@ -244,9 +269,13 @@ if __name__=="__main__":
     output_c_file = open(output_c_filename,"w")
     output_python_file =  open(output_python_filename,"w")
 
-    parameters_definition = extract_parameters_definition(model_name,
+    try:
+        parameters_definition = extract_parameters_definition(model_name,
                                                           options.tcl_file)
-
+    except:
+        parameters_definition = []
+        for i in range(11):
+            parameters_definition.append("")
     generate_python_header(model_name, output_python_file, parameters_definition)
 
     convert_sasfit_model(model_name, options.sasfit_file, output_c_file,
