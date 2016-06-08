@@ -29,6 +29,7 @@ __author__ = "Wojtek Potrzebowski"
 __maintainer__ = "Wojtek Potrzebowski"
 __email__ = "Wojciech.Potrzebowski@esss.se"
 
+import os
 import optparse
 from re import search
 from string import replace
@@ -58,7 +59,8 @@ substitution_dict = {"scalar":"double",
                      "gsl_sf_bessel_JN":"sas_JN",
                      "gsl_sf_bessel_j1":"sph_j1",
                      "gsl_sf_gamma":"sas_gamma",
-                     "gsl_sf_Si":"Si"}
+                     "gsl_sf_Si":"Si",
+                     "gsl_sf_erf":"sas_erf"}
 
 #Data types and GSL functions will be replcaced here
 libinclude_dict = {"gsl_pow_2":["sas_pow.c"],
@@ -75,7 +77,8 @@ libinclude_dict = {"gsl_pow_2":["sas_pow.c"],
                     "gsl_sf_bessel_JN":["polevl.c", "sas_JN.c"],
                     "gsl_sf_gamma":["sas_gamma.c"],
                     "gsl_sf_bessel_j1": "sph_j1c.c",
-                    "gsl_sf_Si":["Si.c"]}
+                    "gsl_sf_Si":["Si.c"],
+                    "gsl_sf_erf": ["polevl.c", "sas_erf.c"]}
 
 def extract_parameters_definition( model_name, tcl_filename ):
     """
@@ -193,18 +196,18 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
         if search("sasfit_ff_"+model_name, line) and not search("src", line):
             if search("sasfit_ff_"+model_name+"_f", line):
                 for param in parameters[:-1]:
-                    Fq_lines+="\n\tdouble "+param+","
-                Fq_lines+="\n\tdouble "+parameters[-1]+")\n"
+                    Fq_lines+=" double "+param+","
+                Fq_lines+=" double "+parameters[-1]+")\n"
                 output_c_lines.append(Fq_lines)
             elif search("sasfit_ff_"+model_name+"_v", line):
                 for param in parameters[:-1]:
-                    form_volume_lines+="\n\tdouble "+param+","
-                form_volume_lines+="\n\tdouble "+parameters[-1]+")\n"
+                    form_volume_lines+=" double "+param+","
+                form_volume_lines+=" double "+parameters[-1]+")\n"
                 output_c_lines.append(form_volume_lines)
             else:
                 for param in parameters[:-1]:
-                    Iq_lines+="\n\tdouble "+param+","
-                Iq_lines+="\n\tdouble "+parameters[-1]+")\n"
+                    Iq_lines+=" double "+param+","
+                Iq_lines+=" double "+parameters[-1]+")\n"
                 output_c_lines.append(Iq_lines)
             allowed = 0
 
@@ -235,8 +238,8 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     #TODO: Not exactly sure how to handle this
     header_Iqxy_line = "double Iqxy( double qx, double qy,"
     for param in parameters[:-1]:
-        header_Iqxy_line+="\n\tdouble "+param+","
-    header_Iqxy_line+="\n\tdouble "+parameters[-1]+")\n"
+        header_Iqxy_line+=" double "+param+","
+    header_Iqxy_line+=" double "+parameters[-1]+")\n"
     header_Iqxy_line+="{\n"
     header_Iqxy_line+="\tdouble q = sqrt(qx*qx + qy*qy);\n"
     header_Iqxy_line+="\treturn Iq( q,"
@@ -259,7 +262,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
             param_def = parameters_definition[index+1]
         except:
             param_def = " "
-        print "Param def", param, param_def
+        #print "Param def", param, param_def
         output_python_lines += " [ \""+param+"\", \t\"\", \t"\
                                +str(parameters_values[index])+", " \
                                 "\t[-inf, inf], \t\"\", " \
@@ -267,11 +270,13 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     output_python_lines += "]\n"
     output_python_lines +=" #pylint: enable=bad-whitespace, line-too-long\n\n"
     #FIXME: It should refer to c_file not model name
-    output_python_lines +="source = [\"sasfit_"+model_name+".c\" "
+    output_python_lines +="source = [ "
 
     for libfile in include_libs:
-        output_python_lines += ",\""+libfile+"\" "
-    output_python_lines +="]\n\n"
+        libfile = os.path.join("lib", libfile)
+        output_python_lines += "\""+libfile+"\", "
+    output_python_lines += " \"sasfit_" + model_name + ".c\" ]\n\n"
+
 
     output_python_lines +="demo = dict(\n"
     for index, param in enumerate(parameters[:-1]):

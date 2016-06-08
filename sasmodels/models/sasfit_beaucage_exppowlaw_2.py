@@ -27,7 +27,7 @@ parameters = [
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
-source = ["sasfit_beaucage_exppowlaw_2.c" ]
+source = [ "lib/sas_pow.c", "lib/polevl.c", "lib/sas_erf.c",  "sasfit_beaucage_exppowlaw_2.c" ]
 
 demo = dict(
 	G = 10.0,

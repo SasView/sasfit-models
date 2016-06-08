@@ -193,8 +193,9 @@ double sas_erfc(double a)
     else
         x = a;
 
-    if (x < 1.0)
-        return (1.0 - sas_erf(a));
+    //FIXME: Trouble maker on GPU
+    //if (x < 1.0)
+     //   return (1.0 - sas_erf(a));
 
     z = -a * a;
 
@@ -219,11 +220,13 @@ double sas_erfc(double a)
         }
         y = (z * p) / q;
     #else
+        q=1.0/x;
+        y=q*q;
         if( x < 2.0 ) {
-	        p = polevlf( y, PF, 8 );
+	        p = polevl( y, PF, 8 );
 	    }
         else {
-	        p = polevlf( y, RF, 7 );
+	        p = polevl( y, RF, 7 );
 	    }
         y = z * q * p;
     #endif
@@ -253,7 +256,8 @@ double sas_erf(double x)
         y = x * polevl(z, TD, 4) / p1evl(z, UD, 5);
     #else
         y = x * polevl( z, TF, 6 );
-    ##endif
+    #endif
+
     return y;
 }
 
