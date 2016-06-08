@@ -43,6 +43,8 @@
 #endif
 
 double sph_j1c(double q);
+double sph_j1(double q);
+
 double sph_j1c(double q)
 {
     if (q < SPH_J1C_CUTOFF) {
@@ -54,3 +56,10 @@ double sph_j1c(double q)
         return 3.0*(sin_q/q - cos_q)/(q*q);
     }
 }
+
+//GSL function gsl_sf_bessel_j1 equivalent
+double sph_j1(double q)
+{
+    return q*sph_j1c/3
+}
+

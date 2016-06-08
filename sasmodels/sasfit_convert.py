@@ -42,7 +42,40 @@ exclude_list = ["#include", "#define",
                 "SASFIT_ASSERT_PTR", "SASFIT_CHECK_COND1",
                 "SASFIT_CHECK_COND", "SASFIT_CHECK_SUB_ERR"]
 
-substitution_dict = {"scalar":"double"}
+#Data types and GSL functions will be replcaced here
+substitution_dict = {"scalar":"double",
+                     "gsl_pow_2":"sas_pow_2",
+                     "gsl_pow_3":"sas_pow_3",
+                     "gsl_pow_4":"sas_pow_4",
+                     "gsl_pow_5":"sas_pow_5",
+                     "gsl_pow_6":"sas_pow_6",
+                     "gsl_pow_7":"sas_pow_7",
+                     "gsl_pow_8":"sas_pow_8",
+                     "gsl_pow_9":"sas_pow_9",
+                     "gsl_pow_int": "sas_pow_int",
+                     "gsl_sf_bessel_J0":"sas_J0",
+                     "gsl_sf_bessel_J1":"sas_J1",
+                     "gsl_sf_bessel_JN":"sas_JN",
+                     "gsl_sf_bessel_j1":"sph_j1",
+                     "gsl_sf_gamma":"sas_gamma",
+                     "gsl_sf_Si":"Si"}
+
+#Data types and GSL functions will be replcaced here
+libinclude_dict = {"gsl_pow_2":["sas_pow.c"],
+                    "gsl_pow_3":["sas_pow.c"],
+                    "gsl_pow_4":["sas_pow.c"],
+                    "gsl_pow_5":["sas_pow.c"],
+                    "gsl_pow_6":["sas_pow.c"],
+                    "gsl_pow_7":["sas_pow.c"],
+                    "gsl_pow_8":["sas_pow.c"],
+                    "gsl_pow_9":["sas_pow.c"],
+                    "gsl_pow_int": ["sas_pow.c"],
+                    "gsl_sf_bessel_J0":["polevl.c","sas_J0.c"],
+                    "gsl_sf_bessel_J1":["polevl.c","sas_J1.c"],
+                    "gsl_sf_bessel_JN":["polevl.c", "sas_JN.c"],
+                    "gsl_sf_gamma":["sas_gamma.c"],
+                    "gsl_sf_bessel_j1": "sph_j1c.c",
+                    "gsl_sf_Si":["Si.c"]}
 
 def extract_parameters_definition( model_name, tcl_filename ):
     """
@@ -151,6 +184,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     Iq_lines = "double Iq( double q,"
     Fq_lines = "double Fq( double q, "
     form_volume_lines = "double form_volume( "
+    include_libs = []
     for line in sasfit_lines:
         line = line.strip()
         allowed = 1
@@ -178,10 +212,18 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
             if search(banned_term, line):
                 allowed = 0
 
+
+        for func in libinclude_dict.keys():
+            if search(func, line):
+                for libfile in libinclude_dict[func]:
+                    if not libfile in include_libs:
+                        include_libs.append(libfile)
+
         #Replace string in line when need
         for sub in substitution_dict.keys():
             if search(sub, line):
                 line = line.replace(sub, substitution_dict[sub])
+
 
         #Skip empty lines
         if line=="":
@@ -213,14 +255,23 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     output_python_lines = "#pylint: disable=bad-whitespace, line-too-long\n"
     output_python_lines += "parameters = [\n"
     for index, param in enumerate(parameters):
+        try:
+            param_def = parameters_definition[index+1]
+        except:
+            param_def = " "
+        print "Param def", param, param_def
         output_python_lines += " [ \""+param+"\", \t\"\", \t"\
                                +str(parameters_values[index])+", " \
                                 "\t[-inf, inf], \t\"\", " \
-                                "\t\""+parameters_definition[index+1]+"\"],\n"
+                                "\t\""+param_def+"\"],\n"
     output_python_lines += "]\n"
     output_python_lines +=" #pylint: enable=bad-whitespace, line-too-long\n\n"
     #FIXME: It should refer to c_file not model name
-    output_python_lines +="source = [\"sasfit_"+model_name+".c\" ]\n\n"
+    output_python_lines +="source = [\"sasfit_"+model_name+".c\" "
+
+    for libfile in include_libs:
+        output_python_lines += ",\""+libfile+"\" "
+    output_python_lines +="]\n\n"
 
     output_python_lines +="demo = dict(\n"
     for index, param in enumerate(parameters[:-1]):
