@@ -1,4 +1,10 @@
-/*							erf.c
+
+/*
+ * Cephes Math Library Release 2.2:  June, 1992
+ * Copyright 1984, 1987, 1988, 1992 by Stephen L. Moshier
+ * Direct inquiries to 30 Frost Street, Cambridge, MA 02140
+ */
+/*
  *
  *	Error function
  *
@@ -36,7 +42,7 @@
  *    IEEE      0,1         30000       3.7e-16     1.0e-16
  *
  */
-/*							erfc.c
+/*
  *
  *	Complementary error function
  *
@@ -77,15 +83,7 @@
  */
 
 
-/*
- * Cephes Math Library Release 2.2:  June, 1992
- * Copyright 1984, 1987, 1988, 1992 by Stephen L. Moshier
- * Direct inquiries to 30 Frost Street, Cambridge, MA 02140
- */
-
-
-
- constant double PD[] = {
+constant double PD[] = {
     2.46196981473530512524E-10,
     5.64189564831068821977E-1,
     7.46321056442269912687E0,
@@ -97,7 +95,7 @@
     5.57535335369399327526E2
 };
 
- constant double QD[] = {
+constant double QD[] = {
     /* 1.00000000000000000000E0, */
     1.32281951154744992508E1,
     8.67072140885989742329E1,
@@ -109,7 +107,7 @@
     5.57535340817727675546E2
 };
 
- constant double RD[] = {
+constant double RD[] = {
     5.64189583547755073984E-1,
     1.27536670759978104416E0,
     5.01905042251180477414E0,
@@ -118,7 +116,7 @@
     2.97886665372100240670E0
 };
 
- constant double SD[] = {
+constant double SD[] = {
     /* 1.00000000000000000000E0, */
     2.26052863220117276590E0,
     9.39603524938001434673E0,
@@ -128,7 +126,7 @@
     3.36907645100081516050E0
 };
 
- constant double TD[] = {
+constant double TD[] = {
     9.60497373987051638749E0,
     9.00260197203842689217E1,
     2.23200534594684319226E3,
@@ -136,7 +134,7 @@
     5.55923013010394962768E4
 };
 
- constant double UD[] = {
+constant double UD[] = {
     /* 1.00000000000000000000E0, */
     3.35617141647503099647E1,
     5.21357949780152679795E2,
@@ -146,7 +144,7 @@
 };
 
 /* erfc(x) = exp(-x^2) P(1/x), 1 < x < 2 */
- constant double PF[] = {
+constant double PF[] = {
     2.326819970068386E-002,
     -1.387039388740657E-001,
     3.687424674597105E-001,
@@ -159,7 +157,7 @@
 };
 
 /* erfc(x) = exp(-x^2) 1/x P(1/x^2), 2 < x < 14 */
- constant double RF[] = {
+constant double RF[] = {
     -1.047766399936249E+001,
     1.297719955372516E+001,
     -7.495518717768503E+000,
@@ -181,19 +179,14 @@
     1.128379165726710E+000
 };
 
-#define UTHRESH 37.519379347
-#define MAXLOGF 88.72283905206835
-
 double sas_erf(double x);
 double sas_erfc(double a);
 
 double sas_erfc(double a)
 {
+    double MAXLOG = 88.72283905206835;
     double p, q, x, y, z;
 
-    //if (cephes_isnan(a)) {
-    //    return (NPY_NAN);
-    //}
 
     if (a < 0.0)
         x = -a;
@@ -239,14 +232,12 @@ double sas_erfc(double a)
         y = 2.0 - y;
 
     if (y == 0.0) {
-        //FIXME: Remove goto statement
-        //goto under;
         if (a < 0)
             return (2.0);
         else
             return (0.0);
     }
-    return (y);
+    return y;
 }
 
 
@@ -255,7 +246,7 @@ double sas_erf(double x)
     double y, z;
 
     if (fabs(x) > 1.0)
-        return (1.0 - erfc(x));
+        return (1.0 - sas_erfc(x));
 
     z = x * x;
     #if FLOAT_SIZE>4
@@ -263,11 +254,7 @@ double sas_erf(double x)
     #else
         y = x * polevl( z, TF, 6 );
     ##endif
-    return (y);
+    return y;
 }
-
-
-
-
 
 
