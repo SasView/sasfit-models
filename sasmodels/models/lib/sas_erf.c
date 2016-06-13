@@ -188,14 +188,27 @@ double sas_erfc(double a)
     double p, q, x, y, z;
 
 
-    if (a < 0.0)
+    /*if (a < 0.0)
         x = -a;
     else
-        x = a;
+        x = a;*/
 
-    //FIXME: Trouble maker on GPU
-    //if (x < 1.0)
-     //   return (1.0 - sas_erf(a));
+    x = fabs(a);
+
+
+    if (x < 1.0) {
+        //The line bellow is a troublemaker for GPU, so sas_erf function
+        //is explicit here for the case < 1.0
+        //return (1.0 - sas_erf(a));
+        z = x * x;
+        #if FLOAT_SIZE>4
+            y = x * polevl(z, TD, 4) / p1evl(z, UD, 5);
+        #else
+            y = x * polevl( z, TF, 6 );
+        #endif
+
+        return y;
+    }
 
     z = -a * a;
 
