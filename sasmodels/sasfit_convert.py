@@ -38,7 +38,7 @@ from string import rstrip
 from string import lstrip
 
 
-exclude_list = ["#include", "#define",
+exclude_list = ["#include", "param->p",
                 "sasfit_get_param",
                 "SASFIT_ASSERT_PTR", "SASFIT_CHECK_COND1",
                 "SASFIT_CHECK_COND", "SASFIT_CHECK_SUB_ERR"]
@@ -144,6 +144,11 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     """
     sasfit_lines = open(sasfit_file).readlines()
     output_c_lines = []
+    output_Fq_lines = []
+    output_Vol_lines = []
+    output_Iq_lines = []
+    output_intro_lines = []
+
     parameters = []
     output_python_lines = []
     #DO regular expression and remove if it is in line
@@ -153,7 +158,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     c_intro_lines += "//    Some editting might be required            //\n"
     c_intro_lines += "///////////////////////////////////////////////////\n\n"
 
-    output_c_lines.append(c_intro_lines)
+    output_intro_lines.append(c_intro_lines)
 
     #There a few different ways to extract parameters
     #1. From sasfit_get_param
@@ -193,24 +198,26 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
         allowed = 1
 
         #Create a new header for Iq function
-        if search("sasfit_ff_"+model_name, line) and not search("src", line):
+        if search("scalar sasfit_ff_"+model_name, line) and not search("src", line):
             if search("sasfit_ff_"+model_name+"_f", line):
                 for param in parameters[:-1]:
                     Fq_lines+=" double "+param+","
-                Fq_lines+=" double "+parameters[-1]+")\n"
-                output_c_lines.append(Fq_lines)
+                Fq_lines+=" double "+parameters[-1]+")"
+                output_c_lines.append(Fq_lines+"\n")
+                output_intro_lines.append(Fq_lines+";\n")
             elif search("sasfit_ff_"+model_name+"_v", line):
                 for param in parameters[:-1]:
                     form_volume_lines+=" double "+param+","
-                form_volume_lines+=" double "+parameters[-1]+")\n"
-                output_c_lines.append(form_volume_lines)
+                form_volume_lines+=" double "+parameters[-1]+")"
+                output_c_lines.append(form_volume_lines+"\n")
+                output_intro_lines.append(form_volume_lines+";\n")
             else:
                 for param in parameters[:-1]:
                     Iq_lines+=" double "+param+","
-                Iq_lines+=" double "+parameters[-1]+")\n"
-                output_c_lines.append(Iq_lines)
+                Iq_lines+=" double "+parameters[-1]+")"
+                output_c_lines.append(Iq_lines+"\n")
+                output_intro_lines.append(Iq_lines+";\n")
             allowed = 0
-
         for banned_term in exclude_list:
             if search(banned_term, line):
                 allowed = 0
@@ -235,11 +242,16 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
         if allowed:
             output_c_lines.append(line+"\n")
 
+
+    #output_c_lines += output_Vol_lines + output_Fq_lines + output_Iq_lines
+
     #TODO: Not exactly sure how to handle this
     header_Iqxy_line = "double Iqxy( double qx, double qy,"
     for param in parameters[:-1]:
         header_Iqxy_line+=" double "+param+","
-    header_Iqxy_line+=" double "+parameters[-1]+")\n"
+    header_Iqxy_line+=" double "+parameters[-1]+")"
+    output_intro_lines.append(header_Iqxy_line+";\n")
+    header_Iqxy_line += "\n"
     header_Iqxy_line+="{\n"
     header_Iqxy_line+="\tdouble q = sqrt(qx*qx + qy*qy);\n"
     header_Iqxy_line+="\treturn Iq( q,"
@@ -286,6 +298,8 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     output_python_lines += "\t"+parameters[-1]+" = "\
                            +str(parameters_values[len(parameters)-1]) + ")\n"
 
+    output_c_file.writelines(output_intro_lines)
+
     output_c_file.writelines(output_c_lines)
     output_python_file.writelines(output_python_lines)
 
@@ -308,12 +322,13 @@ if __name__=="__main__":
 
     options, args = parser.parse_args()
 
-    exclude_model_terms = ["sasfit","ff","../",".."]
+    exclude_model_terms = ["sasfit","ff","ff_ff","../",".."]
     if options.output_file:
         model_name = options.output_file
     else:
         #Remove sasfit_ff prefix and .c suffix
-        model_name =  options.sasfit_file.split("/")[1]
+        #model_name =  options.sasfit_file.split("/")[1]
+        model_name = options.sasfit_file.split("/")[2]
         model_name = "_".join([name_term for name_term in model_name.split("_")
                                if name_term not in exclude_model_terms])
         model_name = model_name.rstrip(".c")
