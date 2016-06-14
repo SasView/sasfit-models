@@ -17,7 +17,7 @@ import sys
 from re import search
 from string import replace
 from string import capwords
-#import importlib
+from prettytable import PrettyTable
 
 sys.path.append('/Users/wojciechpotrzebowski/sasmodels_sasfit/sasmodels/sasmodels/models')
 
@@ -34,9 +34,9 @@ def generate_table(sasmodels_dict, sasfit_dict):
     :param sasfit_dict:
     :return:
     """
-    header = "||SasView Model||SasView Description||SasView Parameters||" \
-             "SasFit Model||SasFit Description||SasFit Parameters||\n"
-    output_lines = [header]
+    x = PrettyTable(["SasView Model", "SasView Description",
+                     "SasView Parameters", "SasFit Model",
+                     "SasFit Description", "SasFit Parameters"])
 
 
     overlaping_models = []
@@ -51,6 +51,7 @@ def generate_table(sasmodels_dict, sasfit_dict):
                                        sasview_model.split("_")))
         sasfit_model_cap = sasview_model.upper()
 
+        #Checking different naming options
         if sasview_model in sasfit_dict:
             model_names_sv[sasview_model] = sasview_model
             overlaping_models.append(sasview_model)
@@ -73,72 +74,68 @@ def generate_table(sasmodels_dict, sasfit_dict):
     for sasview_model in sasview_dict.keys():
         if sasview_model in overlaping_models:
             descs_sv = sasview_dict[sasview_model][0].replace("\n"," ")
-            descs_sv = descs_sv.replace("^"," ^ ")
-            descs_sf = descs_sf.replace("{",")")
-            descs_sf = descs_sf.replace("}",")")
-            descs_sv = descs_sv.replace("[","(")
-            descs_sv = descs_sv.replace("]",")")
-            descs_sv = descs_sv.replace("(x)","( x )")
-            descs_sv = descs_sv.replace("|q-q0|","fabs(q-q0)")
+            #descs_sv = descs_sv.replace("^"," ^ ")
+            #descs_sv = descs_sv.replace("{",")")
+            #descs_sv = descs_sv.replace("}",")")
+            #descs_sv = descs_sv.replace("[","(")
+            #descs_sv = descs_sv.replace("]",")")
+            #descs_sv = descs_sv.replace("(x)","( x )")
+            #descs_sv = descs_sv.replace("|q-q0|","fabs(q-q0)")
             params_sv = []
             map( params_sv.extend, sasview_dict[sasview_model][1])
-            params_sv =", ".join(str(x) for x in params_sv)
+            print params_sv
+            params_sv =" br ".join(str(x) for x in params_sv)
 
             sasfit_model = model_names_sv[sasview_model]
             descs_sf = sasfit_dict[sasfit_model][0].replace("\n"," ")
-            descs_sf = descs_sf.replace("^"," ^ ")
-            descs_sf = descs_sf.replace("{",")")
-            descs_sf = descs_sf.replace("}",")")
-            descs_sv = descs_sv.replace("[","(")
-            descs_sv = descs_sv.replace("]",")")
-            descs_sv = descs_sv.replace("(x)","( x )")
-            descs_sf = descs_sf.replace("|q-q0|","fabs(q-q0)")
+            #descs_sf = descs_sf.replace("^"," ^ ")
+            #descs_sf = descs_sf.replace("{",")")
+            #descs_sf = descs_sf.replace("}",")")
+            #descs_sv = descs_sv.replace("[","(")
+            #descs_sv = descs_sv.replace("]",")")
+            #descs_sv = descs_sv.replace("(x)","( x )")
+            #descs_sf = descs_sf.replace("|q-q0|","fabs(q-q0)")
 
             params_sf = []
             map( params_sf.extend, sasfit_dict[sasfit_model][1])
-            params_sf =", ".join(str(x) for x in params_sf)
-            outline = "||"+sasview_model+"||"+descs_sv+"||"+params_sv+"||"\
-                      + "||"+sasfit_model+"||"+descs_sf+"||"+params_sf+"||\n"
-            output_lines.append(outline)
+            params_sf ="br ".join(str(x) for x in params_sf)
+            x.add_row([sasview_model, descs_sv, params_sv, sasfit_model, descs_sf, params_sf])
 
     #Print non-overlapping SasView models
     for sasview_model in sasview_dict.keys():
         if sasview_model in nonoverlaping_sasview_models:
             descs = sasview_dict[sasview_model][0].replace("\n"," ")
-            descs = descs.replace("^"," ^ ")
-            descs_sf = descs_sf.replace("{",")")
-            descs_sf = descs_sf.replace("}",")")
-            descs_sv = descs_sv.replace("[","(")
-            descs_sv = descs_sv.replace("]",")")
-            descs_sv = descs_sv.replace("(x)","( x )")
-            descs = descs.replace("|q-q0|","fabs(q-q0)")
+            #descs = descs.replace("^"," ^ ")
+            #descs_sf = descs_sf.replace("{",")")
+            #descs_sf = descs_sf.replace("}",")")
+            #descs_sv = descs_sv.replace("[","(")
+            #descs_sv = descs_sv.replace("]",")")
+            #descs_sv = descs_sv.replace("(x)","( x )")
+            #descs = descs.replace("|q-q0|","fabs(q-q0)")
 
             params = []
             map( params.extend, sasview_dict[sasview_model][1])
-            params =", ".join(str(x) for x in params)
-            outline = "||"+sasview_model+"||"+descs+"||"+params+"||"\
-                      + " || || ||\n"
-            output_lines.append(outline)
+            params ="br ".join(str(x) for x in params)
+            x.add_row([sasview_model, descs, params, "", "",""])
 
     #Last print non-overlaping SASFit models
     for sasfit_model in sasfit_dict.keys():
         if not sasfit_model in overlaping_models:
-            descs = sasfit_dict[sasfit_model][0].replace("\n"," ")
-            descs = descs.replace("^"," ^ ")
-            descs_sf = descs_sf.replace("{",")")
-            descs_sf = descs_sf.replace("}",")")
-            descs_sv = descs_sv.replace("[","(")
-            descs_sv = descs_sv.replace("]",")")
-            descs_sv = descs_sv.replace("(x)","( x )")
-            descs = descs.replace("|q-q0|","fabs(q-q0)")
+            #descs = sasfit_dict[sasfit_model][0].replace("\n"," ")
+            #descs = descs.replace("^"," ^ ")
+            #descs_sf = descs_sf.replace("{",")")
+            #descs_sf = descs_sf.replace("}",")")
+            #descs_sv = descs_sv.replace("[","(")
+            #descs_sv = descs_sv.replace("]",")")
+            #descs_sv = descs_sv.replace("(x)","( x )")
+            #descs = descs.replace("|q-q0|","fabs(q-q0)")
 
             params = []
             map( params.extend, sasfit_dict[sasfit_model][1])
-            params =", ".join(str(x) for x in params)
-            outline = " || || || "\
-            + "||"+sasfit_model+"||"+descs+"||"+params+"||\n"
-            output_lines.append(outline)
-    return output_lines
+            params ="br ".join(str(x) for x in params)
+            x.add_row(["", "", "", sasfit_model, descs, params])
+
+    return x
 
 def extract_pardesc_table(model_dict, model_name):
     """
@@ -160,8 +157,8 @@ def extract_pardesc_table(model_dict, model_name):
 
 if __name__=="__main__":
     doc = """
-            Script to generate overlap table between SASFit and Sasmodels
-            Usage: python sasfit_sasview_overlap.py --help
+        Script to generate overlap table between SASFit and Sasmodels
+        Usage: python sasfit_sasview_overlap.py --help
         """
     print doc
     usage = "usage: %prog [options] args"
@@ -179,13 +176,14 @@ if __name__=="__main__":
 
     for model_file in open(options.sasfit_file).readlines():
         #model_name = model_file.rstrip(".py\n")
-        model_name = model_file[:-4]
+        model_name = model_file.rstrip("\n")
         extract_pardesc_table(sasfit_dict,model_name)
 
     for model_file in open(options.sasmodels_file).readlines():
         #model_name = model_file.rstrip(".py\n")
-        model_name = model_file[:-4]
+        model_name = model_file.rstrip("\n")
         extract_pardesc_table(sasview_dict, model_name)
 
     table_lines = generate_table(sasview_dict,sasfit_dict)
-    open(options.output_file,"w").writelines(table_lines)
+    output_html = table_lines.get_html_string(attributes={"name":"my_table", "class":"red_table"})
+    open(options.output_file,"w").write(output_html)
