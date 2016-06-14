@@ -4,6 +4,8 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iqxy( double qx, double qy, double T, double SIGMA_T, double DUMMY1,
+             double DUMMY2, double ETA_L, double ETA_SOL, double Q);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)

@@ -4,11 +4,14 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iqxy( double qx, double qy, double R_TOT, double DR, double ETA_CORE,
+             double ETA_SHELL, double X_IN_SOL, double X_OUT_SOL, double ETA_SOL);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local parameters/variables
+#define R_CORE		((R_TOT-DR>=0) ? R_TOT-DR : 0)
 double sasfit_ff_radial_profile_of_linshell2(double r, sasfit_param * param)
 {
     double m,b,eta_sh_in, eta_sh_out;

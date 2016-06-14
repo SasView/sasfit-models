@@ -4,6 +4,14 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double XMIN, double XMAX, double Y1, double Y2, double Y3,
+           double Y4, double Y5, double Y6, double Y7, double Y8);
+double Fq( double q,  double XMIN, double XMAX, double Y1, double Y2,
+           double Y3, double Y4, double Y5, double Y6, double Y7, double Y8);
+double form_volume(  double XMIN, double XMAX, double Y1, double Y2, double Y3,
+                     double Y4, double Y5, double Y6, double Y7, double Y8);
+double Iqxy( double qx, double qy, double XMIN, double XMAX, double Y1,
+             double Y2, double Y3, double Y4, double Y5, double Y6, double Y7, double Y8);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
@@ -27,7 +35,6 @@ double Iq( double q, double XMIN, double XMAX, double Y1, double Y2, double Y3,
     ycs[9]=0;
     for (i=1; i<=8; i++) {
         xcs[i] = XMIN+i*(XMAX-XMIN)/(8.0+1.0);
-        ycs[i] = param->p[1+i];
     }
     gsl_spline_init(ffakima8_T, xcs, ycs, 10);
     return gsl_spline_eval (ffakima8_T, x, acc_cspline);

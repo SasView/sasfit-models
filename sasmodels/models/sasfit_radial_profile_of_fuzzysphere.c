@@ -4,6 +4,11 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double R, double SIGMA, double ETA_SPH, double ETA_SOL);
+double Fq( double q,  double R, double SIGMA, double ETA_SPH, double ETA_SOL);
+double form_volume(  double R, double SIGMA, double ETA_SPH, double ETA_SOL);
+double Iqxy( double qx, double qy, double R, double SIGMA, double ETA_SPH,
+             double ETA_SOL);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)

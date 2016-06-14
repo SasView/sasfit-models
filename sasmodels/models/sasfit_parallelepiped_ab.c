@@ -4,6 +4,22 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double A, double B, double C, double ETA, double Q,
+           double ALPHA, double BETA);
+double Iq( double q, double A, double B, double C, double ETA, double Q,
+           double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+                  double ALPHA, double BETA);
+double Iq( double q, double A, double B, double C, double ETA, double Q,
+           double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA);
+double Iq( double q, double A, double B, double C, double ETA, double Q,
+           double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA);
+double Iqxy( double qx, double qy, double A, double B, double C, double ETA,
+             double Q, double ALPHA, double BETA);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
@@ -22,15 +38,9 @@ double sinc(double x)
 }
 double Psi_P_kernel(double y, sasfit_param * param)
 {
-    param->p[MAXPAR-2] = y;
-    return 2./M_PI * sas_pow_2(sinc(Q*A/2.0*sin(param->p[MAXPAR-2])*cos(
-                                        param->p[MAXPAR-3])) *
-                               sinc(Q*B/2.0*sin(param->p[MAXPAR-2])*sin(param->p[MAXPAR-3])) *
-                               sinc(Q*C/2.0*cos(param->p[MAXPAR-2]))) * sin(param->p[MAXPAR-2]);
 }
 double Psi_kernel(double x, sasfit_param * param)
 {
-    param->p[MAXPAR-3] = x;
     return sasfit_integrate(0.0,M_PI/2.0,&Psi_P_kernel,param);
 }
 double Iq( double q, double A, double B, double C, double ETA, double Q,
@@ -39,23 +49,23 @@ double Iq( double q, double A, double B, double C, double ETA, double Q,
     Q=q;
 // insert your code here
     double Iq( double q, double A, double B, double C, double ETA, double Q,
-               double ALPHA, double BETA)
-    double A, double B, double C, double ETA, double Q, double ALPHA, double BETA)
+               double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+                      double ALPHA, double BETA)
     *sasfit_integrate(0.0,M_PI/2.0,&Psi_kernel,param);
 }
 double Iq( double q, double A, double B, double C, double ETA, double Q,
-           double ALPHA, double BETA)
-double A, double B, double C, double ETA, double Q, double ALPHA, double BETA)
-double A, double B, double C, double ETA, double Q, double ALPHA, double BETA)
+           double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA)
 {
 // insert your code here
     return 0.0;
 }
 double Iq( double q, double A, double B, double C, double ETA, double Q,
-           double ALPHA, double BETA)
-double A, double B, double C, double ETA, double Q, double ALPHA, double BETA)
-double A, double B, double C, double ETA, double Q, double ALPHA, double BETA)
-double A, double B, double C, double ETA, double Q, double ALPHA, double BETA)
+           double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA) double A, double B, double C, double ETA, double Q,
+double ALPHA, double BETA)
 {
 // insert your code here
     return A*B*C;

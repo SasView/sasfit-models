@@ -4,6 +4,10 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double R, double ALPHA, double DELTA_ETA);
+double Fq( double q,  double R, double ALPHA, double DELTA_ETA);
+double form_volume(  double R, double ALPHA, double DELTA_ETA);
+double Iqxy( double qx, double qy, double R, double ALPHA, double DELTA_ETA);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)
@@ -12,10 +16,9 @@
 double Iq( double q, double R, double ALPHA, double DELTA_ETA)
 {
 // insert your code here
-    double Fq( double q,  double R, double ALPHA, double DELTA_ETA)
+    Fq(q,R,ALPHA,DELTA_ETA);
 }
 double Fq( double q,  double R, double ALPHA, double DELTA_ETA)
-double R, double ALPHA, double DELTA_ETA)
 {
     double beta;
 // insert your code here

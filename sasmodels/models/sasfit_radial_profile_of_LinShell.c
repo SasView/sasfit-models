@@ -4,6 +4,8 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iqxy( double qx, double qy, double R_CORE, double DR, double ETA_CORE,
+             double ETA_SHELL, double X_IN_SOL, double X_OUT_SOL, double ETA_SOL);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)

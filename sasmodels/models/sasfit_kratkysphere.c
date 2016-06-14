@@ -4,6 +4,18 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double R, double DELTA_Q_PERP, double ETA, double R0,
+           double XI, double D, double SCALE param->p[6]
+           , double Q);
+double Fq( double q,  double R, double DELTA_Q_PERP, double ETA, double R0,
+           double XI, double D, double SCALE param->p[6]
+           , double Q);
+double form_volume(  double R, double DELTA_Q_PERP, double ETA, double R0,
+                     double XI, double D, double SCALE param->p[6]
+                     , double Q);
+double Iqxy( double qx, double qy, double R, double DELTA_Q_PERP, double ETA,
+             double R0, double XI, double D, double SCALE param->p[6]
+             , double Q);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)

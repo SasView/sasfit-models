@@ -4,6 +4,14 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double G2, double S2, double RG2, double S1, double RG1,
+           double M);
+double Fq( double q,  double G2, double S2, double RG2, double S1, double RG1,
+           double M);
+double form_volume(  double G2, double S2, double RG2, double S1, double RG1,
+                     double M);
+double Iqxy( double qx, double qy, double G2, double S2, double RG2, double S1,
+             double RG1, double M);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)

@@ -4,6 +4,10 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double T, double SIGMA_T, double Q);
+double Fq( double q,  double T, double SIGMA_T, double Q);
+double form_volume(  double T, double SIGMA_T, double Q);
+double Iqxy( double qx, double qy, double T, double SIGMA_T, double Q);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)

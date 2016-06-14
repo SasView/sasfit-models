@@ -4,6 +4,43 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
+           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP);
+double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
+           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+           double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+                  double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP);
+double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
+           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+           double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP);
+double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
+           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+           double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP);
+double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
+           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+           double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP);
+double Fq( double q,  double A, double DELTA_B, double DELTA_C, double T,
+           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP);
+double form_volume(  double A, double DELTA_B, double DELTA_C, double T,
+                     double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP);
+double Iqxy( double qx, double qy, double A, double DELTA_B, double DELTA_C,
+             double T, double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+             double V_POL_AP);
 /*
 * src/plugins/triax_ellip_shell/sasfit_ff_triax_ellip_shell_syl.c
 *
@@ -34,12 +71,6 @@ double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
            double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
 {
     double q, p, x, b, c, u_c, u_sh, eta_sh, f_c, f_sh;
-    q	= param->p[MAXPAR-1];
-    p	= param->p[MAXPAR-2]; // pow
-    x	= param->p[MAXPAR-3]; // param from outer integration
-    b	= param->p[MAXPAR-4];
-    c	= param->p[MAXPAR-5];
-    eta_sh	= param->p[MAXPAR-6];
     if (fabs(A*b*c) + fabs(T) == 0.0) return 0.0;
     u_c = q*sqrt(( pow(A*cos(x*M_PI/2.),2.) + pow(b*sin(x*M_PI/2.),
                    2.) )*(1.-y*y) + pow(c*y,2.));
@@ -58,50 +89,44 @@ double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
     return pow(f_sh+f_c, p);
 }
 double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
-           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-       double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
+           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+           double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
 {
     double res;
-    param->p[MAXPAR-3] = x;
     double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
-               double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-    double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-           double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-    double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-    double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
+               double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+               double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+                      double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+                      double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+    double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
     return res;
 }
 double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
-           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
+           double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+           double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
 {
     double res, b, c, w, eta_sh, n;
-    param->p[MAXPAR-1] = q;		// Q
-    param->p[MAXPAR-2] = 2.0;	// pow
     b = A + DELTA_B;
     c = b + DELTA_C;
-    param->p[MAXPAR-4] = b;
-    param->p[MAXPAR-5] = c;
     w = 1.0 - ((V_POL_AP * A * b * c)/((A+T)*(b+T)*(c+T) - A*b*c));
     eta_sh = (1.0-w)*ETA_SH_DRY + w*ETA_SOL;
-    param->p[MAXPAR-6] = eta_sh;
     n = PHI/((1.0+V_POL_AP)*4./3.*M_PI*A*b*c);
     double Iq( double q, double A, double DELTA_B, double DELTA_C, double T,
-               double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-    double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-           double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-    double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-    double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-    double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-    double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
-    double A, double DELTA_B, double DELTA_C, double T, double ETA_C,
-    double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
+               double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+               double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+                      double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+                      double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+    double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+    double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+    double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
+    double V_POL_AP) double A, double DELTA_B, double DELTA_C, double T,
+    double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI, double V_POL_AP)
     return n*res;
 }
 double Fq( double q,  double A, double DELTA_B, double DELTA_C, double T,

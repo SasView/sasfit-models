@@ -4,6 +4,10 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double LENGTH, double ETA);
+double Fq( double q,  double LENGTH, double ETA);
+double form_volume(  double LENGTH, double ETA);
+double Iqxy( double qx, double qy, double LENGTH, double ETA);
 /*
 * src/plugins/rod/sasfit_ff_rod.c
 *

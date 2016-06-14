@@ -4,6 +4,18 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double T, double SIGMA_T, double D, double SIGMA_D,
+           double DUMMY, double DUMMY, double SIGMA_OUT, double B_OUT, double SIGMA_CORE,
+           double B_CORE);
+double Fq( double q,  double T, double SIGMA_T, double D, double SIGMA_D,
+           double DUMMY, double DUMMY, double SIGMA_OUT, double B_OUT, double SIGMA_CORE,
+           double B_CORE);
+double form_volume(  double T, double SIGMA_T, double D, double SIGMA_D,
+                     double DUMMY, double DUMMY, double SIGMA_OUT, double B_OUT, double SIGMA_CORE,
+                     double B_CORE);
+double Iqxy( double qx, double qy, double T, double SIGMA_T, double D,
+             double SIGMA_D, double DUMMY, double DUMMY, double SIGMA_OUT, double B_OUT,
+             double SIGMA_CORE, double B_CORE);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)

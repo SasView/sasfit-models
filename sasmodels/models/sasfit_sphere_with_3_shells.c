@@ -4,6 +4,18 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double R_CORE, double T_SH1, double T_SH2, double T_SH3,
+           double ETA_CORE, double ETA_SH1, double ETA_SH2, double ETA_SH3,
+           double ETA_SOL);
+double Fq( double q,  double R_CORE, double T_SH1, double T_SH2, double T_SH3,
+           double ETA_CORE, double ETA_SH1, double ETA_SH2, double ETA_SH3,
+           double ETA_SOL);
+double form_volume(  double R_CORE, double T_SH1, double T_SH2, double T_SH3,
+                     double ETA_CORE, double ETA_SH1, double ETA_SH2, double ETA_SH3,
+                     double ETA_SOL);
+double Iqxy( double qx, double qy, double R_CORE, double T_SH1, double T_SH2,
+             double T_SH3, double ETA_CORE, double ETA_SH1, double ETA_SH2, double ETA_SH3,
+             double ETA_SOL);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
@@ -15,9 +27,7 @@ double Iq( double q, double R_CORE, double T_SH1, double T_SH2, double T_SH3,
 {
     double F;
 // insert your code here
-    double Fq( double q,  double R_CORE, double T_SH1, double T_SH2, double T_SH3,
-               double ETA_CORE, double ETA_SH1, double ETA_SH2, double ETA_SH3,
-               double ETA_SOL)
+    Fq(q,R_CORE,T_SH1,T_SH2,T_SH3,ETA_CORE,ETA_SH1,ETA_SH2,ETA_SH3,ETA_SOL);
     return sas_pow_2(F);
 }
 double SF(double q,double r) {
@@ -32,8 +42,6 @@ double SF(double q,double r) {
 double Fq( double q,  double R_CORE, double T_SH1, double T_SH2, double T_SH3,
            double ETA_CORE, double ETA_SH1, double ETA_SH2, double ETA_SH3,
            double ETA_SOL)
-double R_CORE, double T_SH1, double T_SH2, double T_SH3, double ETA_CORE,
-       double ETA_SH1, double ETA_SH2, double ETA_SH3, double ETA_SOL)
 {
     return   (ETA_CORE-ETA_SOL)* SF(q,R_CORE)
              + (ETA_SH1-ETA_SOL) *(SF(q,R_CORE+T_SH1)            -SF(q,R_CORE))

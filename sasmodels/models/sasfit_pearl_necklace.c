@@ -4,6 +4,11 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double R, double l, double NU, double B, double NP);
+double Fq( double q,  double R, double l, double NU, double B, double NP);
+double form_volume(  double R, double l, double NU, double B, double NP);
+double Iqxy( double qx, double qy, double R, double l, double NU, double B,
+             double NP);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)

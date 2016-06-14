@@ -4,6 +4,10 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double xi, double d, double eta);
+double Fq( double q,  double xi, double d, double eta);
+double form_volume(  double xi, double d, double eta);
+double Iqxy( double qx, double qy, double xi, double d, double eta);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)
@@ -11,11 +15,11 @@
 // define shortcuts for local parameters/variables
 double Iq( double q, double xi, double d, double eta)
 {
-    double a, b, k, c, xi, d, eta;
+    double a, b, k, c;
 // insert your code here
-    k = 2.*M_PI/D;
-    a = k*k + 1./(XI*XI);
-    b = k*k - 1./(XI*XI);
+    k = 2.*M_PI/d;
+    a = k*k + 1./(xi*xi);
+    b = k*k - 1./(xi*xi);
     c = a*a - 2.*b*q*q + q*q*q*q;
     return eta*eta*8*M_PI/xi/c;
 }

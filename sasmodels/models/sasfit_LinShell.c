@@ -4,6 +4,9 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iqxy( double qx, double qy, double EMPTY, double DR, double eta_core,
+             double eta_shell, double x_in_solvent, double x_out_solvent,
+             double eta_solvent);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)

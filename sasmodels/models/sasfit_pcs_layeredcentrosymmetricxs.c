@@ -4,6 +4,15 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double LC, double SIGMA_LC, double LSH, double SIGMA_LSH,
+           double ETA_C, double ETA_SH, double ETA_SOL, double SH, double LL, double Q);
+double Fq( double q,  double LC, double SIGMA_LC, double LSH, double SIGMA_LSH,
+           double ETA_C, double ETA_SH, double ETA_SOL, double SH, double LL, double Q);
+double form_volume(  double LC, double SIGMA_LC, double LSH, double SIGMA_LSH,
+                     double ETA_C, double ETA_SH, double ETA_SOL, double SH, double LL, double Q);
+double Iqxy( double qx, double qy, double LC, double SIGMA_LC, double LSH,
+             double SIGMA_LSH, double ETA_C, double ETA_SH, double ETA_SOL, double SH,
+             double LL, double Q);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)

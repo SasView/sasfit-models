@@ -4,6 +4,11 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double N, double XMIN, double FD1, double XMAX);
+double Fq( double q,  double N, double XMIN, double FD1, double XMAX);
+double form_volume(  double N, double XMIN, double FD1, double XMAX);
+double Iqxy( double qx, double qy, double N, double XMIN, double FD1,
+             double XMAX);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)

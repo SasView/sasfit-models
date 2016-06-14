@@ -191,6 +191,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
 
     Iq_lines = "double Iq( double q,"
     Fq_lines = "double Fq( double q, "
+    Fqf_lines = "Fq(q,"
     form_volume_lines = "double form_volume( "
     include_libs = []
     for line in sasfit_lines:
@@ -198,14 +199,19 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
         allowed = 1
 
         #Create a new header for Iq function
-        if search("scalar sasfit_ff_"+model_name, line) and not search("src", line):
-            if search("sasfit_ff_"+model_name+"_f", line):
+        if search("sasfit_ff_"+model_name, line) and not search("src", line):
+            if search("scalar sasfit_ff_"+model_name+"_f", line):
                 for param in parameters[:-1]:
                     Fq_lines+=" double "+param+","
                 Fq_lines+=" double "+parameters[-1]+")"
                 output_c_lines.append(Fq_lines+"\n")
                 output_intro_lines.append(Fq_lines+";\n")
-            elif search("sasfit_ff_"+model_name+"_v", line):
+            elif search("sasfit_ff_" + model_name + "_f", line):
+                for param in parameters[:-1]:
+                    Fqf_lines += param + ","
+                Fqf_lines += parameters[-1] + ");"
+                output_c_lines.append(Fqf_lines + "\n")
+            elif search("scalar sasfit_ff_"+model_name+"_v", line):
                 for param in parameters[:-1]:
                     form_volume_lines+=" double "+param+","
                 form_volume_lines+=" double "+parameters[-1]+")"
@@ -221,7 +227,6 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
         for banned_term in exclude_list:
             if search(banned_term, line):
                 allowed = 0
-
 
         for func in libinclude_dict.keys():
             if search(func, line):

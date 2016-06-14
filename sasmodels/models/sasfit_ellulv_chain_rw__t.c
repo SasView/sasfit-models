@@ -4,6 +4,10 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double N);
+double Iq( double q, double N) double N);
+double Iq( double q, double N) double N) double N);
+double Iqxy( double qx, double qy, double N);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)
@@ -14,15 +18,12 @@ double Iq( double q, double N)
 // insert your code here
     return 0.0;
 }
-double Iq( double q, double N)
-double N)
+double Iq( double q, double N) double N)
 {
 // insert your code here
     return 0.0;
 }
-double Iq( double q, double N)
-double N)
-double N)
+double Iq( double q, double N) double N) double N)
 {
 // insert your code here
     return 0.0;

@@ -4,6 +4,32 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double A, double B, double C, double T, double ETA_C,
+           double ETA_SH, double ETA_SOL);
+double Iq( double q, double A, double B, double C, double T, double ETA_C,
+           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
+                  double ETA_C, double ETA_SH, double ETA_SOL);
+double Iq( double q, double A, double B, double C, double T, double ETA_C,
+           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
+double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
+double T, double ETA_C, double ETA_SH, double ETA_SOL);
+double Iq( double q, double A, double B, double C, double T, double ETA_C,
+           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
+double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
+double T, double ETA_C, double ETA_SH, double ETA_SOL) double A, double B,
+double C, double T, double ETA_C, double ETA_SH, double ETA_SOL);
+double Iq( double q, double A, double B, double C, double T, double ETA_C,
+           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
+double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
+double T, double ETA_C, double ETA_SH, double ETA_SOL) double A, double B,
+double C, double T, double ETA_C, double ETA_SH, double ETA_SOL) double A,
+double B, double C, double T, double ETA_C, double ETA_SH, double ETA_SOL);
+double Fq( double q,  double A, double B, double C, double T, double ETA_C,
+           double ETA_SH, double ETA_SOL);
+double form_volume(  double A, double B, double C, double T, double ETA_C,
+                     double ETA_SH, double ETA_SOL);
+double Iqxy( double qx, double qy, double A, double B, double C, double T,
+             double ETA_C, double ETA_SH, double ETA_SOL);
 /*
 * src/plugins/triax_ellip_shell/sasfit_ff_triax_ellip_shell.c
 *
@@ -35,9 +61,6 @@ double Iq( double q, double A, double B, double C, double T, double ETA_C,
 {
     double q, p, x, u_c, u_sh;
     double f_c, f_sh;
-    q		= param->p[MAXPAR-1];
-    p		= param->p[MAXPAR-2]; // pow
-    x		= param->p[MAXPAR-3]; // param from outer integration
     if (fabs(A*B*C) + fabs(T) == 0.0) return 0.0;
     u_c = q*sqrt(( pow(A*cos(x*M_PI/2.),2.) + pow(B*sin(x*M_PI/2.),
                    2.) )*(1.-y*y) + pow(C*y,2.));
@@ -56,42 +79,29 @@ double Iq( double q, double A, double B, double C, double T, double ETA_C,
     return pow(f_sh+f_c, p);
 }
 double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL)
-double A, double B, double C, double T, double ETA_C, double ETA_SH,
-       double ETA_SOL)
+           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
+double ETA_C, double ETA_SH, double ETA_SOL)
 {
     double res;
-    param->p[MAXPAR-3] = x;
     double Iq( double q, double A, double B, double C, double T, double ETA_C,
-               double ETA_SH, double ETA_SOL)
-    double A, double B, double C, double T, double ETA_C, double ETA_SH,
-           double ETA_SOL)
-    double A, double B, double C, double T, double ETA_C, double ETA_SH,
-    double ETA_SOL)
+               double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
+                      double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
+    double T, double ETA_C, double ETA_SH, double ETA_SOL)
     return res;
 }
 double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL)
-double A, double B, double C, double T, double ETA_C, double ETA_SH,
-double ETA_SOL)
-double A, double B, double C, double T, double ETA_C, double ETA_SH,
-double ETA_SOL)
-double A, double B, double C, double T, double ETA_C, double ETA_SH,
-double ETA_SOL)
+           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
+double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
+double T, double ETA_C, double ETA_SH, double ETA_SOL) double A, double B,
+double C, double T, double ETA_C, double ETA_SH, double ETA_SOL)
 {
     double res;
-    param->p[MAXPAR-1] = q;		// Q
-    param->p[MAXPAR-2] = 2.0;	// pow
     double Iq( double q, double A, double B, double C, double T, double ETA_C,
-               double ETA_SH, double ETA_SOL)
-    double A, double B, double C, double T, double ETA_C, double ETA_SH,
-           double ETA_SOL)
-    double A, double B, double C, double T, double ETA_C, double ETA_SH,
-    double ETA_SOL)
-    double A, double B, double C, double T, double ETA_C, double ETA_SH,
-    double ETA_SOL)
-    double A, double B, double C, double T, double ETA_C, double ETA_SH,
-    double ETA_SOL)
+               double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
+                      double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
+    double T, double ETA_C, double ETA_SH, double ETA_SOL) double A, double B,
+    double C, double T, double ETA_C, double ETA_SH, double ETA_SOL) double A,
+    double B, double C, double T, double ETA_C, double ETA_SH, double ETA_SOL)
     return res;
 }
 double Fq( double q,  double A, double B, double C, double T, double ETA_C,

@@ -4,6 +4,26 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double SIGMA_CORE fabs(param->p[0])
+           , double B_CORE param->p[1]
+           , double SIGMA_OUT fabs(param->p[2])
+           , double B_OUT param->p[3]
+           , double D);
+double Fq( double q,  double SIGMA_CORE fabs(param->p[0])
+           , double B_CORE param->p[1]
+           , double SIGMA_OUT fabs(param->p[2])
+           , double B_OUT param->p[3]
+           , double D);
+double form_volume(  double SIGMA_CORE fabs(param->p[0])
+                     , double B_CORE param->p[1]
+                     , double SIGMA_OUT fabs(param->p[2])
+                     , double B_OUT param->p[3]
+                     , double D);
+double Iqxy( double qx, double qy, double SIGMA_CORE fabs(param->p[0])
+             , double B_CORE param->p[1]
+             , double SIGMA_OUT fabs(param->p[2])
+             , double B_OUT param->p[3]
+             , double D);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
@@ -16,22 +36,17 @@ double Iq( double q, double SIGMA_CORE fabs(param->p[0])
            , double D)
 {
 // insert your code here
-    double Fq( double q,  double SIGMA_CORE fabs(param->p[0])
-               , double B_CORE param->p[1]
-               , double SIGMA_OUT fabs(param->p[2])
-               , double B_OUT param->p[3]
-               , double D)
+    Fq(q,SIGMA_CORE fabs(param->p[0])
+       ,B_CORE param->p[1]
+       ,SIGMA_OUT fabs(param->p[2])
+       ,B_OUT param->p[3]
+       ,D);
 }
 double Fq( double q,  double SIGMA_CORE fabs(param->p[0])
            , double B_CORE param->p[1]
            , double SIGMA_OUT fabs(param->p[2])
            , double B_OUT param->p[3]
            , double D)
-double SIGMA_CORE fabs(param->p[0])
-, double B_CORE param->p[1]
-, double SIGMA_OUT fabs(param->p[2])
-, double B_OUT param->p[3]
-, double D)
 {
     double u_out, u_core, M, Pprime, R, Fout, Fcore;
 // insert your code here
