@@ -24,7 +24,7 @@ sys.path.append('/Users/wojciechpotrzebowski/sasmodels_sasfit/sasmodels/sasmodel
 sasview_dict = {}
 sasfit_dict = {}
 
-def generate_table(sasmodels_dict, sasfit_dict):
+def generate_table(sasmodels_dict, sasfit_dict, cpu_list, gpu_list):
     """
     Generates a table in a wiki format that can be then copy pased.
     Two dictionaries contain are indexed by model name and store
@@ -36,8 +36,19 @@ def generate_table(sasmodels_dict, sasfit_dict):
     """
     x = PrettyTable(["SasView Model", "SasView Description",
                      "SasView Parameters", "SasFit Model",
-                     "SasFit Description", "SasFit Parameters"])
+                     "SasFit Description", "SasFit Parameters",
+                     "Compile CPU", "Compile GPU"],
+                    header_color='bold'
+                    )
+    x.align["SasView Model"] = "c"
+    x.align["SasView Description"] = "l"
+    x.align["SasView Parameters"] = "l"
 
+    x.align["SasFit Model"] = "c"
+    x.align["SasFit Description"] = "l"
+    x.align["SasFit Parameters"] = "l"
+    x.align["Compile CPU"] = "c"
+    x.align["Compile GPU"] = "c"
 
     overlaping_models = []
     nonoverlaping_sasview_models = []
@@ -74,66 +85,63 @@ def generate_table(sasmodels_dict, sasfit_dict):
     for sasview_model in sasview_dict.keys():
         if sasview_model in overlaping_models:
             descs_sv = sasview_dict[sasview_model][0].replace("\n"," ")
-            #descs_sv = descs_sv.replace("^"," ^ ")
-            #descs_sv = descs_sv.replace("{",")")
-            #descs_sv = descs_sv.replace("}",")")
-            #descs_sv = descs_sv.replace("[","(")
-            #descs_sv = descs_sv.replace("]",")")
-            #descs_sv = descs_sv.replace("(x)","( x )")
-            #descs_sv = descs_sv.replace("|q-q0|","fabs(q-q0)")
-            params_sv = []
-            map( params_sv.extend, sasview_dict[sasview_model][1])
-            print params_sv
-            params_sv =" br ".join(str(x) for x in params_sv)
-
+            #params_sv = []
+            # map( params_sv.extend, sasview_dict[sasview_model][1])
+            params_sv = sasview_dict[sasview_model][1]
+            params_sv ="br".join(str(x) for x in params_sv)
+            params_sv = params_sv.replace("]br["," br ")
+            params_sv = params_sv[1:-1]
+            #for each of the paramters repeat it with some step and change color
             sasfit_model = model_names_sv[sasview_model]
             descs_sf = sasfit_dict[sasfit_model][0].replace("\n"," ")
-            #descs_sf = descs_sf.replace("^"," ^ ")
-            #descs_sf = descs_sf.replace("{",")")
-            #descs_sf = descs_sf.replace("}",")")
-            #descs_sv = descs_sv.replace("[","(")
-            #descs_sv = descs_sv.replace("]",")")
-            #descs_sv = descs_sv.replace("(x)","( x )")
-            #descs_sf = descs_sf.replace("|q-q0|","fabs(q-q0)")
 
-            params_sf = []
-            map( params_sf.extend, sasfit_dict[sasfit_model][1])
-            params_sf ="br ".join(str(x) for x in params_sf)
-            x.add_row([sasview_model, descs_sv, params_sv, sasfit_model, descs_sf, params_sf])
+            params_sf = sasfit_dict[sasfit_model][1]
+            params_sf = "br".join(str(x) for x in params_sf)
+            params_sf = params_sf.replace("]br[", " br ")
+            params_sf = params_sf[1:-1]
+            #map( params_sf.extend, sasfit_dict[sasfit_model][1])
+
+            compiled_cpu = "No"
+            compiled_gpu = "No"
+            if "sasfit_"+sasfit_model in cpu_list:
+                compiled_cpu = "Yes"
+            if "sasfit_"+sasfit_model in gpu_list:
+                compiled_gpu = "Yes"
+            x.add_row([sasview_model, descs_sv, params_sv,
+                       sasfit_model, descs_sf, params_sf,
+                       compiled_cpu, compiled_gpu])
 
     #Print non-overlapping SasView models
     for sasview_model in sasview_dict.keys():
         if sasview_model in nonoverlaping_sasview_models:
             descs = sasview_dict[sasview_model][0].replace("\n"," ")
-            #descs = descs.replace("^"," ^ ")
-            #descs_sf = descs_sf.replace("{",")")
-            #descs_sf = descs_sf.replace("}",")")
-            #descs_sv = descs_sv.replace("[","(")
-            #descs_sv = descs_sv.replace("]",")")
-            #descs_sv = descs_sv.replace("(x)","( x )")
-            #descs = descs.replace("|q-q0|","fabs(q-q0)")
 
-            params = []
-            map( params.extend, sasview_dict[sasview_model][1])
-            params ="br ".join(str(x) for x in params)
-            x.add_row([sasview_model, descs, params, "", "",""])
+            #map( params.extend, sasview_dict[sasview_model][1])
+            #params =", ".join(str(x) for x in params)
+            params = sasview_dict[sasview_model][1]
+            params = "br".join(str(x) for x in params)
+            params = params.replace("]br[", " br ")
+            params = params[1:-1]
+            x.add_row([sasview_model, descs, params, "", "","", "N/A", "N/A"])
 
     #Last print non-overlaping SASFit models
     for sasfit_model in sasfit_dict.keys():
         if not sasfit_model in overlaping_models:
-            #descs = sasfit_dict[sasfit_model][0].replace("\n"," ")
-            #descs = descs.replace("^"," ^ ")
-            #descs_sf = descs_sf.replace("{",")")
-            #descs_sf = descs_sf.replace("}",")")
-            #descs_sv = descs_sv.replace("[","(")
-            #descs_sv = descs_sv.replace("]",")")
-            #descs_sv = descs_sv.replace("(x)","( x )")
-            #descs = descs.replace("|q-q0|","fabs(q-q0)")
-
-            params = []
-            map( params.extend, sasfit_dict[sasfit_model][1])
-            params ="br ".join(str(x) for x in params)
-            x.add_row(["", "", "", sasfit_model, descs, params])
+            #params = []
+            #map( params.extend, sasfit_dict[sasfit_model][1])
+            #params =", ".join(str(x) for x in params)
+            params = sasfit_dict[sasfit_model][1]
+            params = "br".join(str(x) for x in params)
+            params = params.replace("]br[", " br ")
+            params = params[1:-1]
+            compiled_cpu = "No"
+            compiled_gpu = "No"
+            if "sasfit_"+sasfit_model in cpu_list:
+                compiled_cpu = "Yes"
+            if "sasfit_"+sasfit_model in gpu_list:
+                compiled_gpu = "Yes"
+            x.add_row(["", "", "", sasfit_model, descs, params,
+                       compiled_cpu, compiled_gpu])
 
     return x
 
@@ -166,14 +174,22 @@ if __name__=="__main__":
     parser = option_parser_class( usage = usage, version='0.1' )
 
     parser.add_option("-l", "--sasmodels_list", dest="sasmodels_file",
-                      help="List of sasmodel files [OBLIGATORY]")
+                    help="List of sasmodel files [OBLIGATORY]")
     parser.add_option("-m", "--sasfit_list", dest="sasfit_file",
-                      help="List of sasfit files [OBLIGATORY]")
+                    help="List of sasfit files [OBLIGATORY]")
+    parser.add_option("-c", "--cpulist_file", dest="cpu_file",
+                    help="List of cpu compiled files [OBLIGATORY]")
+    parser.add_option("-g", "--gpulist_file", dest="gpu_file",
+                    help="List of GPU compiled files [OBLIGATORY]")
     parser.add_option("-o", "--output_file", dest="output_file",
-                      help="Output table file [OBLIGATORY]")
+                    help="Output table file [OBLIGATORY]")
 
     options, args = parser.parse_args()
 
+    cpu_list = map( lambda model: model.strip("\n"),
+                    open(options.cpu_file).readlines())
+    gpu_list = map(lambda model: model.strip("\n"),
+                   open(options.gpu_file).readlines())
     for model_file in open(options.sasfit_file).readlines():
         #model_name = model_file.rstrip(".py\n")
         model_name = model_file.rstrip("\n")
@@ -184,6 +200,7 @@ if __name__=="__main__":
         model_name = model_file.rstrip("\n")
         extract_pardesc_table(sasview_dict, model_name)
 
-    table_lines = generate_table(sasview_dict,sasfit_dict)
-    output_html = table_lines.get_html_string(attributes={"name":"my_table", "class":"red_table"})
+    table_lines = generate_table(sasview_dict,sasfit_dict, cpu_list, gpu_list)
+    table_lines.format = True
+    output_html = table_lines.get_html_string(attributes={"name":"my_table"})
     open(options.output_file,"w").write(output_html)
