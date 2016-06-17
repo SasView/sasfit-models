@@ -111,6 +111,26 @@ def generate_table(sasmodels_dict, sasfit_dict, cpu_list, gpu_list):
                        sasfit_model, descs_sf, params_sf,
                        compiled_cpu, compiled_gpu])
 
+            # Last print non-overlaping SASFit models
+    for sasfit_model in sasfit_dict.keys():
+        if not sasfit_model in overlaping_models:
+            descs = sasfit_dict[sasfit_model][0].replace("\n", " ")
+            # params = []
+            # map( params.extend, sasfit_dict[sasfit_model][1])
+            # params =", ".join(str(x) for x in params)
+            params = sasfit_dict[sasfit_model][1]
+            params = "br".join(str(x) for x in params)
+            params = params.replace("]br[", " br ")
+            params = params[1:-1]
+            compiled_cpu = "NoImg"
+            compiled_gpu = "NoImg"
+            if "sasfit_" + sasfit_model in cpu_list:
+                compiled_cpu = "YesImg"
+            if "sasfit_" + sasfit_model in gpu_list:
+                compiled_gpu = "YesImg"
+            x.add_row(["", "", "", sasfit_model, descs, params,
+                           compiled_cpu, compiled_gpu])
+
     #Print non-overlapping SasView models
     for sasview_model in sasview_dict.keys():
         if sasview_model in nonoverlaping_sasview_models:
@@ -124,25 +144,6 @@ def generate_table(sasmodels_dict, sasfit_dict, cpu_list, gpu_list):
             params = params[1:-1]
             x.add_row([sasview_model, descs, params, "", "","", "N/A", "N/A"])
 
-    #Last print non-overlaping SASFit models
-    for sasfit_model in sasfit_dict.keys():
-        if not sasfit_model in overlaping_models:
-            descs = sasfit_dict[sasfit_model][0].replace("\n", " ")
-            #params = []
-            #map( params.extend, sasfit_dict[sasfit_model][1])
-            #params =", ".join(str(x) for x in params)
-            params = sasfit_dict[sasfit_model][1]
-            params = "br".join(str(x) for x in params)
-            params = params.replace("]br[", " br ")
-            params = params[1:-1]
-            compiled_cpu = "NoImg"
-            compiled_gpu = "NoImg"
-            if "sasfit_"+sasfit_model in cpu_list:
-                compiled_cpu = "YesImg"
-            if "sasfit_"+sasfit_model in gpu_list:
-                compiled_gpu = "YesImg"
-            x.add_row(["", "", "", sasfit_model, descs, params,
-                       compiled_cpu, compiled_gpu])
 
     return x
 
