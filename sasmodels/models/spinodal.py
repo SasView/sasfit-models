@@ -65,7 +65,7 @@ parameters = [["I_max",  "",         1.0, [-inf, inf], "", "Scattering intensity
 def Iq(q,
        I_max=1.0,
        q_max=0.1,
-       gamma=1.0,
+       gamma=2.0,
        ):
 
     """

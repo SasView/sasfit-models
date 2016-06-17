@@ -14,12 +14,12 @@ from numpy import inf
 
 name = "rod"
 title = " "
-description = ""
+description = "Formfactor of very long cylindrical block copolymer micelles"
 category = " "
 #pylint: disable=bad-whitespace, line-too-long
 parameters = [
- [ "LENGTH", 	"", 	10.0, 	[-inf, inf], 	"", 	""],
- [ "ETA", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "LENGTH", 	"", 	10.0, 	[-inf, inf], 	"", 	"Vpolym_core: molecular volume of the block in the core \nin nm\^3 if Q in nm\^-1, in A\^3 if Q in A\^-1"],
+ [ "ETA", 	"", 	0.0, 	[-inf, inf], 	"", 	"Vpolym_brsh: molecular volume of the block bilding the shell \nin nm\^3 if Q in nm\^-1, in A\^3 if Q in A\^-1"],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 

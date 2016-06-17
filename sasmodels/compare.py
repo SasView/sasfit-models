@@ -76,6 +76,7 @@ Any two calculation engines can be selected for comparison:
     -single/-double/-half/-fast sets an OpenCL calculation engine
     -single!/-double!/-quad! sets an OpenMP calculation engine
     -sasview sets the sasview calculation engine
+    -sasfit=sasfit_converted_model compares with model coverted from sasfit
 
 The default is -single -sasview.  Note that the interpretation of quad
 precision depends on architecture, and may vary from 64-bit to 128-bit,
@@ -446,6 +447,33 @@ def eval_ctypes(model_info, data, dtype='double', cutoff=0.):
     calculator.engine = "OMP%s"%DTYPE_MAP[dtype]
     return calculator
 
+
+def eval_sasfit_opencl(model_info, data, dtype='single', cutoff=0.):
+    """
+    Returns a model calculator for SasFit corrected models
+    """
+    try:
+        model = core.build_model(model_info, dtype=dtype, platform="ocl")
+    except Exception as exc:
+        print(exc)
+        print("... trying again with single precision")
+        model = core.build_model(model_info, dtype='single', platform="ocl")
+    calculator = DirectModel(data, model, cutoff=cutoff)
+    calculator.engine = "OCL%s" % DTYPE_MAP[dtype]
+    return calculator
+
+def eval_sasfit_ctypes(model_info, data, dtype='double', cutoff=0.):
+    """
+    Return a model calculator using the DLL calculation engine.
+    """
+    if dtype == 'quad':
+        dtype = 'longdouble'
+    model = core.build_model(model_info, dtype=dtype, platform="dll")
+    calculator = DirectModel(data, model, cutoff=cutoff)
+    calculator.engine = "OMP%s"%DTYPE_MAP[dtype]
+    return calculator
+
+
 def time_calculation(calculator, pars, Nevals=1):
     """
     Compute the average calculation time over N evaluations.
@@ -487,7 +515,7 @@ def make_data(opts):
         index = slice(None, None)
     return data, index
 
-def make_engine(model_info, data, dtype, cutoff):
+def make_engine(model_info, data, dtype, cutoff, sasfit_model_info):
     """
     Generate the appropriate calculation engine for the given datatype.
 
@@ -498,8 +526,16 @@ def make_engine(model_info, data, dtype, cutoff):
         return eval_sasview(model_info, data)
     elif dtype.endswith('!'):
         return eval_ctypes(model_info, data, dtype=dtype[:-1], cutoff=cutoff)
+        if sasfit_model_info:
+            return eval_sasfit_ctypes(sasfit_model_info, data, dtype=dtype[:-1],
+                                  cutoff=cutoff)
     else:
+        if sasfit_model_info:
+            return eval_sasfit_opencl(sasfit_model_info, data, dtype=dtype,
+                                      cutoff=cutoff)
         return eval_opencl(model_info, data, dtype=dtype, cutoff=cutoff)
+
+
 
 def _show_invalid(data, theory):
     if not theory.mask.any():
@@ -651,7 +687,7 @@ NAME_OPTIONS = set([
     ])
 VALUE_OPTIONS = [
     # Note: random is both a name option and a value option
-    'cutoff', 'random', 'nq', 'res', 'accuracy',
+    'cutoff', 'random', 'nq', 'res', 'accuracy', 'sasfit',
     ]
 
 def columnize(L, indent="", width=79):
@@ -747,6 +783,7 @@ def parse_opts():
         'explore'   : False,
         'use_demo'  : True,
         'zero'      : False,
+        "sasfit_model" : ""
     }
     engines = []
     for arg in flags:
@@ -767,6 +804,7 @@ def parse_opts():
         elif arg.startswith('-accuracy='): opts['accuracy'] = arg[10:]
         elif arg.startswith('-cutoff='):   opts['cutoff'] = float(arg[8:])
         elif arg.startswith('-random='):   opts['seed'] = int(arg[8:])
+        elif arg.startswith('-sasfit='):   opts['sasfit_model'] = arg[8:]
         elif arg == '-random':  opts['seed'] = np.random.randint(1e6)
         elif arg == '-preset':  opts['seed'] = -1
         elif arg == '-mono':    opts['mono'] = True
@@ -790,6 +828,17 @@ def parse_opts():
         elif arg == '-default':    opts['use_demo'] = False
     # pylint: enable=bad-whitespace
 
+    sasfit_name = opts['sasfit_model']
+    #TODO: Empty safit model_info
+    sasfit_model_info = ""
+    if sasfit_name:
+        try:
+            sasfit_model_info = core.load_model_info(sasfit_name)
+        except ImportError as exc:
+            print(str(exc))
+            print("Could not find model; use one of:\n    " + models)
+            sys.exit(1)
+
     if len(engines) == 0:
         engines.extend(['single', 'sasview'])
     elif len(engines) == 1:
@@ -809,7 +858,6 @@ def parse_opts():
     # if model does not define demo parameters
     pars = get_pars(model_info, opts['use_demo'])
 
-
     # Fill in parameters given on the command line
     presets = {}
     for arg in values:
@@ -821,6 +869,18 @@ def parse_opts():
             sys.exit(1)
         presets[k] = float(v) if not k.endswith('type') else v
 
+    #if sasfit_name:
+    #    sasfit_pars = get_pars(sasfit_model_info, opts['use_demo'])
+    #    sasfit_presets = {}
+    #    for arg in values:
+    #        k, v = arg.split('=', 1)
+    #        if k not in sasfit_pars:
+    #            # extract base name without polydispersity info
+    #            s = set(p.split('_pd')[0] for p in sasfit_pars)
+    #            print("%r invalid; parameters are: %s" % (k, ", ".join(sorted(s))))
+    #            sys.exit(1)
+    #        sasfit_presets[k] = float(v) if not k.endswith('type') else v
+
     # randomize parameters
     #pars.update(set_pars)  # set value before random to control range
     if opts['seed'] > -1:
@@ -828,8 +888,15 @@ def parse_opts():
         print("Randomize using -random=%i"%opts['seed'])
     if opts['mono']:
         pars = suppress_pd(pars)
+
     pars.update(presets)  # set value after random to control value
-    #import pprint; pprint.pprint(model_info)
+
+    #if sasfit_name:
+    #    sasfit_pars.update(sasfit_presets)  # set value after random to control value
+    #    constrain_pars(sasfit_model_info, sasfit_pars)
+    #    if use_sasview:
+    #        constrain_new_to_old(sasfit_model_info, sasfit_pars)
+
     constrain_pars(model_info, pars)
     if use_sasview:
         constrain_new_to_old(model_info, pars)
@@ -839,11 +906,13 @@ def parse_opts():
     # Create the computational engines
     data, _ = make_data(opts)
     if n1:
-        base = make_engine(model_info, data, engines[0], opts['cutoff'])
+        base = make_engine(model_info, data, engines[0], opts['cutoff'],
+                           sasfit_model_info)
     else:
         base = None
     if n2:
-        comp = make_engine(model_info, data, engines[1], opts['cutoff'])
+        comp = make_engine(model_info, data, engines[1], opts['cutoff'],
+                           sasfit_model_info)
     else:
         comp = None
 

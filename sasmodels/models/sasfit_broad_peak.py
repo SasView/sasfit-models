@@ -14,15 +14,15 @@ from numpy import inf
 
 name = "broad_peak"
 title = " "
-description = ""
+description = "F^2(q,I0,xi,m,q0) = I0/(1+(|q-q0|*xi)^m)^p"
 category = " "
 #pylint: disable=bad-whitespace, line-too-long
 parameters = [
- [ "I0", 	"", 	10.0, 	[-inf, inf], 	"", 	""],
- [ "XI", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
- [ "Q0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
- [ "M", 	"", 	1.0, 	[-inf, inf], 	"", 	""],
- [ "P", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "I0", 	"", 	10.0, 	[-inf, inf], 	"", 	"I0: forward scattering"],
+ [ "XI", 	"", 	0.0, 	[-inf, inf], 	"", 	"xi: correlation length"],
+ [ "Q0", 	"", 	0.0, 	[-inf, inf], 	"", 	"q0:peak position which is related to the d-spacing as q0 = 2pi/d"],
+ [ "M", 	"", 	1.0, 	[-inf, inf], 	"", 	"m:"],
+ [ "P", 	"", 	0.0, 	[-inf, inf], 	"", 	"p:"],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 

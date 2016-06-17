@@ -1,0 +1,1212 @@
+<table border=1 name="my_table">
+    <tr>
+        <th style="padding-left: 1em; padding-right: 1em; text-align: center">SasView Model</th>
+        <th style="padding-left: 1em; padding-right: 1em; text-align: center">SasView Description</th>
+        <th style="padding-left: 1em; padding-right: 1em; text-align: center">SasView Parameters</th>
+        <th style="padding-left: 1em; padding-right: 1em; text-align: center">SasFit Model</th>
+        <th style="padding-left: 1em; padding-right: 1em; text-align: center">SasFit Description</th>
+        <th style="padding-left: 1em; padding-right: 1em; text-align: center">SasFit Parameters</th>
+        <th style="padding-left: 1em; padding-right: 1em; text-align: center">Compile CPU</th>
+        <th style="padding-left: 1em; padding-right: 1em; text-align: center">Compile GPU</th>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">teubner_strey</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">   Scattering model class for the Teubner-Strey model given by     Provide F(x) = 1/( a2 + c1 q^2+  c2 q^4 ) + background     a2&gt;0, c1&lt;0, c2&gt;0, 4 a2 c2 - c1^2 &gt; 0 </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'a2', '', 0.1, [0, inf], '', 'a2'<br>'c1', '1e-6/Ang^2', -30.0, [-inf, 0], '', 'c1'<br>'c2', 'Ang', 5000.0, [0, inf], 'volume', 'c2'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">teubner_strey</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">F^2(Q,Rg,I0) = eta^2*8*pi/xi/(a^2-2bq^2+q^4) with k=2pi/d, a=k^2+1/xi^2, b=k^2-1/xi^2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'xi', '', 10.0, [-inf, inf], '', 'xi: correlation length'<br>'d', '', 0.0, [-inf, inf], '', 'd: characteristic domain size (the periodicity)'<br>'eta', '', 0.0, [-inf, inf], '', 'eta: mean average contrast'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fuzzy_sphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">scale: scale factor times volume fraction, or just volume fraction for absolute scale data radius: radius of the solid sphere fuzziness = the standard deviation of the fuzzy interfacial thickness (ie., so-called interfacial roughness) sld: the SLD of the sphere solvend_sld: the SLD of the solvent background: incoherent background Note: By definition, this function works only when fuzziness &lt;&lt; radius. </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 1, [-inf, inf], '', 'Particle scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 3, [-inf, inf], '', 'Solvent scattering length density'<br>'radius', 'Ang', 60, [0, inf], 'volume', 'Sphere radius'<br>'fuzziness', 'Ang', 10, [0, inf], '', 'std deviation of Gaussian convolution for interface (must be &lt;&lt; radius)'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fuzzysphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'SIGMA', '', 0.0, [-inf, inf], '', ''<br>'ETA_SPH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">broad_peak</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">      I(q) = scale_p/pow(q,exponent)+scale_l/       (1.0 + pow((fabs(q-q_peak)*length_l),exponent_l) )+ background        List of default parameters:       porod_scale = Porod term scaling       porod_exp = Porod exponent       lorentz_scale = Lorentzian term scaling       lorentz_length = Lorentzian screening length [A]       peak_pos = peak location [1/A]       lorentz_exp = Lorentzian exponent       background = Incoherent background</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'porod_scale', '', 1e-05, [-inf, inf], '', 'Power law scale factor'<br>'porod_exp', '', 3.0, [-inf, inf], '', 'Exponent of power law'<br>'lorentz_scale', '', 10.0, [-inf, inf], '', 'Scale factor for broad Lorentzian peak'<br>'lorentz_length', 'Ang', 50.0, [-inf, inf], '', 'Lorentzian screening length'<br>'peak_pos', '1/Ang', 0.1, [-inf, inf], '', 'Peak position in q'<br>'lorentz_exp', '', 2.0, [-inf, inf], '', 'Exponent of Lorentz function'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">broad_peak</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">F^2(q,I0,xi,m,q0) = I0/(1+(|q-q0|*xi)^m)^p</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', 'I0: forward scattering'<br>'XI', '', 0.0, [-inf, inf], '', 'xi: correlation length'<br>'Q0', '', 0.0, [-inf, inf], '', 'q0:peak position which is related to the d-spacing as q0 = 2pi/d'<br>'M', '', 1.0, [-inf, inf], '', 'm:'<br>'P', '', 0.0, [-inf, inf], '', 'p:'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pearl_necklace</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"> Calculate form factor for Pearl Necklace Model [Macromol. Symp. 2004, 211, 25-42] Parameters: background:background scale: scale factor sld: the SLD of the pearl spheres sld_string: the SLD of the strings sld_solvent: the SLD of the solvent number_of_pearls: number of the pearls radius: the radius of a pearl edge_separation: the length of string segment; surface to surface string_thickness: thickness (ie, diameter) of the string </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 80.0, [0, inf], 'volume', 'Mean radius of the chained spheres'<br>'edge_separation', 'Ang', 350.0, [0, inf], 'volume', 'Mean separation of chained particles'<br>'string_thickness', 'Ang', 2.5, [0, inf], 'volume', 'Thickness of the chain linkage'<br>'number_of_pearls', 'none', 3, [0, inf], 'volume', 'Number of pearls in the necklace (must be integer)'<br>'sld', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Scattering length density of the chained spheres'<br>'sld_string', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Scattering length density of the chain linkage'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'Scattering length density of the solvent'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pearl_necklace</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'l', '', 0.0, [-inf, inf], '', ''<br>'NU', '', 0.0, [-inf, inf], '', ''<br>'B', '', 1.0, [-inf, inf], '', ''<br>'NP', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">spinodal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">             I(q) = I_max * (1 + gamma/2) *x**2 / (gamma/2 +x**(2+gamma)             I_max =  The scattering intensity at peak position [1/cm]             q_max = The position of the correlation peak [1/A]             ganmna = The decomposition epxonent             background = Incoherent background [1/cm]         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I_max', '', 1.0, [-inf, inf], '', 'Scattering intensity at peak position'<br>'qmax', '1/Ang', 0.04, [-inf, inf], '', 'Croleation peak position'<br>'gamma', '', 2.0, [-inf, inf], '', 'Decomposition exponent'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">spinodal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">F^2(Q,gamma,Qmax,I0) = I0 (1+gamma/2)(Q/Qmax)^2/(gamma/2+(Q/Qmax)^(2+gamma))</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'IMAX', '', 10.0, [-inf, inf], '', 'Qmax:'<br>'QMAX', '', 0.0, [-inf, inf], '', 'gamma: the exponent gamma is equal to d+1 for off-critical concentration mixtures\nand 2d for critical concentration mixtures (d:dimension)'<br>'GAMMA', '', 0.0, [-inf, inf], '', 'Imax: scattering intensity at peak position I(Q=Qmax)'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">guinier</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">  I(q) = scale.exp ( - rg^2 q^2 / 3.0 )       List of default parameters:     scale = scale     rg = Radius of gyration </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'rg', 'Ang', 60.0, [0, inf], '', 'Radius of Gyration'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylinder</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">      f(q,alpha) = 2*(sld - sld_solvent)*V*sin(qLcos(alpha)/2))                 /[qLcos(alpha)/2]*J1(qRsin(alpha))/[qRsin(alpha)]              P(q,alpha)= scale/V*f(q,alpha)^(2)+background             V: Volume of the cylinder             R: Radius of the cylinder             L: Length of the cylinder             J1: The bessel function             alpha: angle between the axis of the             cylinder and the q-vector for 1D             :the ouput is P(q)=scale/V*integral             from pi/2 to zero of...             f(q,alpha)^(2)*sin(alpha)*dalpha + background </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '4e-6/Ang^2', 4, [-inf, inf], '', 'Cylinder scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'radius', 'Ang', 20, [0, inf], 'volume', 'Cylinder radius'<br>'length', 'Ang', 400, [0, inf], 'volume', 'Cylinder length'<br>'theta', 'degrees', 60, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">polymer_excl_volume</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">Compute the scattering intensity from polymers with excluded                 volume effects.                 rg:         radius of gyration                 porod_exp:  Porod exponent               </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'rg', 'Ang', 60.0, [0, inf], '', 'Radius of Gyration'<br>'porod_exp', '', 3.0, [-inf, inf], '', 'Porod exponent'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">lamellar_stack_paracrystal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [Random lamellar phase with paracrystal structure factor]         randomly oriented stacks of infinite sheets         with paracrytal S(Q), having polydisperse spacing.         sld = sheet scattering length density         sld_solvent = solvent scattering length density         background = incoherent background         scale = scale factor </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'thickness', 'Ang', 33.0, [0, inf], 'volume', 'sheet thickness'<br>'Nlayers', '', 20, [0, inf], '', 'Number of layers'<br>'spacing', 'Ang', 250.0, [0.0, inf], '', 'd-spacing of paracrystal stack'<br>'spacing_polydisp', 'Ang', 0.0, [0.0, inf], '', 'd-spacing polydispersity'<br>'sld', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'layer scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6.34, [-inf, inf], '', 'Solvent scattering length density'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">gel_fit</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    Structure factor for interacting particles:      Shibayama-Geissler Two-Length Scale Fit for Gels (GelFit)      Shibayama; Tanaka; Han J Chem Phys (1992), 97(9), 6829-6841     Mallam; Horkay; Hecht; Rennie; Geissler, Macromol (1991), 24, 543 </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'guinier_scale', 'cm^-1', 1.7, [-inf, inf], '', 'Guinier length scale'<br>'lorentzian_scale', 'cm^-1', 3.5, [-inf, inf], '', 'Lorentzian length scale'<br>'gyration_radius', 'Ang', 104.0, [2, inf], '', 'Radius of gyration'<br>'fractal_exp', '', 2.0, [0, inf], '', 'Fractal exponent'<br>'cor_length', 'Ang', 16.0, [0, inf], '', 'Correlation length'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">P(q)=(scale/V)*[3V(sld-sld_solvent)*(sin(qr)-qr cos(qr))                 /(qr)^3]^2 + background     r: radius of sphere     V: The volume of the scatter     sld: the SLD of the sphere     sld_solvent: the SLD of the solvent </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 1, [-inf, inf], '', 'Layer scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6, [-inf, inf], '', 'Solvent scattering length density'<br>'radius', 'Ang', 50, [0, inf], 'volume', 'Sphere radius'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">multilayer_vesicle</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     multilayer_vesicle model parameters;     scale : scale factor for abs intensity if needed else 1.0     volfraction: volume fraction     radius : Core radius of the multishell     thick_shell: shell thickness     thick_solvent: water thickness     sld_solvent: solvent scattering length density     sld: shell scattering length density     n_pairs:number of pairs of water/shell     background: incoherent background         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'volfraction', '', 0.05, [0.0, 1], '', 'volume fraction of vesicles'<br>'radius', 'Ang', 60.0, [0.0, inf], '', 'Core radius of the multishell'<br>'thick_shell', 'Ang', 10.0, [0.0, inf], '', 'Shell thickness'<br>'thick_solvent', 'Ang', 10.0, [0.0, inf], '', 'Water thickness'<br>'sld_solvent', '1e-6/Ang^2', 6.4, [-inf, inf], '', 'Core scattering length density'<br>'sld', '1e-6/Ang^2', 0.4, [-inf, inf], '', 'Shell scattering length density'<br>'n_pairs', '', 2.0, [1.0, inf], '', 'Number of pairs of water and shell'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">core_shell_cylinder</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"> P(q,alpha)= scale/Vs*f(q)^(2) + background,       where: f(q)= 2(sld_core - solvant_sld)         * Vc*sin[qLcos(alpha/2)]         /[qLcos(alpha/2)]*J1(qRsin(alpha))         /[qRsin(alpha)]+2(sld_shell-sld_solvent)         *Vs*sin[q(L+T)cos(alpha/2)][[q(L+T)         *cos(alpha/2)]*J1(q(R+T)sin(alpha))         /q(R+T)sin(alpha)]      alpha:is the angle between the axis of         the cylinder and the q-vector     Vs: the volume of the outer shell     Vc: the volume of the core     L: the length of the core         sld_shell: the scattering length density of the shell     sld_solvent: the scattering length density of the solvent     background: the background     T: the thickness         R+T: is the outer radius      L+2T: The total length of the outershell     J1: the first order Bessel function      theta: axis_theta of the cylinder      phi: the axis_phi of the cylinder </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld_core', '1e-6/Ang^2', 4, [-inf, inf], '', 'Cylinder core scattering length density'<br>'sld_shell', '1e-6/Ang^2', 4, [-inf, inf], '', 'Cylinder shell scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'radius', 'Ang', 20, [0, inf], 'volume', 'Cylinder core radius'<br>'thickness', 'Ang', 20, [0, inf], 'volume', 'Cylinder shell thickness'<br>'length', 'Ang', 400, [0, inf], 'volume', 'Cylinder length'<br>'theta', 'degrees', 60, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">lamellar_hg</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [Random lamellar phase with Head and Tail Groups]         I(q)= 2*pi*P(q)/(2(H+T)*q^(2)), where         P(q)= see manual         layer thickness =(H+T+T+H) = 2(Head+Tail)         sld = Tail scattering length density         sld_head = Head scattering length density         sld_solvent = solvent scattering length density         background = incoherent background         scale = scale factor </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'tail_length', 'Ang', 15, [0, inf], 'volume', 'Tail thickness ( total = H+T+T+H)'<br>'head_length', 'Ang', 10, [0, inf], 'volume', 'Head thickness'<br>'sld', '1e-6/Ang^2', 0.4, [-inf, inf], '', 'Tail scattering length density'<br>'sld_head', '1e-6/Ang^2', 3.0, [-inf, inf], '', 'Head scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6, [-inf, inf], '', 'Solvent scattering length density'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">barbell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Calculates the scattering from a barbell-shaped cylinder.     That is a sphereocylinder with spherical end caps that have a radius larger     than that of the cylinder and the center of the end cap radius lies outside     of the cylinder.     Note: As the length of cylinder(bar) --&gt;0,it becomes a dumbbell. And when     rad_bar = rad_bell, it is a spherocylinder.     It must be that rad_bar &lt;(=) rad_bell. </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 4, [-inf, inf], '', 'Barbell scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'bell_radius', 'Ang', 40, [0, inf], 'volume', 'Spherical bell radius'<br>'radius', 'Ang', 20, [0, inf], 'volume', 'Cylindrical bar radius'<br>'length', 'Ang', 400, [0, inf], 'volume', 'Cylinder bar length'<br>'theta', 'degrees', 60, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">linear_pearls</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Calculate form factor for Pearl Necklace Model     [Macromol. 1996, 29, 2974-2979]     Parameters:      sld_pearl: the SLD of the pearl spheres     sld_solv: the SLD of the solvent     num_pearls: number of the pearls     radius: the radius of a pearl     edge_separation: the length of string segment; surface to surface     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 80.0, [0, inf], '', 'Radius of the pearls'<br>'edge_sep', 'Ang', 350.0, [0, inf], '', 'Length of the string segment - surface to surface'<br>'num_pearls', '', 3.0, [0, inf], '', 'Number of the pearls'<br>'sld', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'SLD of the pearl spheres'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'SLD of the solvent'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">triaxial_ellipsoid</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">Note: During fitting ensure that the inequality ra&lt;rb&lt;rc is not 	violated. Otherwise the calculation will 	not be correct. </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 4, [-inf, inf], '', 'Ellipsoid scattering length density'<br>'solvent_sld', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'req_minor', 'Ang', 20, [0, inf], 'volume', 'Minor equatorial radius'<br>'req_major', 'Ang', 400, [0, inf], 'volume', 'Major equatorial radius'<br>'rpolar', 'Ang', 10, [0, inf], 'volume', 'Polar radius'<br>'theta', 'degrees', 60, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'<br>'psi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">lorentz</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"> Model that evaluates a Lorentz (Ornstein-Zernicke) model.          I(q) = scale/( 1 + (q*L)^2 ) + bkd          The model has three parameters:      length     =  screening Length     scale  =  scale factor     background    =  incoherent background </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'cor_length', 'Ang', 50.0, [0, inf], '', 'Screening length'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">mono_gauss_coil</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Evaluates the scattering from      monodisperse polymer chains.     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'i_zero', '1/cm', 70.0, [0.0, inf], '', 'Intensity at q=0'<br>'radius_gyration', 'Ang', 75.0, [0.0, inf], '', 'Radius of gyration'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">core_shell_bicelle</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     P(q,alpha)= scale/Vs*f(q)^(2) + bkg,  where: f(q)= 2(sld_core     - solvant_sld)* Vc*sin[qLcos(alpha/2)]     /[qLcos(alpha/2)]*J1(qRsin(alpha))     /[qRsin(alpha)]+2(shell_sld-sld_solvent)     *Vs*sin[q(L+T)cos(alpha/2)][[q(L+T)     *cos(alpha/2)]*J1(q(R+T)sin(alpha))     /q(R+T)sin(alpha)]      alpha:is the angle between the axis of     the cylinder and the q-vector     Vs: the volume of the outer shell     Vc: the volume of the core     L: the length of the core     shell_sld: the scattering length density     of the shell     sld_solvent: the scattering length density     of the solvent     bkg: the background     T: the thickness     R+T: is the outer radius     L+2T: The total length of the outershell     J1: the first order Bessel function     theta: axis_theta of the cylinder     phi: the axis_phi of the cylinder...         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 20, [0, inf], 'volume', 'Cylinder core radius'<br>'rim_thickness', 'Ang', 10, [0, inf], 'volume', 'Rim shell thickness'<br>'face_thickness', 'Ang', 10, [0, inf], 'volume', 'Cylinder face thickness'<br>'length', 'Ang', 400, [0, inf], 'volume', 'Cylinder length'<br>'sld_core', '1e-6/Ang^2', 1, [-inf, inf], '', 'Cylinder core scattering length density'<br>'sld_face', '1e-6/Ang^2', 4, [-inf, inf], '', 'Cylinder face scattering length density'<br>'sld_rim', '1e-6/Ang^2', 4, [-inf, inf], '', 'Cylinder rim scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'theta', 'degrees', 90, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 0, [-inf, inf], 'orientation', 'Out of plane angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">mass_surface_fractal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">         The scattering intensity  I(x) = scale*P(x)*S(x) + background, where         p(x)= {[1+(x^2*a)]^(Dm/2) * [1+(x^2*b)]^(6-Ds-Dm)/2}^(-1)         a = Rg^2/(3*Dm/2)         b = rg^2/(3*(6-Ds-Dm)/2)         scale        =  scale factor * N*Volume^2*contrast^2         mass_dim       =  Dm (mass fractal dimension)         surface_dim  =  Ds         cluster_rg  =  Rg         primary_rg    =  rg         background   =  background         Ref: Schmidt, J Appl Cryst, eq(19), (1991), 24, 414-435         Hurd, Schaefer, Martin, Phys Rev A, eq(2),(1987),35, 2361-2364         Note that 0 &lt; Ds&lt; 6 and 0 &lt; Dm &lt; 6.         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'mass_dim', '', 1.8, [1e-16, 6.0], '', 'Mass fractal dimension'<br>'surface_dim', '', 2.3, [1e-16, 6.0], '', 'Surface fractal dimension'<br>'cluster_rg', 'Ang', 86.7, [0.0, inf], '', 'Cluster radius of gyration'<br>'primary_rg', 'Ang', 4000.0, [0.0, inf], '', 'Primary particle radius of gyration'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">flexible_cylinder</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">Note : scale and contrast = (sld - sld_solvent) are both                 multiplicative factors in the model and are perfectly                 correlated. One or both of these parameters must be held fixed                 during model fitting.               </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'length', 'Ang', 1000.0, [0, inf], 'volume', 'Length of the flexible cylinder'<br>'kuhn_length', 'Ang', 100.0, [0, inf], 'volume', 'Kuhn length of the flexible cylinder'<br>'radius', 'Ang', 20.0, [0, inf], 'volume', 'Radius of the flexible cylinder'<br>'sld', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Cylinder scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'Solvent scattering length density'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">flexible_cylinder_elliptical</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">Note : scale and contrast=sldCyl-sldSolv are both multiplicative         factors in the         model and are perfectly correlated. One or         both of these parameters must be held fixed         during model fitting.         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'length', 'Ang', 1000.0, [0, inf], 'volume', 'Length of the flexible cylinder'<br>'kuhn_length', 'Ang', 100.0, [0, inf], 'volume', 'Kuhn length of the flexible cylinder'<br>'radius', 'Ang', 20.0, [1, inf], 'volume', 'Radius of the flexible cylinder'<br>'axis_ratio', '', 1.5, [0, inf], '', 'Axis_ratio (major_radius/minor_radius'<br>'sld', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Cylinder scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'Solvent scattering length density'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">mass_fractal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">         The scattering intensity  I(x) = scale*P(x)*S(x) + background, where         scale = scale_factor  * V * delta^(2)         p(x)=  F(x*radius)^(2)         F(x) = 3*[sin(x)-x cos(x)]/x**3         S(x) = [(gamma(Dm-1)*colength^(Dm-1)*[1+(x^2*colength^2)]^((1-Dm)/2)         * sin[(Dm-1)*arctan(x*colength)])/x]         where delta = sldParticle -sldSolv.         radius       =  Particle radius         mass_dim  =  Mass fractal dimension         cutoff_length  =  Cut-off length         background   =  background         Ref.:Mildner, Hall,J Phys D Appl Phys(1986), 9, 1535-1545         Note I: This model is valid for 1&lt;mass_dim&lt;6.         Note II: This model is not in absolute scale.         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 10.0, [0.0, inf], '', 'Particle radius'<br>'mass_dim', '', 1.9, [1.0, 6.0], '', 'Mass fractal dimension'<br>'cutoff_length', 'Ang', 100.0, [0.0, inf], '', 'Cut-off length'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">hollow_rectangular_prism_thin_walls</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     I(q)= scale*V*(sld - sld_solvent)^2*P(q)+background         with P(q) being the form factor corresponding to a hollow rectangular         parallelepiped with infinitely thin walls. </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'Parallelepiped scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'a_side', 'Ang', 35, [0, inf], 'volume', 'Shorter side of the parallelepiped'<br>'b2a_ratio', 'Ang', 1, [0, inf], 'volume', 'Ratio sides b/a'<br>'c2a_ratio', 'Ang', 1, [0, inf], 'volume', 'Ratio sides c/a'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">surface_fractal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [The scattering intensity  I(x) = scale*P(x)*S(x) + background, where         scale = scale_factor  * V * delta^(2)         p(x) = F(x*radius)^(2)         F(x) = 3*[sin(x)-x cos(x)]/x**3         S(x) = [(gamma(5-Ds)*colength^(5-Ds)*[1+(x^2*colength^2)]^((Ds-5)/2)              * sin[(Ds-5)*arctan(x*colength)])/x]         where         delta        =  sldParticle -sldSolv.         radius       =  Particle radius         surface_dim  =  Surface fractal dimension (Ds)         co_length    =  Cut-off length         background   =  background          Ref.   :Mildner, Hall,J Phys D Appl Phys(1986), 19, 1535-1545         Note I : This model is valid for 1&lt;surface_dim&lt;3 with limited q range.         Note II: This model is not in absolute scale. </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 10.0, [0, inf], '', 'Particle radius'<br>'surface_dim', '', 2.0, [0, inf], '', 'Surface fractal dimension'<br>'cutoff_length', 'Ang', 500.0, [0.0, inf], '', 'Cut-off Length'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">adsorbed_layer</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Evaluates the scattering from large particles     with an adsorbed layer of surfactant or     polymer, independent of the form of the     density distribution.     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'second_moment', 'Ang', 23.0, [0.0, inf], '', 'Second moment of polymer distribution'<br>'adsorbed_amount', 'mg/m2', 1.9, [0.0, inf], '', 'Adsorbed amount of polymer'<br>'density_shell', 'g/cm3', 0.7, [0.0, inf], '', 'Bulk density of polymer in the shell'<br>'radius', 'Ang', 500.0, [0.0, inf], '', 'Core particle radius'<br>'volfraction', 'None', 0.14, [0.0, inf], '', 'Core particle volume fraction'<br>'sld_shell', '1e-6/Ang^2', 1.5, [-inf, inf], 'sld', 'Polymer shell SLD'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [-inf, inf], 'sld', 'Solvent SLD'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">hollow_rectangular_prism</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     I(q)= scale*V*(sld - sld_solvent)^2*P(q,theta,phi)+background         P(q,theta,phi) = (2/pi/V^2) * double integral from 0 to pi/2 of ...            (AP1-AP2)^2(q)*sin(theta)*dtheta*dphi         AP1 = S(q*C*cos(theta)/2) * S(q*A*sin(theta)*sin(phi)/2) * S(q*B*sin(theta)*cos(phi)/2)         AP2 = S(q*C'*cos(theta)) * S(q*A'*sin(theta)*sin(phi)) * S(q*B'*sin(theta)*cos(phi))         C' = (C/2-thickness)         B' = (B/2-thickness)         A' = (A/2-thickness)         S(x) = sin(x)/x </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'Parallelepiped scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'a_side', 'Ang', 35, [0, inf], 'volume', 'Shorter side of the parallelepiped'<br>'b2a_ratio', 'Ang', 1, [0, inf], 'volume', 'Ratio sides b/a'<br>'c2a_ratio', 'Ang', 1, [0, inf], 'volume', 'Ratio sides c/a'<br>'thickness', 'Ang', 1, [0, inf], 'volume', 'Thickness of parallelepiped'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellipsoid</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">P(q.alpha)= scale*f(q)^2 + background, where f(q)= 3*(sld         - sld_solvent)*V*[sin(q*r(Rp,Re,alpha))         -q*r*cos(qr(Rp,Re,alpha))]         /[qr(Rp,Re,alpha)]^3"       r(Rp,Re,alpha)= [Re^(2)*(sin(alpha))^2         + Rp^(2)*(cos(alpha))^2]^(1/2)          sld: SLD of the ellipsoid         sld_solvent: SLD of the solvent         V: volume of the ellipsoid         Rp: polar radius of the ellipsoid         Re: equatorial radius of the ellipsoid </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 4, [-inf, inf], '', 'Ellipsoid scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'r_polar', 'Ang', 20, [0, inf], 'volume', 'Polar radius'<br>'r_equatorial', 'Ang', 400, [0, inf], 'volume', 'Equatorial radius'<br>'theta', 'degrees', 60, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">two_lorentzian</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">I(q) = scale_1/(1.0 + pow((q*length_1),exponent_1))              + scale_2/(1.0 + pow((q*length_2),exponent_2) )+ background               scale_1    = Lorentzian term scaling #1              length_1   = Lorentzian screening length #1 [A]              exponent_1 = Lorentzian exponent #1              scale_2    = Lorentzian term scaling #2              length_2   = Lorentzian screening length #2 [A]              exponent_2 = Lorentzian exponent #2              background = Incoherent background         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'lorentz_scale_1', '', 10.0, [-inf, inf], '', 'First power law scale factor'<br>'lorentz_length_1', 'Ang', 100.0, [-inf, inf], '', 'First Lorentzian screening length'<br>'lorentz_exp_1', '', 3.0, [-inf, inf], '', 'First exponent of power law'<br>'lorentz_scale_2', '', 1.0, [-inf, inf], '', 'Second scale factor for broad Lorentzian peak'<br>'lorentz_length_2', 'Ang', 10.0, [-inf, inf], '', 'Second Lorentzian screening length'<br>'lorentz_exp_2', '', 2.0, [-inf, inf], '', 'Second exponent of power law'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fractal_core_shell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">  </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 60.0, [0, inf], 'volume', 'Sphere core radius'<br>'thickness', 'Ang', 10.0, [0, inf], 'volume', 'Sphere shell thickness'<br>'sld_core', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Sphere core scattering length density'<br>'sld_shell', '1e-6/Ang^2', 2.0, [-inf, inf], '', 'Sphere shell scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 3.0, [-inf, inf], '', 'Solvent scattering length density'<br>'volfraction', '', 1.0, [0, inf], '', 'Volume fraction of building block spheres'<br>'frac_dim', '', 2.0, [-inf, inf], '', 'Fractal dimension'<br>'cor_length', 'Ang', 100.0, [0, inf], '', 'Correlation length of fractal-like aggregates'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">capped_cylinder</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">That is, a sphereocylinder     with end caps that have a radius larger than     that of the cylinder and the center of the     end cap radius lies within the cylinder.     Note: As the length of cylinder --&gt;0,     it becomes a Convex Lens.     It must be that radius &lt;(=) cap_radius.     [Parameters];     scale: volume fraction of spheres,     background:incoherent background,     radius: radius of the cylinder,     length: length of the cylinder,     cap_radius: radius of the semi-spherical cap,     sld: SLD of the capped cylinder,     sld_solvent: SLD of the solvent. </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 4, [-inf, inf], '', 'Cylinder scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'radius', 'Ang', 20, [0, inf], 'volume', 'Cylinder radius'<br>'cap_radius', 'Ang', 20, [0, inf], 'volume', 'Cap radius'<br>'length', 'Ang', 400, [0, inf], 'volume', 'Cylinder length'<br>'theta', 'degrees', 60, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">core_shell_ellipsoid</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     [SpheroidCoreShellModel] Calculates the form factor for an spheroid     ellipsoid particle with a core_shell structure.     The form factor is averaged over all possible     orientations of the ellipsoid such that P(q)     = scale*&lt;f^2&gt;/Vol + bkg, where f is the     single particle scattering amplitude.     [Parameters]:     equat_core = equatorial radius of core, Rminor_core,     polar_core = polar radius of core, Rmajor_core,     equat_shell = equatorial radius of shell, Rminor_outer,     polar_shell = polar radius of shell, Rmajor_outer,     sld_core = scattering length density of core,     sld_shell = scattering length density of shell,     sld_solvent = scattering length density of solvent,     background = Incoherent bkg     scale =scale     Note:It is the users' responsibility to ensure     that shell radii are larger than core radii,     especially if both are polydisperse.     oblate: polar radius &lt; equatorial radius     prolate :  polar radius &gt; equatorial radius     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'equat_core', 'Ang', 200, [0, inf], 'volume', 'Equatorial radius of core, Rminor_core '<br>'polar_core', 'Ang', 10, [0, inf], 'volume', 'Polar radius of core, Rmajor_core'<br>'equat_shell', 'Ang', 250, [0, inf], 'volume', 'Equatorial radius of shell, Rminor_outer '<br>'polar_shell', 'Ang', 30, [0, inf], 'volume', 'Polar radius of shell, Rmajor_outer'<br>'sld_core', '1e-6/Ang^2', 2, [-inf, inf], 'sld', 'Core scattering length density'<br>'sld_shell', '1e-6/Ang^2', 1, [-inf, inf], 'sld', 'Shell scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [-inf, inf], 'sld', 'Solvent scattering length density'<br>'theta', 'degrees', 0, [-inf, inf], 'orientation', 'Oblate orientation wrt incoming beam'<br>'phi', 'degrees', 0, [-inf, inf], 'orientation', 'Oblate orientation in the plane of the detector'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">stickyhardsphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [Sticky hard sphere structure factor, with Percus-Yevick closure]         Interparticle structure factor S(Q)for a hard sphere fluid with         a narrow attractive well. Fits are prone to deliver non-physical         parameters, use with care and read the references in the full manual.         In sasview the effective radius will be calculated from the         parameters used in P(Q). </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius_effective', 'Ang', 50.0, [0, inf], 'volume', 'effective radius of hard sphere'<br>'volfraction', '', 0.2, [0, 0.74], '', 'volume fraction of hard spheres'<br>'perturb', '', 0.05, [0.01, 0.1], '', 'perturbation parameter, epsilon'<br>'stickiness', '', 0.2, [-inf, inf], '', 'stickiness, tau'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fcc_paracrystal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Calculates the scattering from a **face-centered cubic lattice** with paracrystalline distortion. Thermal vibrations     are considered to be negligible, and the size of the paracrystal is infinitely large. Paracrystalline distortion is     assumed to be isotropic and characterized by a Gaussian distribution.     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'dnn', 'Ang', 220, [-inf, inf], '', 'Nearest neighbour distance'<br>'d_factor', '', 0.06, [-inf, inf], '', 'Paracrystal distortion factor'<br>'radius', 'Ang', 40, [0, inf], 'volume', 'Particle radius'<br>'sld', '1e-6/Ang^2', 4, [-inf, inf], '', 'Particle scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'theta', 'degrees', 60, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'<br>'psi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">poly_gauss_coil</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Evaluates the scattering from      polydisperse polymer chains.     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'i_zero', '1/cm', 70.0, [0.0, inf], '', 'Intensity at q=0'<br>'radius_gyration', 'Ang', 75.0, [0.0, inf], '', 'Radius of gyration'<br>'polydispersity', 'None', 2.0, [1.0, inf], '', 'Polymer Mw/Mn'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">squarewell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [Square well structure factor, with MSA closure]         Interparticle structure factor S(Q)for a hard sphere fluid with         a narrow attractive well. Fits are prone to deliver non-physical         parameters, use with care and read the references in the full manual.         In sasview the effective radius will be calculated from the         parameters used in P(Q). </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius_effective', 'Ang', 50.0, [0, inf], 'volume', 'effective radius of hard sphere'<br>'volfraction', '', 0.04, [0, 0.08], '', 'volume fraction of spheres'<br>'welldepth', 'kT', 1.5, [0.0, 1.5], '', 'depth of well, epsilon'<br>'wellwidth', 'diameters', 1.2, [1.0, inf], '', 'width of well in diameters (=2R) units, must be &gt; 1'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">hayter_msa</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [Hayter-Penfold RMSA charged sphere interparticle S(Q) structure factor]         Interparticle structure factor S(Q)for a charged hard spheres.         Routine takes absolute value of charge, use HardSphere if charge         goes to zero.         In sasview the effective radius and volume fraction may be calculated          from the parameters used in P(Q). </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius_effective', 'Ang', 20.75, [0, inf], 'volume', 'effective radius of charged sphere'<br>'volfraction', 'None', 0.0192, [0, 0.74], '', 'volume fraction of spheres'<br>'charge', 'e', 19.0, [0, inf], '', 'charge on sphere (in electrons)'<br>'temperature', 'K', 318.16, [0, inf], '', 'temperature, in Kelvin, for Debye length calculation'<br>'salt_concentration', 'M', 0.0, [-inf, inf], '', 'conc of salt, moles/litre, 1:1 electolyte, for Debye length'<br>'dielectconst', 'None', 71.08, [-inf, inf], '', 'dielectric constant (relative permittivity) of solvent, default water, for Debye length'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">two_power_law</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">             I(q) = coef_A*pow(qval,-1.0*power1) + background for q&lt;=q_c             =C*pow(qval,-1.0*power2) + background for q&gt;q_c             where C=coef_A*pow(q_c,-1.0*power1)/pow(q_c,-1.0*power2).              coef_A = scaling coefficent             q_c = crossover location [1/A]             power_1 (=m1) = power law exponent at low Q             power_2 (=m2) = power law exponent at high Q             background = Incoherent background [1/cm]         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'coefficent_1', '', 1.0, [-inf, inf], '', 'coefficent A in low Q region'<br>'crossover', '1/Ang', 0.04, [0, inf], '', 'crossover location'<br>'power_1', '', 1.0, [0, inf], '', 'power law exponent at low Q'<br>'power_2', '', 4.0, [0, inf], '', 'power law exponent at high Q'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">core_shell_parallelepiped</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">      P(q)=  </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld_core', '1e-6/Ang^2', 1, [-inf, inf], '', 'Parallelepiped core scattering length density'<br>'sld_a', '1e-6/Ang^2', 2, [-inf, inf], '', 'Parallelepiped A rim scattering length density'<br>'sld_b', '1e-6/Ang^2', 4, [-inf, inf], '', 'Parallelepiped B rim scattering length density'<br>'sld_c', '1e-6/Ang^2', 2, [-inf, inf], '', 'Parallelepiped C rim scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6, [-inf, inf], '', 'Solvent scattering length density'<br>'a_side', 'Ang', 35, [0, inf], 'volume', 'Shorter side of the parallelepiped'<br>'b_side', 'Ang', 75, [0, inf], 'volume', 'Second side of the parallelepiped'<br>'c_side', 'Ang', 400, [0, inf], 'volume', 'Larger side of the parallelepiped'<br>'arim_thickness', 'Ang', 10, [0, inf], 'volume', 'Thickness of A rim'<br>'brim_thickness', 'Ang', 10, [0, inf], 'volume', 'Thickness of B rim'<br>'crim_thickness', 'Ang', 10, [0, inf], 'volume', 'Thickness of C rim'<br>'theta', 'degrees', 0, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 0, [-inf, inf], 'orientation', 'Out of plane angle'<br>'psi', 'degrees', 0, [-inf, inf], 'orientation', 'Rotation angle around its own c axis against q plane'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">power_law</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Evaluates the function     I(q) = scale * q^(-power) + background     NB: enter power as a positive number!     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'power', '', 4.0, [-inf, inf], '', 'Power law exponent'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">core_shell_ellipsoid_xt</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">         [core_shell_ellipsoid_xt] Calculates the form factor for an spheroid         ellipsoid particle with a core_shell structure.         The form factor is averaged over all possible         orientations of the ellipsoid such that P(q)         = scale*&lt;f^2&gt;/Vol + bkg, where f is the         single particle scattering amplitude.         [Parameters]:         equat_core = equatorial radius of core,         x_core = ratio of core polar/equatorial radii,         t_shell = equatorial radius of outer surface,         x_polar_shell = ratio of polar shell thickness to equatorial shell thickness,         sld_core = SLD_core         sld_shell = SLD_shell         sld_solvent = SLD_solvent         background = Incoherent bkg         scale =scale         Note:It is the users' responsibility to ensure         that shell radii are larger than core radii.         oblate: polar radius &lt; equatorial radius         prolate :  polar radius &gt; equatorial radius - this new model will make this easier         and polydispersity integrals more logical (as previously the shell could disappear).     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'equat_core', 'Ang', 20, [0, inf], 'volume', 'Equatorial radius of core'<br>'x_core', 'None', 3, [0, inf], 'volume', 'axial ratio of core, X = r_polar/r_equatorial'<br>'t_shell', 'Ang', 30, [0, inf], 'volume', 'thickness of shell at equator'<br>'x_polar_shell', '', 1, [0, inf], 'volume', 'ratio of thickness of shell at pole to that at equator'<br>'sld_core', '1e-6/Ang^2', 2, [-inf, inf], '', 'Core scattering length density'<br>'sld_shell', '1e-6/Ang^2', 1, [-inf, inf], '', 'Shell scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'Solvent scattering length density'<br>'theta', 'degrees', 0, [-inf, inf], 'orientation', 'Oblate orientation wrt incoming beam'<br>'phi', 'degrees', 0, [-inf, inf], 'orientation', 'Oblate orientation in the plane of the detector'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">elliptical_cylinder</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Form factor for an elliptical cylinder.     See L A Feigin and D I Svergun, Structure Analysis by Small-Angle X-Ray and Neutron Scattering, Plenum, New York, (1987). </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'r_minor', 'Ang', 20.0, [0, inf], 'volume', 'Ellipse minor radius'<br>'axis_ratio', '', 1.5, [1, inf], 'volume', 'Ratio of major radius over minor radius'<br>'length', 'Ang', 400.0, [1, inf], 'volume', 'Length of the cylinder'<br>'sld', '1e-6/Ang^2', 4.0, [-inf, inf], '', 'Cylinder scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Solvent scattering length density'<br>'theta', 'degrees', 90.0, [-360, 360], 'orientation', 'In plane angle'<br>'phi', 'degrees', 0, [-360, 360], 'orientation', 'Out of plane angle'<br>'psi', 'degrees', 0, [-360, 360], 'orientation', 'Major axis angle relative to Q'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">peak_lorentz</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">      Class that evaluates a lorentzian  shaped peak.          F(q) = scale/(1+[(q-q0)/B]^2 ) + background          The model has three parameters:             scale     =  scale             peak_pos        =  peak position             peak_hwhm        =  half-width-half-maximum of peak             background=  incoherent background</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'peak_pos', '1/Ang', 0.05, [-inf, inf], '', 'Peak postion in q'<br>'peak_hwhm', '1/Ang', 0.005, [-inf, inf], '', 'HWHM of peak'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">binary_hard_sphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">Describes the scattering from a mixture of two distinct monodisperse, hard sphere particles.         [Parameters];         radius_lg: large radius of binary hard sphere,         radius_sm: small radius of binary hard sphere,         volfraction_lg: volume fraction of large spheres,         volfraction_sm: volume fraction of small spheres,         sld_lg: large sphere  scattering length density,         sld_sm: small sphere scattering length density,         sld_solvent: solvent scattering length density. </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius_lg', 'Ang', 100, [0, inf], '', 'radius of large particle'<br>'radius_sm', 'Ang', 25, [0, inf], '', 'radius of small particle'<br>'volfraction_lg', '', 0.1, [0, 1], '', 'volume fraction of large particle'<br>'volfraction_sm', '', 0.2, [0, 1], '', 'volume fraction of small particle'<br>'sld_lg', '1e-6/Ang^2', 3.5, [-inf, inf], '', 'scattering length density of large particle'<br>'sld_sm', '1e-6/Ang^2', 0.5, [-inf, inf], '', 'scattering length density of small particle'<br>'sld_solvent', '1e-6/Ang^2', 6.36, [-inf, inf], '', 'Solvent scattering length density'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">dab</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"> F(q)= scale * L^3/(1 + (q*L)^2)^2  L: the correlation length  </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'length', 'Ang', 50.0, [0, inf], '', 'correlation length'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">gaussian_peak</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Model describes a Gaussian shaped peak including a flat background     Provide F(q) = scale*exp( -1/2 *[(q-q0)/sigma]^2 )+ background </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'q0', '1/Ang', 0.05, [-inf, inf], '', 'Peak position'<br>'sigma', '1/Ang', 0.005, [0, inf], '', 'Peak width (standard deviation)'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">star_polymer</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">         Benoit 'Star polymer with Gaussian statistics'         with         P(q) = 2/{fv^2} * (v - (1-exp(-v)) + {f-1}/2 * (1-exp(-v))^2)         where         - v = u^2f/(3f-2)         - u = &lt;R_g^2&gt;q^2, where &lt;R_g^2&gt; is the ensemble average radius of         gyration squared of an arm         - f is the number of arms on the star         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'rg_squared', 'Ang^2', 100.0, [0.0, inf], '', 'Ensemble radius of gyration SQUARED of an arm'<br>'arms', '', 3, [1.0, 6.0], '', 'Number of arms in the model'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">vesicle</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Model parameters:         radius : the core radius of the vesicle         thickness: the shell thickness         sld: the shell SLD         sld_slovent: the solvent (and core) SLD         background: incoherent background         volfraction: shell volume fraction         scale : scale factor = 1 if on absolute scale</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 0.5, [-inf, inf], '', 'vesicle shell scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6.36, [-inf, inf], '', 'solvent scattering length density'<br>'volfraction', '', 0.05, [0, 1.0], '', 'volume fraction of shell'<br>'radius', 'Ang', 100, [0, inf], 'volume', 'vesicle core radius'<br>'thickness', 'Ang', 30, [0, inf], 'volume', 'vesicle shell thickness'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">rpa</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"> This formalism applies to multicomponent polymer mixtures in the homogeneous (mixed) phase region only. Case 0: C/D binary mixture of homopolymers Case 1: C-D diblock copolymer Case 2: B/C/D ternary mixture of homopolymers Case 3: B/C-D mixture of homopolymer b and diblock copolymer C-D Case 4: B-C-D triblock copolymer Case 5: A/B/C/D quaternary mixture of homopolymers Case 6: A/B/C-D mixture of two homopolymers A/B and a diblock C-D Case 7: A/B-C-D mixture of a homopolymer A and a triblock B-C-D Case 8: A-B/C-D mixture of two diblock copolymers A-B and C-D Case 9: A-B-C-D four-block copolymer See details in the model function help </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'case_num', ['C+D binary mixture', 'C:D diblock copolymer', 'B+C+D ternary mixture', 'B+C:D binary mixture', 'B:C:D triblock copolymer', 'A+B+C+D quaternary mixture', 'A+B+C:D ternary mixture', 'A+B:C:D binary mixture', 'A:B+C:D binary mixture', 'A:B:C:D quadblock copolymer'], 0, [0, 10], '', 'Component organization'<br>'Na', '', 1000.0, [1, inf], '', 'Degree of polymerization'<br>'Phia', '', 0.25, [0, 1], '', 'volume fraction'<br>'va', 'mL/mol', 100.0, [0, inf], '', 'specific volume'<br>'La', 'fm', 10.0, [-inf, inf], '', 'scattering length'<br>'ba', 'Ang', 5.0, [0, inf], '', 'segment length'<br>'Nb', '', 1000.0, [1, inf], '', 'Degree of polymerization'<br>'Phib', '', 0.25, [0, 1], '', 'volume fraction'<br>'vb', 'mL/mol', 100.0, [0, inf], '', 'specific volume'<br>'Lb', 'fm', 10.0, [-inf, inf], '', 'scattering length'<br>'bb', 'Ang', 5.0, [0, inf], '', 'segment length'<br>'Nc', '', 1000.0, [1, inf], '', 'Degree of polymerization'<br>'Phic', '', 0.25, [0, 1], '', 'volume fraction'<br>'vc', 'mL/mol', 100.0, [0, inf], '', 'specific volume'<br>'Lc', 'fm', 10.0, [-inf, inf], '', 'scattering length'<br>'bc', 'Ang', 5.0, [0, inf], '', 'segment length'<br>'Nd', '', 1000.0, [1, inf], '', 'Degree of polymerization'<br>'Phid', '', 0.25, [0, 1], '', 'volume fraction'<br>'vd', 'mL/mol', 100.0, [0, inf], '', 'specific volume'<br>'Ld', 'fm', 10.0, [-inf, inf], '', 'scattering length'<br>'bd', 'Ang', 5.0, [0, inf], '', 'segment length'<br>'Kab', '', -0.0004, [-inf, inf], '', 'Interaction parameter'<br>'Kac', '', -0.0004, [-inf, inf], '', 'Interaction parameter'<br>'Kad', '', -0.0004, [-inf, inf], '', 'Interaction parameter'<br>'Kbc', '', -0.0004, [-inf, inf], '', 'Interaction parameter'<br>'Kbd', '', -0.0004, [-inf, inf], '', 'Interaction parameter'<br>'Kcd', '', -0.0004, [-inf, inf], '', 'Interaction parameter'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">polymer_micelle</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     This model provides an approximate form factor, P(q), for a micelle with     a spherical core with Gaussian polymer chains attached to the surface.     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'ndensity', '1e15/cm^3', 8.94, [0.0, inf], '', 'Number density of micelles'<br>'v_core', 'Ang^3', 62624.0, [0.0, inf], '', 'Core volume '<br>'v_corona', 'Ang^3', 61940.0, [0.0, inf], '', 'Corona volume'<br>'sld_solvent', '1e-6/Ang^2', 6.4, [0.0, inf], '', 'Solvent scattering length density'<br>'sld_core', '1e-6/Ang^2', 0.34, [0.0, inf], '', 'Core scattering length density'<br>'sld_corona', '1e-6/Ang^2', 0.8, [0.0, inf], '', 'Corona scattering length density'<br>'radius_core', 'Ang', 45.0, [0.0, inf], '', 'Radius of core ( must be &gt;&gt; radius_gyr )'<br>'radius_gyr', 'Ang', 20.0, [0.0, inf], '', 'Radius of gyration of chains in corona'<br>'d_penetration', '', 1.0, [-inf, inf], '', 'Factor to mimic non-penetration of Gaussian chains'<br>'n_aggreg', '', 6.0, [-inf, inf], '', 'Aggregation number of the micelle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">parallelepiped</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     I(q)= scale*V*(sld - sld_solvent)^2*P(q,alpha)+background         P(q,alpha) = integral from 0 to 1 of ...            phi(mu*sqrt(1-sigma^2),a) * S(mu*c*sigma/2)^2 * dsigma         with             phi(mu,a) = integral from 0 to 1 of ..             (S((mu/2)*cos(pi*u/2))*S((mu*a/2)*sin(pi*u/2)))^2 * du             S(x) = sin(x)/x             mu = q*B         V: Volume of the rectangular parallelepiped         alpha: angle between the long axis of the              parallelepiped and the q-vector for 1D </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 4, [-inf, inf], '', 'Parallelepiped scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'a_side', 'Ang', 35, [0, inf], 'volume', 'Shorter side of the parallelepiped'<br>'b_side', 'Ang', 75, [0, inf], 'volume', 'Second side of the parallelepiped'<br>'c_side', 'Ang', 400, [0, inf], 'volume', 'Larger side of the parallelepiped'<br>'theta', 'degrees', 60, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'<br>'psi', 'degrees', 60, [-inf, inf], 'orientation', 'Rotation angle around its own c axis against q plane'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">hollow_cylinder</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"> P(q) = scale*&lt;f*f&gt;/Vol + background, where f is the scattering amplitude. core_radius = the radius of core radius = the radius of shell length = the total length of the cylinder sld = SLD of the shell sld_solvent = SLD of the solvent background = incoherent background </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 30.0, [0, inf], 'volume', 'Cylinder radius'<br>'core_radius', 'Ang', 20.0, [0, inf], 'volume', 'Hollow core radius'<br>'length', 'Ang', 400.0, [0, inf], 'volume', 'Cylinder length'<br>'sld', '1/Ang^2', 6.3, [-inf, inf], '', 'Cylinder sld'<br>'sld_solvent', '1/Ang^2', 1, [-inf, inf], '', 'Solvent sld'<br>'theta', 'degrees', 90, [-360, 360], 'orientation', 'Theta angle'<br>'phi', 'degrees', 0, [-360, 360], 'orientation', 'Phi angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">be_polyelectrolyte</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">             Evaluate             F(x) = K 1/(4 pi Lb (alpha)^(2)) (q^(2)+k2)/(1+(r02)^(2))                  (q^(2)+k2) (q^(2)-(12 h C/b^(2)))              has 3 internal parameters :                    The inverse Debye Length: K2 = 4 pi Lb (2 Cs+alpha C)                    r02 =1/alpha/Ca^(0.5) (B/(48 pi Lb)^(0.5))                    Ca = 6.022136e-4 C             </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'contrast_factor', 'barns', 10.0, [-inf, inf], '', 'Contrast factor of the polymer'<br>'bjerrum_length', 'Ang', 7.1, [0, inf], '', 'Bjerrum length'<br>'virial_param', '1/Ang^2', 12.0, [-inf, inf], '', 'Virial parameter'<br>'monomer_length', 'Ang', 10.0, [0, inf], '', 'Monomer length'<br>'salt_concentration', 'mol/L', 0.0, [-inf, inf], '', 'Concentration of monovalent salt'<br>'ionization_degree', '', 0.05, [0, inf], '', 'Degree of ionization'<br>'polymer_concentration', 'mol/L', 0.7, [0, inf], '', 'Polymer molar concentration'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">guinier_porod</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">         I(q) = scale/q^s* exp ( - R_g^2 q^2 / (3-s) ) for q&lt;= ql          = scale/q^m*exp((-ql^2*Rg^2)/(3-s))*ql^(m-s) for q&gt;=ql                         where ql = sqrt((m-s)(3-s)/2)/Rg.                         List of parameters:                         scale = Guinier Scale                         s = Dimension Variable                         Rg = Radius of Gyration [A]                          m = Porod Exponent                         background  = Background [1/cm]</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'rg', 'Ang', 60.0, [0, inf], '', 'Radius of gyration'<br>'s', '', 1.0, [0, inf], '', 'Dimension variable'<br>'m', '', 3.0, [0, inf], '', 'Porod exponent'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">line</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">      I(q) = A + B*q        List of default parameters:       A = intercept       B = slope       </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'intercept', '1/cm', 1.0, [-inf, inf], '', 'intercept in linear model'<br>'slope', 'Ang/cm', 1.0, [-inf, inf], '', 'slope in linear model'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">raspberry</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">                 RaspBerryModel:                 volfraction_lg = volume fraction large spheres                 radius_lg = radius large sphere (A)                 sld_lg = sld large sphere (A-2)                 volfraction_sm = volume fraction small spheres                 radius_sm = radius small sphere (A)                 surface_fraction = fraction of small spheres at surface                 sld_sm = sld small sphere                 penetration = small sphere penetration (A)                 sld_solvent   = sld solvent                 background = background (cm-1)             Ref: J. coll. inter. sci. (2010) vol. 343 (1) pp. 36-41.</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld_lg', '1e-6/Ang^2', -0.4, [-inf, inf], '', 'large particle scattering length density'<br>'sld_sm', '1e-6/Ang^2', 3.5, [-inf, inf], '', 'small particle scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6.36, [-inf, inf], '', 'solvent scattering length density'<br>'volfraction_lg', '', 0.05, [-inf, inf], '', 'volume fraction of large spheres'<br>'volfraction_sm', '', 0.005, [-inf, inf], '', 'volume fraction of small spheres'<br>'surface_fraction', '', 0.4, [-inf, inf], '', 'fraction of small spheres at surface'<br>'radius_lg', 'Ang', 5000, [0, inf], 'volume', 'radius of large spheres'<br>'radius_sm', 'Ang', 100, [0, inf], '', 'radius of small spheres'<br>'penetration', 'Ang', 0, [-1, 1], '', 'fractional penetration depth of small spheres into large sphere'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fractal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">         The scattering intensity is given by         I(q) = scale * V * delta^(2) * P(q) * S(q) + background, where         p(q)= F(q*radius)^(2)         F(x) = 3*[sin(x)-x cos(x)]/x**3         delta = sld_block -sld_solv         scale        =  scale * volfraction         radius       =  Block radius         sld_block    =  SDL block         sld_solv  =  SDL solvent         background   =  background         and S(q) is the interference term between building blocks given         in the full documentation and depending on the parameters         fractal_dim  =  Fractal dimension         cor_length  =  Correlation Length    </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'volfraction', '', 0.05, [0.0, 1], '', 'volume fraction of blocks'<br>'radius', 'Ang', 5.0, [0.0, inf], '', 'radius of particles'<br>'fractal_dim', '', 2.0, [0.0, 6.0], '', 'fractal dimension'<br>'cor_length', 'Ang', 100.0, [0.0, inf], '', 'cluster correlation length'<br>'sld_block', '1e-6/Ang^2', 2.0, [-inf, inf], '', 'scattering length density of particles'<br>'sld_solvent', '1e-6/Ang^2', 6.4, [-inf, inf], '', 'scattering length density of solvent'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sc_paracrystal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">         P(q)=(scale/Vp)*V_lattice*P(q)*Z(q)+bkg where scale is the volume         fraction of sphere,         Vp = volume of the primary particle,         V_lattice = volume correction for         for the crystal structure,         P(q)= form factor of the sphere (normalized),         Z(q)= paracrystalline structure factor         for a simple cubic structure.         [Simple Cubic ParaCrystal Model]         Parameters;         scale: volume fraction of spheres         bkg:background, R: radius of sphere         dnn: Nearest neighbor distance         d_factor: Paracrystal distortion factor         radius: radius of the spheres         sldSph: SLD of the sphere         sldSolv: SLD of the solvent         </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'dnn', 'Ang', 220.0, [0.0, inf], '', 'Nearest neighbor distance'<br>'d_factor', '', 0.06, [-inf, inf], '', 'Paracrystal distortion factor'<br>'radius', 'Ang', 40.0, [0.0, inf], 'volume', 'Radius of sphere'<br>'sld', '1e-6/Ang^2', 3.0, [0.0, inf], '', 'Sphere scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [0.0, inf], '', 'Solvent scattering length density'<br>'theta', 'degrees', 0.0, [-inf, inf], 'orientation', 'Orientation of the a1 axis w/respect incoming beam'<br>'phi', 'degrees', 0.0, [-inf, inf], 'orientation', 'Orientation of the a2 in the plane of the detector'<br>'psi', 'degrees', 0.0, [-inf, inf], 'orientation', 'Orientation of the a3 in the plane of the detector'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">lamellar_hg_stack_caille</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [Random lamellar phase with Caille  structure factor]         randomly oriented stacks of infinite sheets         with Caille S(Q), having polydisperse spacing.         layer thickness =(H+T+T+H) = 2(Head+Tail)         sld = Tail scattering length density         sld_head = Head scattering length density         sld_solvent = solvent scattering length density         background = incoherent background         scale = scale factor </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'tail_length', 'Ang', 10, [0, inf], 'volume', 'Tail thickness'<br>'head_length', 'Ang', 2, [0, inf], 'volume', 'head thickness'<br>'Nlayers', '', 30, [0, inf], '', 'Number of layers'<br>'spacing', 'Ang', 40.0, [0.0, inf], 'volume', 'd-spacing of Caille S(Q)'<br>'Caille_parameter', '', 0.001, [0.0, 0.8], '', 'Caille parameter'<br>'sld', '1e-6/Ang^2', 0.4, [-inf, inf], '', 'Tail scattering length density'<br>'sld_head', '1e-6/Ang^2', 2.0, [-inf, inf], '', 'Head scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6, [-inf, inf], '', 'Solvent scattering length density'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">correlation_length</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"> </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'lorentz_scale', '', 10.0, [0, inf], '', 'Lorentzian Scaling Factor'<br>'porod_scale', '', 1e-06, [0, inf], '', 'Porod Scaling Factor'<br>'cor_length', 'Ang', 50.0, [0, inf], '', 'Correlation length, xi, in Lorentzian'<br>'exponent_p', '', 3.0, [0, inf], '', 'Porod Exponent, n, in q^-n'<br>'exponent_l', '1/Ang^2', 2.0, [0, inf], '', 'Lorentzian Exponent, m, in 1/( 1 + (q.xi)^m)'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">lamellar</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [Dilute Lamellar Form Factor](from a lyotropic lamellar phase)         I(q)= 2*pi*P(q)/(delta *q^(2)), where         P(q)=2*(contrast/q)^(2)*(1-cos(q*delta))^(2))         thickness = layer thickness         sld = layer scattering length density         sld_solvent = solvent scattering length density         background = incoherent background         scale = scale factor </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'thickness', 'Ang', 50, [0, inf], 'volume', 'total layer thickness'<br>'sld', '1e-6/Ang^2', 1, [-inf, inf], '', 'Layer scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 6, [-inf, inf], '', 'Solvent scattering length density'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pringle</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"> </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 60.0, [0, inf], 'volume', 'Pringle radius'<br>'thickness', 'Ang', 10.0, [0, inf], 'volume', 'Thickness of pringle'<br>'alpha', '', 0.001, [-inf, inf], '', 'Curvature parameter alpha'<br>'beta', '', 0.02, [-inf, inf], '', 'Curvature paramter beta'<br>'sld_pringle', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Pringle sld'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'Solvent sld'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">porod</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">          I(q) = scale/q^4 + background </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">lamellar_stack_caille</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [Random lamellar phase with Caille  structure factor]     randomly oriented stacks of infinite sheets     with Caille S(Q), having polydisperse spacing.     sld = sheet scattering length density     sld_solvent = solvent scattering length density     background = incoherent background     scale = scale factor </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'thickness', 'Ang', 30.0, [0, inf], 'volume', 'sheet thickness'<br>'Nlayers', '', 20, [0, inf], '', 'Number of layers'<br>'spacing', 'Ang', 400.0, [0.0, inf], 'volume', 'd-spacing of Caille S(Q)'<br>'Caille_parameter', '1/Ang^2', 0.1, [0.0, 0.8], '', 'Caille parameter'<br>'sld', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'layer scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Solvent scattering length density'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">gauss_lorentz_gel</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">             Class that evaluates a GaussLorentzGel model.              I(q) = scale_g*exp(- q^2*Z^2 / 2)+scale_l/(1+q^2*z^2)                     + background             List of default parameters:                 scale_g = Gauss scale factor                 Z = Static correlation length                 scale_l = Lorentzian scale factor                 z = Dynamic correlation length                 background = Incoherent background             </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'gauss_scale_factor', '', 100.0, [-inf, inf], '', 'Gauss scale factor'<br>'static_cor_length', 'Ang', 100.0, [0, inf], '', 'Static correlation length'<br>'lorentz_scale_factor', '', 50.0, [-inf, inf], '', 'Lorentzian scale factor'<br>'dynamic_cor_length', 'Ang', 20.0, [0, inf], '', 'Dynamic correlation length'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">rectangular_prism</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     I(q)= scale*V*(sld - sld_solvent)^2*P(q,theta,phi)+background         P(q,theta,phi) = (2/pi) * double integral from 0 to pi/2 of ...            AP^2(q)*sin(theta)*dtheta*dphi         AP = S(q*C*cos(theta)/2) * S(q*A*sin(theta)*sin(phi)/2) * S(q*B*sin(theta)*cos(phi)/2)         S(x) = sin(x)/x </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'Parallelepiped scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'a_side', 'Ang', 35, [0, inf], 'volume', 'Shorter side of the parallelepiped'<br>'b2a_ratio', 'Ang', 1, [0, inf], 'volume', 'Ratio sides b/a'<br>'c2a_ratio', 'Ang', 1, [0, inf], 'volume', 'Ratio sides c/a'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">bcc_paracrystal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     Calculates the scattering from a **body-centered cubic lattice** with     paracrystalline distortion. Thermal vibrations are considered to be     negligible, and the size of the paracrystal is infinitely large.     Paracrystalline distortion is assumed to be isotropic and characterized     by a Gaussian distribution.     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'dnn', 'Ang', 220, [-inf, inf], '', 'Nearest neighbour distance'<br>'d_factor', '', 0.06, [-inf, inf], '', 'Paracrystal distortion factor'<br>'radius', 'Ang', 40, [0, inf], 'volume', 'Particle radius'<br>'sld', '1e-6/Ang^2', 4, [-inf, inf], '', 'Particle scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 1, [-inf, inf], '', 'Solvent scattering length density'<br>'theta', 'degrees', 60, [-inf, inf], 'orientation', 'In plane angle'<br>'phi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'<br>'psi', 'degrees', 60, [-inf, inf], 'orientation', 'Out of plane angle'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">core_shell_sphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">     F^2(q) = 3/V_s [V_c (sld_core-sld_shell) (sin(q*radius)-q*radius*cos(q*radius))/(q*radius)^3                     + V_s (sld_shell-sld_solvent) (sin(q*r_s)-q*r_s*cos(q*r_s))/(q*r_s)^3]              V_s: Volume of the sphere shell             V_c: Volume of the sphere core             r_s: Shell radius = radius + thickness </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 60.0, [0, inf], 'volume', 'Sphere core radius'<br>'thickness', 'Ang', 10.0, [0, inf], 'volume', 'Sphere shell thickness'<br>'sld_core', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'core scattering length density'<br>'sld_shell', '1e-6/Ang^2', 2.0, [-inf, inf], '', 'shell scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 3.0, [-inf, inf], '', 'Solvent scattering length density'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">stacked_disks</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    One layer of disk consists of a core, a top layer, and a bottom layer.     radius =  the radius of the disk     core_thick = thickness of the core     layer_thick = thickness of a layer     sld_core = the SLD of the core     sld_layer = the SLD of the layers     n_stacking = the number of the disks     sigma_d =  Gaussian STD of d-spacing     sld_solvent = the SLD of the solvent     </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'core_thick', 'Ang', 10.0, [0, inf], 'volume', 'Thickness of the core disk'<br>'layer_thick', 'Ang', 10.0, [0, inf], 'volume', 'Thickness of layer each side of core'<br>'radius', 'Ang', 15.0, [0, inf], 'volume', 'Radius of the stacked disk'<br>'n_stacking', '', 1.0, [0, inf], 'volume', 'Number of stacked layer/core/layer disks'<br>'sigma_d', 'Ang', 0, [0, inf], '', 'GSD of disks sigma_d'<br>'sld_core', '1e-6/Ang^2', 4, [-inf, inf], '', 'Core scattering length density'<br>'sld_layer', '1e-6/Ang^2', 0.0, [-inf, inf], '', 'Layer scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 5.0, [-inf, inf], '', 'Solvent scattering length density'<br>'theta', 'degrees', 0, [-inf, inf], 'orientation', 'Orientation of the stacked disk axis w/respect incoming beam'<br>'phi', 'degrees', 0, [-inf, inf], 'orientation', 'Orientation of the stacked disk in the plane of the detector'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">hardsphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">    [Hard sphere structure factor, with Percus-Yevick closure]         Interparticle S(Q) for random, non-interacting spheres.     May be a reasonable approximation for other shapes of     particles that freely rotate, and for moderately polydisperse         systems. Though strictly the maths needs to be modified -     which sasview does not do yet.     radius_effective is the hard sphere radius     volfraction is the volume fraction occupied by the spheres. </td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius_effective', 'Ang', 50.0, [0, inf], 'volume', 'effective radius of hard sphere'<br>'volfraction', '', 0.2, [0, 0.74], '', 'volume fraction of hard spheres'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">N/A</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">beaucage_exppowlaw</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'G', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'GS', '', 0.0, [-inf, inf], '', ''<br>'BS', '', 1.0, [-inf, inf], '', ''<br>'RG', '', 0.0, [-inf, inf], '', ''<br>'RSUB', '', 0.0, [-inf, inf], '', ''<br>'RS', '', 0.0, [-inf, inf], '', ''<br>'P', '', 0.0, [-inf, inf], '', ''<br>'PS', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylulv_chain_rw__nagg</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_coreshellmicrogel</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'W_CORE', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_CORE', '', 0.0, [-inf, inf], '', ''<br>'W_SH', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_SHIN', '', 1.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_OUT', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ornstein_zernike</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">F^2(Q,Rg,I0) = I0/(1+Q^2*xi^2)</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', 'xi: correlation length'<br>'XI', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cspline8</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'XMIN', '', 10.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''<br>'Y1', '', 0.0, [-inf, inf], '', ''<br>'Y2', '', 1.0, [-inf, inf], '', ''<br>'Y3', '', 0.0, [-inf, inf], '', ''<br>'Y4', '', 0.0, [-inf, inf], '', ''<br>'Y5', '', 0.0, [-inf, inf], '', ''<br>'Y6', '', 0.0, [-inf, inf], '', ''<br>'Y7', '', 0.0, [-inf, inf], '', ''<br>'Y8', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ExpShell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R1', '', 10.0, [-inf, inf], '', ''<br>'dR', '', 0.0, [-inf, inf], '', ''<br>'eta_c', '', 0.0, [-inf, inf], '', ''<br>'eta_sh', '', 1.0, [-inf, inf], '', ''<br>'x_in', '', 0.0, [-inf, inf], '', ''<br>'x_out', '', 0.0, [-inf, inf], '', ''<br>'alpha', '', 0.0, [-inf, inf], '', ''<br>'eta_sol', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">rod</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">Formfactor of very long cylindrical block copolymer micelles</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'LENGTH', '', 10.0, [-inf, inf], '', 'Vpolym_core: molecular volume of the block in the core \nin nm\\^3 if Q in nm\\^-1, in A\\^3 if Q in A\\^-1'<br>'ETA', '', 0.0, [-inf, inf], '', 'Vpolym_brsh: molecular volume of the block bilding the shell \nin nm\\^3 if Q in nm\\^-1, in A\\^3 if Q in A\\^-1'</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_ExpShell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_CORE', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 1.0, [-inf, inf], '', ''<br>'X_IN_SOL', '', 0.0, [-inf, inf], '', ''<br>'X_OUT_SOL', '', 0.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">boucher_sphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_fuzzysphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'SIGMA', '', 0.0, [-inf, inf], '', ''<br>'ETA_SPH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pcs_twoinfinitelythinlayers</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sphulv_chain_rw__t</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pcs_homogeneous_plate</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'DUMMY1', '', 0.0, [-inf, inf], '', ''<br>'DUMMY2', '', 1.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_LinShell2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_TOT', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 1.0, [-inf, inf], '', ''<br>'X_IN_SOL', '', 0.0, [-inf, inf], '', ''<br>'X_OUT_SOL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">disc_chain_rw__nagg</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NAGG', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pcs_layeredcentrosymmetricxs</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'LC', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_LC', '', 0.0, [-inf, inf], '', ''<br>'LSH', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_LSH', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'SH', '', 0.0, [-inf, inf], '', ''<br>'LL', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellulv_chain_rw__nagg</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">generalized_guinier_porod_law</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'G2', '', 10.0, [-inf, inf], '', ''<br>'S2', '', 0.0, [-inf, inf], '', ''<br>'RG2', '', 0.0, [-inf, inf], '', ''<br>'S1', '', 1.0, [-inf, inf], '', ''<br>'RG1', '', 0.0, [-inf, inf], '', ''<br>'M', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">akima8</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'XMIN', '', 10.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''<br>'Y1', '', 0.0, [-inf, inf], '', ''<br>'Y2', '', 1.0, [-inf, inf], '', ''<br>'Y3', '', 0.0, [-inf, inf], '', ''<br>'Y4', '', 0.0, [-inf, inf], '', ''<br>'Y5', '', 0.0, [-inf, inf], '', ''<br>'Y6', '', 0.0, [-inf, inf], '', ''<br>'Y7', '', 0.0, [-inf, inf], '', ''<br>'Y8', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sphulv_chain_rw__nagg</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">coreshellmicrogel</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'W_CORE', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_CORE', '', 0.0, [-inf, inf], '', ''<br>'W_SH', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_SHIN', '', 1.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_OUT', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">disc_chain_rw__l</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'LC', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sphere_with_3_shells</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_CORE', '', 10.0, [-inf, inf], '', ''<br>'T_SH1', '', 0.0, [-inf, inf], '', ''<br>'T_SH2', '', 0.0, [-inf, inf], '', ''<br>'T_SH3', '', 1.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH1', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH2', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH3', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylsh_sd_homoxs</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'R', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_R', '', 1.0, [-inf, inf], '', ''<br>'H', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_H', '', 0.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">LinShell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'EMPTY', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'eta_core', '', 0.0, [-inf, inf], '', ''<br>'eta_shell', '', 1.0, [-inf, inf], '', ''<br>'x_in_solvent', '', 0.0, [-inf, inf], '', ''<br>'x_out_solvent', '', 0.0, [-inf, inf], '', ''<br>'eta_solvent', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">boucher_sphere2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellsh_sd_bilayergauss</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_LinShell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_CORE', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 1.0, [-inf, inf], '', ''<br>'X_IN_SOL', '', 0.0, [-inf, inf], '', ''<br>'X_OUT_SOL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylulv_chain_rw_</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellsh_sd_homoxs</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'R0', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_R0', '', 1.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'DUMMY', '', 0.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">debye_anderson_brumberger</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', ''<br>'XI', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylulv_chain_rw__t</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylsh_sd_bilayergauss</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellulv_chain_rw_</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">beaucage_exppowlaw_2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'G', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'R_I', '', 0.0, [-inf, inf], '', ''<br>'R_Ip1', '', 1.0, [-inf, inf], '', ''<br>'K', '', 0.0, [-inf, inf], '', ''<br>'P', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sphulv_chain_rw_</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">disc_chain_rw_</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">parallelepiped_ab</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'C', '', 0.0, [-inf, inf], '', ''<br>'ETA', '', 1.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'BETA', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">disc_sd_homoxs</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_D', '', 1.0, [-inf, inf], '', ''<br>'DUMMY1', '', 0.0, [-inf, inf], '', ''<br>'DUMMY2', '', 0.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">LinShell2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'EMPTY', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'eta_core', '', 0.0, [-inf, inf], '', ''<br>'eta_shell', '', 1.0, [-inf, inf], '', ''<br>'x_in_solvent', '', 0.0, [-inf, inf], '', ''<br>'x_out_solvent', '', 0.0, [-inf, inf], '', ''<br>'eta_solvent', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">boucher_profiles2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">boucher_profiles</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellulv_chain_rw__t</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">triax_ellip_shell_syl</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'DELTA_B', '', 0.0, [-inf, inf], '', ''<br>'DELTA_C', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH_DRY', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'PHI', '', 0.0, [-inf, inf], '', ''<br>'V_POL_AP', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">extended_guinier_law</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', ''<br>'A', '', 0.0, [-inf, inf], '', ''<br>'RA', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">triax_ellip_shell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'C', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fractal_series1</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'XMIN', '', 0.0, [-inf, inf], '', ''<br>'FD1', '', 0.0, [-inf, inf], '', ''<br>'XMAX', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fractal_series2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'XMIN', '', 0.0, [-inf, inf], '', ''<br>'FD1', '', 0.0, [-inf, inf], '', ''<br>'X12', '', 1.0, [-inf, inf], '', ''<br>'FD2', '', 0.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fractal_series3</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'XMIN', '', 0.0, [-inf, inf], '', ''<br>'FD1', '', 0.0, [-inf, inf], '', ''<br>'X12', '', 1.0, [-inf, inf], '', ''<br>'FD2', '', 0.0, [-inf, inf], '', ''<br>'X23', '', 0.0, [-inf, inf], '', ''<br>'FD3', '', 0.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+    </tr>
+</table>

@@ -101,12 +101,12 @@ def generate_table(sasmodels_dict, sasfit_dict, cpu_list, gpu_list):
             params_sf = params_sf[1:-1]
             #map( params_sf.extend, sasfit_dict[sasfit_model][1])
 
-            compiled_cpu = "No"
-            compiled_gpu = "No"
+            compiled_cpu = "NoImg"
+            compiled_gpu = "NoImg"
             if "sasfit_"+sasfit_model in cpu_list:
-                compiled_cpu = "Yes"
+                compiled_cpu = "YesImg"
             if "sasfit_"+sasfit_model in gpu_list:
-                compiled_gpu = "Yes"
+                compiled_gpu = "YesImg"
             x.add_row([sasview_model, descs_sv, params_sv,
                        sasfit_model, descs_sf, params_sf,
                        compiled_cpu, compiled_gpu])
@@ -127,6 +127,7 @@ def generate_table(sasmodels_dict, sasfit_dict, cpu_list, gpu_list):
     #Last print non-overlaping SASFit models
     for sasfit_model in sasfit_dict.keys():
         if not sasfit_model in overlaping_models:
+            descs = sasfit_dict[sasfit_model][0].replace("\n", " ")
             #params = []
             #map( params.extend, sasfit_dict[sasfit_model][1])
             #params =", ".join(str(x) for x in params)
@@ -134,12 +135,12 @@ def generate_table(sasmodels_dict, sasfit_dict, cpu_list, gpu_list):
             params = "br".join(str(x) for x in params)
             params = params.replace("]br[", " br ")
             params = params[1:-1]
-            compiled_cpu = "No"
-            compiled_gpu = "No"
+            compiled_cpu = "NoImg"
+            compiled_gpu = "NoImg"
             if "sasfit_"+sasfit_model in cpu_list:
-                compiled_cpu = "Yes"
+                compiled_cpu = "YesImg"
             if "sasfit_"+sasfit_model in gpu_list:
-                compiled_gpu = "Yes"
+                compiled_gpu = "YesImg"
             x.add_row(["", "", "", sasfit_model, descs, params,
                        compiled_cpu, compiled_gpu])
 

@@ -15,11 +15,11 @@ double Iqxy( double qx, double qy, double xi, double d, double eta);
 // define shortcuts for local parameters/variables
 double Iq( double q, double xi, double d, double eta)
 {
-    double a, b, k, c;
+    double a, b, k, c, xi, d, eta;
 // insert your code here
-    k = 2.*M_PI/d;
-    a = k*k + 1./(xi*xi);
-    b = k*k - 1./(xi*xi);
+    k = 2.*M_PI/D;
+    a = k*k + 1./(XI*XI);
+    b = k*k - 1./(XI*XI);
     c = a*a - 2.*b*q*q + q*q*q*q;
     return eta*eta*8*M_PI/xi/c;
 }
