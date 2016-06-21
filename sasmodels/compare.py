@@ -531,8 +531,9 @@ def make_engine(model_info, data, dtype, cutoff, sasfit_model_info):
                                   cutoff=cutoff)
     else:
         if sasfit_model_info:
-            return eval_sasfit_opencl(sasfit_model_info, data, dtype=dtype,
-                                      cutoff=cutoff)
+            return eval_sasfit_ctypes(sasfit_model_info, data, dtype=dtype,cutoff=cutoff)
+            #return eval_sasfit_opencl(sasfit_model_info, data, dtype=dtype,cutoff=cutoff)
+
         return eval_opencl(model_info, data, dtype=dtype, cutoff=cutoff)
 
 
