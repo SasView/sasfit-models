@@ -191,12 +191,17 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
 
     Iq_lines = "double Iq( double q,"
     Fq_lines = "double Fq( double q, "
-    Fqf_lines = "Fq(q,"
+    Fqf_lines = "return "
     form_volume_lines = "double form_volume( "
     include_libs = []
     for line in sasfit_lines:
         line = line.strip()
         allowed = 1
+
+        # Replace string in line when need
+        #for sub in substitution_dict.keys():
+        #    if search(sub, line):
+        #        line = line.replace(sub, substitution_dict[sub])
 
         #Create a new header for Iq function
         if search("sasfit_ff_"+model_name, line) and not search("src", line):
@@ -206,7 +211,13 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
                 Fq_lines+=" double "+parameters[-1]+")"
                 output_c_lines.append(Fq_lines+"\n")
                 output_intro_lines.append(Fq_lines+";\n")
+                allowed = 0
             elif search("sasfit_ff_" + model_name + "_f", line):
+                for sub in substitution_dict.keys():
+                    if search(sub, line):
+                        line = line.replace(sub, substitution_dict[sub])
+                Fqf_lines+=line
+                Fqf_lines += "Fq(q, "
                 for param in parameters[:-1]:
                     Fqf_lines += param + ","
                 Fqf_lines += parameters[-1] + ");"
@@ -217,13 +228,14 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
                 form_volume_lines+=" double "+parameters[-1]+")"
                 output_c_lines.append(form_volume_lines+"\n")
                 output_intro_lines.append(form_volume_lines+";\n")
+                allowed = 0
             else:
                 for param in parameters[:-1]:
                     Iq_lines+=" double "+param+","
                 Iq_lines+=" double "+parameters[-1]+")"
                 output_c_lines.append(Iq_lines+"\n")
                 output_intro_lines.append(Iq_lines+";\n")
-            allowed = 0
+                allowed = 0
         for banned_term in exclude_list:
             if search(banned_term, line):
                 allowed = 0
