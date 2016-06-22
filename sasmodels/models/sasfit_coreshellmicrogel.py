@@ -24,9 +24,9 @@ parameters = [
  [ "SIGMA_SHIN", 	"", 	3.0, 	[-inf, inf], 	"volume", 	""],
  [ "D", 	"", 	3.0, 	[-inf, inf], 	"volume", 	""],
  [ "SIGMA_OUT", 	"", 	4.0, 	[-inf, inf], 	"volume", 	""],
- [ "ETA_CORE", 	"", 	3.5, 	[-inf, inf], 	"", 	""],
- [ "ETA_SHELL", 	"", 	2.5, 	[-inf, inf], 	"", 	""],
- [ "ETA_SOL", 	"", 	1.0, 	[-inf, inf], 	"", 	""],
+ [ "sld_core", 	"1e-6/Ang^2", 	3.5, 	[-inf, inf], 	"", 	""],
+ [ "sld_shell", 	"1e-6/Ang^2", 	2.5, 	[-inf, inf], 	"", 	""],
+ [ "sld_sol", 	"1e-6/Ang^2", 	1.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -39,6 +39,6 @@ demo = dict(
 	SIGMA_SHIN = 3.0,
 	D = 3.0,
 	SIGMA_OUT = 4.0,
-	ETA_CORE = 3.5,
-	ETA_SHELL = 2.5,
-	ETA_SOL = 1.0)
+	sld_core = 3.5,
+	sld_shell = 2.5,
+	sld_sol = 1.0)

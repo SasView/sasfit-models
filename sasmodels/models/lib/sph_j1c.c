@@ -60,6 +60,6 @@ double sph_j1c(double q)
 //GSL function gsl_sf_bessel_j1 equivalent
 double sph_j1(double q)
 {
-    return q*sph_j1c/3
+    return q*sph_j1c(q)/3;
 }
 

@@ -43,6 +43,7 @@ exclude_list = ["#include", "param->p",
 
 #Data types and GSL functions will be replcaced here
 substitution_dict = {"scalar":"double",
+                     "ETA":"sld",
                      "gsl_pow_2":"sas_pow_2",
                      "gsl_pow_3":"sas_pow_3",
                      "gsl_pow_4":"sas_pow_4",
@@ -184,8 +185,16 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     #And if this still doesn't work stop computation
     if len(parameters) == 0:
         exit()
+
     #Add paramters to excluded list, so they don't get redifned - shaky
     exclude_list.append("scalar "+", ".join(parameters))
+    #Changing sasview specific parameters
+    fixed_paramters = []
+    for param in parameters:
+        if "ETA" in param:
+            param = param.replace("ETA","sld")
+        fixed_paramters.append(param)
+    parameters = fixed_paramters
 
     Iq_lines = "double Iq( double q,"
     Fq_lines = "double Fq( double q, "
