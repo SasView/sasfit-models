@@ -66,8 +66,8 @@ double Iq( double q, double W_CORE, double SIGMA_CORE, double W_SH,
            double ETA_SHELL, double ETA_SOL)
 {
 // insert your code here
-    return sas_pow_2(Fq(q,W_CORE,SIGMA_CORE,W_SH,SIGMA_SHIN,D,SIGMA_OUT,ETA_CORE,
-            ETA_SHELL,ETA_SOL));
+    return sas_pow_2(Fq(q, W_CORE,SIGMA_CORE,W_SH,SIGMA_SHIN,D,SIGMA_OUT,ETA_CORE,
+                        ETA_SHELL,ETA_SOL));
 }
 double Fq( double q,  double W_CORE, double SIGMA_CORE, double W_SH,
            double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,

@@ -211,15 +211,21 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
                 output_intro_lines.append(Fq_lines+";\n")
                 allowed = 0
             elif search("sasfit_ff_" + model_name + "_f", line):
+                endFqline = 0
                 for sub in substitution_dict.keys():
                     if search(sub, line):
-                        line = line.replace(sub, substitution_dict[sub])
-                Fqf_lines+=line
+                        Fqf_lines += substitution_dict[sub]+"("
+                        endFqline = 1
                 Fqf_lines += "Fq(q, "
                 for param in parameters[:-1]:
                     Fqf_lines += param + ","
-                Fqf_lines += parameters[-1] + ");"
+                Fqf_lines += parameters[-1] + ")"
+                if endFqline:
+                    Fqf_lines += ");"
+                else:
+                    Fqf_lines + ";"
                 output_c_lines.append(Fqf_lines + "\n")
+                allowed = 0
             elif search("scalar sasfit_ff_"+model_name+"_v", line):
                 for param in parameters[:-1]:
                     form_volume_lines+=" double "+param+","
