@@ -18,12 +18,12 @@ description = ""
 category = " "
 #pylint: disable=bad-whitespace, line-too-long
 parameters = [
- [ "W_CORE", 	"", 	10.0, 	[-inf, inf], 	"", 	""],
- [ "SIGMA_CORE", 	"", 	3.0, 	[-inf, inf], 	"", 	""],
- [ "W_SH", 	"", 	4.0, 	[-inf, inf], 	"", 	""],
- [ "SIGMA_SHIN", 	"", 	3.0, 	[-inf, inf], 	"", 	""],
- [ "D", 	"", 	3.0, 	[-inf, inf], 	"", 	""],
- [ "SIGMA_OUT", 	"", 	4.0, 	[-inf, inf], 	"", 	""],
+ [ "W_CORE", 	"", 	10.0, 	[-inf, inf], 	"volume", 	""],
+ [ "SIGMA_CORE", 	"", 	3.0, 	[-inf, inf], 	"volume", 	""],
+ [ "W_SH", 	"", 	4.0, 	[-inf, inf], 	"volume", 	""],
+ [ "SIGMA_SHIN", 	"", 	3.0, 	[-inf, inf], 	"volume", 	""],
+ [ "D", 	"", 	3.0, 	[-inf, inf], 	"volume", 	""],
+ [ "SIGMA_OUT", 	"", 	4.0, 	[-inf, inf], 	"volume", 	""],
  [ "ETA_CORE", 	"", 	3.5, 	[-inf, inf], 	"", 	""],
  [ "ETA_SHELL", 	"", 	2.5, 	[-inf, inf], 	"", 	""],
  [ "ETA_SOL", 	"", 	1.0, 	[-inf, inf], 	"", 	""],

@@ -20,8 +20,6 @@ some additional information ,may need to be filled in
 #TODO: Retrive parameter description automatically
 #TODO: Add categroy as an input parameter?
 #TODO: Units
-#TODO: Form volume (and specify volume params)
-#TODO: Potentially change sasfit_ff_sphere to something from SASView
 #TODO: Don't read EMPTY parameter in
 #TODO: Add support for FQ and volume
 

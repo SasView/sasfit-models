@@ -11,8 +11,7 @@ double Fq( double q,  double W_CORE, double SIGMA_CORE, double W_SH,
            double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
            double ETA_SHELL, double ETA_SOL);
 double form_volume(  double W_CORE, double SIGMA_CORE, double W_SH,
-                     double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
-                     double ETA_SHELL, double ETA_SOL);
+                     double SIGMA_SHIN, double D, double SIGMA_OUT);
 double Iqxy( double qx, double qy, double W_CORE, double SIGMA_CORE,
              double W_SH, double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
              double ETA_SHELL, double ETA_SOL);
@@ -79,9 +78,10 @@ double Fq( double q,  double W_CORE, double SIGMA_CORE, double W_SH,
                 -	ampl(q,R_SHIN,SIGMA_SHIN,(ETA_SHELL-ETA_SOL))
                 +	ampl(q,R_CORE,SIGMA_CORE,(ETA_CORE -ETA_SOL));
 }
+//double form_volume(  double W_CORE, double SIGMA_CORE, double W_SH,
+//                     double SIGMA_SHIN, double D, double SIGMA_OUT)
 double form_volume(  double W_CORE, double SIGMA_CORE, double W_SH,
-                     double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
-                     double ETA_SHELL, double ETA_SOL)
+                     double SIGMA_SHIN, double D, double SIGMA_OUT)
 {
 // insert your code here
     return 4.*M_PI*sas_pow_3(R_OUT+SIGMA_OUT)/3.;
