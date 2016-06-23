@@ -13,8 +13,8 @@ double Fq( double q,  double W_CORE, double SIGMA_CORE, double W_SH,
 double form_volume(  double W_CORE, double SIGMA_CORE, double W_SH,
                      double SIGMA_SHIN, double D, double SIGMA_OUT);
 double Iqxy( double qx, double qy, double W_CORE, double SIGMA_CORE,
-             double W_SH, double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
-             double ETA_SHELL, double ETA_SOL);
+             double W_SH, double SIGMA_SHIN, double D, double SIGMA_OUT,
+             double ETA_CORE, double ETA_SHELL, double ETA_SOL);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
