@@ -65,7 +65,7 @@ double Iq( double q, double W_CORE, double SIGMA_CORE, double W_SH,
            double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
            double ETA_SHELL, double ETA_SOL)
 {
-// insert your code here
+
     return sas_pow_2(Fq(q, W_CORE,SIGMA_CORE,W_SH,SIGMA_SHIN,D,SIGMA_OUT,ETA_CORE,
                         ETA_SHELL,ETA_SOL));
 }
@@ -73,7 +73,6 @@ double Fq( double q,  double W_CORE, double SIGMA_CORE, double W_SH,
            double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
            double ETA_SHELL, double ETA_SOL)
 {
-    double u,v,w,t,s;
     return		ampl(q,R_OUT,SIGMA_OUT,(ETA_SHELL-ETA_SOL))
                 -	ampl(q,R_SHIN,SIGMA_SHIN,(ETA_SHELL-ETA_SOL))
                 +	ampl(q,R_CORE,SIGMA_CORE,(ETA_CORE -ETA_SOL));
@@ -83,8 +82,7 @@ double Fq( double q,  double W_CORE, double SIGMA_CORE, double W_SH,
 double form_volume(  double W_CORE, double SIGMA_CORE, double W_SH,
                      double SIGMA_SHIN, double D, double SIGMA_OUT)
 {
-// insert your code here
-    return 4.*M_PI*sas_pow_3(R_OUT+SIGMA_OUT)/3.;
+       return 4.*M_PI*sas_pow_3(R_OUT+SIGMA_OUT)/3.;
 }
 double Iqxy( double qx, double qy, double W_CORE, double SIGMA_CORE,
              double W_SH, double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
