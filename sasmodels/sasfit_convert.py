@@ -96,11 +96,31 @@ def extract_parameters_definition( model_name, tcl_filename ):
         if search(model_name_upper+ " {", line) or search("\""
                                     +model_name_upper+"\" {", line):
             model_def_index = index
+    #TODO Some models have extra parameters, so the range with 13 won't work
     model_def_lines = tcl_lines[model_def_index+2:model_def_index+13]
     for def_line in model_def_lines:
         pardef = def_line.split("return \"")[1].strip("\\n\"}\r\n")
         parameters_definition.append(pardef)
     return parameters_definition
+
+def extract_parameters_definition_from_check_cond1( model_name, sasfit_lines):
+    """
+    Extracting the definitions of paramters that can be then supplied with the
+    parameter table
+
+    :param tcl_file:
+    :return:
+    """
+    parameters = []
+    for line in sasfit_lines:
+        # TODO: There are other define statements, so check if it is not failing
+        regm = search("SASFIT_CHECK_COND1", line)
+        if regm:
+            param = line[regm.end() + 1:].split(",")[3]
+            param = param.split(");")[0]
+            if param not in parameters:
+                parameters.append(param)
+    return parameters
 
 def generate_python_header(model_name, output_python_file, parameters_definition):
     """
@@ -133,7 +153,7 @@ def generate_python_header(model_name, output_python_file, parameters_definition
     output_python_file.writelines(header_lines)
 
 def convert_sasfit_model(model_name, sasfit_file, output_c_file,
-                         output_python_file, parameters_definition):
+                         output_python_file, parameters, parameters_definition):
     """
     Main conversion function
     :param sasfit_file:
@@ -147,9 +167,8 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     output_Vol_lines = []
     output_Iq_lines = []
     output_intro_lines = []
-
-    parameters = []
     output_python_lines = []
+
     #DO regular expression and remove if it is in line
     c_intro_lines = "///////////////////////////////////////////////////\n"
     c_intro_lines += "//    This is automatically genearted file       //\n"
@@ -159,43 +178,20 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
 
     output_intro_lines.append(c_intro_lines)
 
-    #There a few different ways to extract parameters
-    #1. From sasfit_get_param
-    for line in sasfit_lines:
-        regm = search("sasfit_get_param\(", line)
-        if regm:
-            params = line[regm.end():].strip(");\r\n").split(", ")
-            number_of_params = int(params[1])
-            parameters = map(lambda p : p.lstrip("&"),params[2:2+number_of_params])
-
-    #2. From define statement in the c file
-    if len(parameters) == 0:
-        for line in sasfit_lines:
-            #TODO: There are other define statements, so check if it is not failing
-            regm = search("#define", line)
-            if regm and search("param->", line):
-                parameters.append(line[regm.end()+1:].split("\t")[0])
-
-    #But if 2 above don't work then read it from parameters definition
-    if len(parameters) == 0:
-        for pardef in parameters_definition[1:]:
-            param = pardef.split(":")[0]
-            if param !="":
-                parameters.append(param)
-    #And if this still doesn't work stop computation
-    if len(parameters) == 0:
-        exit()
 
     #Add paramters to excluded list, so they don't get redifned - shaky
     exclude_list.append("scalar "+", ".join(parameters))
-    #Changing sasview specific parameters
-    fixed_paramters = []
-    for param in parameters:
-        if "ETA" in param:
-            param = param.replace("ETA","sld")
-        fixed_paramters.append(param)
-    parameters = fixed_paramters
 
+
+    #If the compariosn with sasview ETA should be swapped with sld
+    #fixed_paramters = []
+    #for param in parameters:
+    #    if "ETA" in param and not "THETA" in param:
+    #        param = param.replace("ETA","sld")
+    #    fixed_paramters.append(param)
+    #parameters = fixed_paramters
+
+    print "Parameters", parameters
     Iq_lines = "double Iq( double q,"
     Fq_lines = "double Fq( double q, "
     Fqf_lines = "return "
@@ -214,11 +210,12 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
         if search("sasfit_ff_"+model_name, line) and not search("src", line):
             if search("scalar sasfit_ff_"+model_name+"_f", line):
                 for param in parameters[:-1]:
-                    Fq_lines+=" double "+param+","
+                    Fq_lines+=" double "+param+", "
                 Fq_lines+=" double "+parameters[-1]+")"
                 output_c_lines.append(Fq_lines+"\n")
                 output_intro_lines.append(Fq_lines+";\n")
                 allowed = 0
+            #TODO: Replace this kind of statements for sake of swaping them at the end
             elif search("sasfit_ff_" + model_name + "_f", line):
                 endFqline = 0
                 for sub in substitution_dict.keys():
@@ -227,7 +224,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
                         endFqline = 1
                 Fqf_lines += "Fq(q, "
                 for param in parameters[:-1]:
-                    Fqf_lines += param + ","
+                    Fqf_lines += param + ", "
                 Fqf_lines += parameters[-1] + ")"
                 if endFqline:
                     Fqf_lines += ");"
@@ -237,14 +234,14 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
                 allowed = 0
             elif search("scalar sasfit_ff_"+model_name+"_v", line):
                 for param in parameters[:-1]:
-                    form_volume_lines+=" double "+param+","
+                    form_volume_lines+=" double "+param+", "
                 form_volume_lines+=" double "+parameters[-1]+")"
                 output_c_lines.append(form_volume_lines+"\n")
                 output_intro_lines.append(form_volume_lines+";\n")
                 allowed = 0
-            else:
+            elif search("scalar sasfit_ff_"+model_name, line):
                 for param in parameters[:-1]:
-                    Iq_lines+=" double "+param+","
+                    Iq_lines+=" double "+param+", "
                 Iq_lines+=" double "+parameters[-1]+")"
                 output_c_lines.append(Iq_lines+"\n")
                 output_intro_lines.append(Iq_lines+";\n")
@@ -295,7 +292,9 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     #It looks from interface that first value is set to 10.0, 4th to 1.0
     #and the rest is 0.0 and apparently standard models takes no more than
     #10 pramateres
-    parameters_values = [10.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    parameters_values = [10.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
     output_python_lines = "#pylint: disable=bad-whitespace, line-too-long\n"
     output_python_lines += "parameters = [\n"
@@ -332,6 +331,59 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
 
     output_c_file.writelines(output_c_lines)
     output_python_file.writelines(output_python_lines)
+
+def extract_params(model_name, tcl_file, sasfit_file):
+    """
+
+    :param model_name:
+    :param tcl_file:
+    :param sasfit_file:
+    :return:
+    """
+    parameters = []
+    parameters_definition = []
+    sasfit_lines = open(sasfit_file).readlines()
+    try:
+        parameters_definition = extract_parameters_definition(model_name,
+                                                          tcl_file)
+    except:
+        parameters_definition = []
+        for i in range(11):
+            parameters_definition.append("")
+
+    # There a few different ways to extract parameters
+    # 1. From sasfit_get_param
+    if len(parameters) == 0:
+        for line in sasfit_lines:
+            regm = search("sasfit_get_param\(", line)
+            if regm:
+                params = line[regm.end():].strip(");\r\n").split(", ")
+                number_of_params = int(params[1])
+                parameters = map(lambda p: p.lstrip("&"),
+                             params[2:2 + number_of_params])
+
+    # 2. From SASFIT_CHECK_COND1 in the c file
+    if len(parameters) == 0:
+        parameters = extract_parameters_definition_from_check_cond1(
+                model_name, sasfit_lines)
+
+    # 2. From define statement in the c file
+    if len(parameters) == 0:
+        for line in sasfit_lines:
+            # TODO: There are other define statements, so check if it is not failing
+            regm = search("#define", line)
+            if regm and search("param->", line):
+                parameters.append(line[regm.end() + 1:].split("\t")[0])
+
+
+    # But if 2 above don't work then read it from parameters definition
+    if len(parameters) == 0:
+        for pardef in parameters_definition[1:]:
+            param = pardef.split(":")[0]
+            if param != "":
+                parameters.append(param)
+
+    return  parameters, parameters_definition
 
 if __name__=="__main__":
     doc = """
@@ -370,14 +422,14 @@ if __name__=="__main__":
     output_c_file = open(output_c_filename,"w")
     output_python_file =  open(output_python_filename,"w")
 
-    try:
-        parameters_definition = extract_parameters_definition(model_name,
-                                                          options.tcl_file)
-    except:
-        parameters_definition = []
-        for i in range(11):
-            parameters_definition.append("")
+    parameters, parameters_definition = extract_params(model_name,
+                                        options.tcl_file, options.sasfit_file)
+
+    #Exit when no parameters for model can be defined
+    if len(parameters) == 0:
+        exit()
+
     generate_python_header(model_name, output_python_file, parameters_definition)
 
     convert_sasfit_model(model_name, options.sasfit_file, output_c_file,
-                         output_python_file, parameters_definition)
+                         output_python_file, parameters, parameters_definition)
