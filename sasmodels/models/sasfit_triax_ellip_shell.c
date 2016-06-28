@@ -4,30 +4,19 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL);
-double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
-                  double ETA_C, double ETA_SH, double ETA_SOL);
-double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
-double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
-double T, double ETA_C, double ETA_SH, double ETA_SOL);
-double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
-double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
-double T, double ETA_C, double ETA_SH, double ETA_SOL) double A, double B,
-double C, double T, double ETA_C, double ETA_SH, double ETA_SOL);
-double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
-double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
-double T, double ETA_C, double ETA_SH, double ETA_SOL) double A, double B,
-double C, double T, double ETA_C, double ETA_SH, double ETA_SOL) double A,
-double B, double C, double T, double ETA_C, double ETA_SH, double ETA_SOL);
-double Fq( double q,  double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL);
-double form_volume(  double A, double B, double C, double T, double ETA_C,
-                     double ETA_SH, double ETA_SOL);
+double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
+           double ETA_SH,  double ETA_SOL);
+double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
+           double ETA_SH,  double ETA_SOL) double A,  double B,  double C,  double T,
+                  double ETA_C,  double ETA_SH,  double ETA_SOL);
+double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
+           double ETA_SH,  double ETA_SOL) double A,  double B,  double C,  double T,
+double ETA_C,  double ETA_SH,  double ETA_SOL) double A,  double B,  double C,
+double T,  double ETA_C,  double ETA_SH,  double ETA_SOL);
+double Fq( double q,  double A,  double B,  double C,  double T,  double ETA_C,
+           double ETA_SH,  double ETA_SOL);
+double form_volume(  double A,  double B,  double C,  double T,  double ETA_C,
+                     double ETA_SH,  double ETA_SOL);
 double Iqxy( double qx, double qy, double A, double B, double C, double T,
              double ETA_C, double ETA_SH, double ETA_SOL);
 /*
@@ -56,8 +45,8 @@ double Iqxy( double qx, double qy, double A, double B, double C, double T,
 *   Ingo Bressler (ingo@cs.tu-berlin.de)
 */
 // define shortcuts for local parameters/variables
-double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL)
+double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
+           double ETA_SH,  double ETA_SOL)
 {
     double q, p, x, u_c, u_sh;
     double f_c, f_sh;
@@ -78,40 +67,31 @@ double Iq( double q, double A, double B, double C, double T, double ETA_C,
     }
     return pow(f_sh+f_c, p);
 }
-double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
-double ETA_C, double ETA_SH, double ETA_SOL)
+double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
+           double ETA_SH,  double ETA_SOL) double A,  double B,  double C,  double T,
+double ETA_C,  double ETA_SH,  double ETA_SOL)
 {
     double res;
-    double Iq( double q, double A, double B, double C, double T, double ETA_C,
-               double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
-                      double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
-    double T, double ETA_C, double ETA_SH, double ETA_SOL)
+    res = sasfit_integrate(0.0, 1.0, sasfit_ff_triax_ellip_shell_core, param);
     return res;
 }
-double Iq( double q, double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
-double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
-double T, double ETA_C, double ETA_SH, double ETA_SOL) double A, double B,
-double C, double T, double ETA_C, double ETA_SH, double ETA_SOL)
+double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
+           double ETA_SH,  double ETA_SOL) double A,  double B,  double C,  double T,
+double ETA_C,  double ETA_SH,  double ETA_SOL) double A,  double B,  double C,
+double T,  double ETA_C,  double ETA_SH,  double ETA_SOL)
 {
     double res;
-    double Iq( double q, double A, double B, double C, double T, double ETA_C,
-               double ETA_SH, double ETA_SOL) double A, double B, double C, double T,
-                      double ETA_C, double ETA_SH, double ETA_SOL) double A, double B, double C,
-    double T, double ETA_C, double ETA_SH, double ETA_SOL) double A, double B,
-    double C, double T, double ETA_C, double ETA_SH, double ETA_SOL) double A,
-    double B, double C, double T, double ETA_C, double ETA_SH, double ETA_SOL)
+    res = sasfit_integrate(0.0, 1.0, sasfit_ff_triax_ellip_shell_core_x, param);
     return res;
 }
-double Fq( double q,  double A, double B, double C, double T, double ETA_C,
-           double ETA_SH, double ETA_SOL)
+double Fq( double q,  double A,  double B,  double C,  double T,  double ETA_C,
+           double ETA_SH,  double ETA_SOL)
 {
 // insert your code here
     return 0.0;
 }
-double form_volume(  double A, double B, double C, double T, double ETA_C,
-                     double ETA_SH, double ETA_SOL)
+double form_volume(  double A,  double B,  double C,  double T,  double ETA_C,
+                     double ETA_SH,  double ETA_SOL)
 {
     double V;
     switch ( dist )

@@ -12,13 +12,17 @@ double Iqxy( double qx, double qy, double R_CORE, double DR, double ETA_CORE,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local parameters/variables
-double expprof(double x, sasfit_param * param) {
+double expprof(double x, sasfit_param * param)
+{
     double eta_sh_in, eta_sh_out;
     eta_sh_in	= X_IN_SOL	*ETA_SOL + (1-X_IN_SOL)*ETA_SHELL;
     eta_sh_out	= X_OUT_SOL	*ETA_SOL + (1-X_OUT_SOL)*ETA_SHELL;
-    if (ALPHA<0) {
+    if (ALPHA<0)
+    {
         return eta_sh_in+(eta_sh_out-eta_sh_in)*x*exp((1-x)*ALPHA);
-    } else {
+    }
+    else
+    {
         return eta_sh_out+(eta_sh_in-eta_sh_out)*(1-x)*exp(-x*ALPHA);
     }
 }
@@ -27,11 +31,16 @@ double sasfit_ff_radial_profile_of_expshell(double r, sasfit_param * param)
     double x;
 // insert your code here
     x = (fabs(r)-R_CORE)/DR;
-    if (fabs(r)<R_CORE) {
+    if (fabs(r)<R_CORE)
+    {
         return ETA_CORE;
-    }  else if ((fabs(r)<(R_CORE+DR)) && fabs(r)>=R_CORE) {
+    }
+    else if ((fabs(r)<(R_CORE+DR)) && fabs(r)>=R_CORE)
+    {
         return expprof(x,param);
-    } else {
+    }
+    else
+    {
         return ETA_SOL;
     }
 }

@@ -4,21 +4,21 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double R, double ALPHA, double DELTA_ETA);
-double Fq( double q,  double R, double ALPHA, double DELTA_ETA);
-double form_volume(  double R, double ALPHA, double DELTA_ETA);
+double Iq( double q, double R,  double ALPHA,  double DELTA_ETA);
+double Fq( double q,  double R,  double ALPHA,  double DELTA_ETA);
+double form_volume(  double R,  double ALPHA,  double DELTA_ETA);
 double Iqxy( double qx, double qy, double R, double ALPHA, double DELTA_ETA);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)
 */
 // define shortcuts for local parameters/variables
-double Iq( double q, double R, double ALPHA, double DELTA_ETA)
+double Iq( double q, double R,  double ALPHA,  double DELTA_ETA)
 {
 // insert your code here
-    Fq(q,R,ALPHA,DELTA_ETA);
+    return sas_pow_2(Fq(q, R, ALPHA, DELTA_ETA));
 }
-double Fq( double q,  double R, double ALPHA, double DELTA_ETA)
+double Fq( double q,  double R,  double ALPHA,  double DELTA_ETA)
 {
     double beta;
 // insert your code here
@@ -28,7 +28,7 @@ double Fq( double q,  double R, double ALPHA, double DELTA_ETA)
     if (q*R == 0) return beta;
     return beta*gsl_sf_hyperg_0F1(0.5*(ALPHA+1),-sas_pow_2(q*R/2.));
 }
-double form_volume(  double R, double ALPHA, double DELTA_ETA)
+double form_volume(  double R,  double ALPHA,  double DELTA_ETA)
 {
 // insert your code here
     return 4./3. * M_PI*sas_pow_3(R);

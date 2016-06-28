@@ -4,26 +4,26 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double I0, double A, double RA);
-double Fq( double q,  double I0, double A, double RA);
-double form_volume(  double I0, double A, double RA);
+double Iq( double q, double I0,  double A,  double RA);
+double Fq( double q,  double I0,  double A,  double RA);
+double form_volume(  double I0,  double A,  double RA);
 double Iqxy( double qx, double qy, double I0, double A, double RA);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)
 */
 // define shortcuts for local parameters/variables
-double Iq( double q, double I0, double A, double RA)
+double Iq( double q, double I0,  double A,  double RA)
 {
     return ((A == 0.0) ? I0*exp(-RA*RA*q*q/3.0): A*M_PI*pow(q,
             -A)*I0*exp(-RA*RA*q*q/(3.0-A)) );
 }
-double Fq( double q,  double I0, double A, double RA)
+double Fq( double q,  double I0,  double A,  double RA)
 {
 // insert your code here
     return 0.0;
 }
-double form_volume(  double I0, double A, double RA)
+double form_volume(  double I0,  double A,  double RA)
 {
 // insert your code here
     return 0.0;

@@ -43,7 +43,7 @@ exclude_list = ["#include", "param->p",
 
 #Data types and GSL functions will be replcaced here
 substitution_dict = {"scalar":"double",
-                     "ETA":"sld",
+                     #"ETA":"sld",
                      "gsl_pow_2":"sas_pow_2",
                      "gsl_pow_3":"sas_pow_3",
                      "gsl_pow_4":"sas_pow_4",
@@ -207,8 +207,11 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
         #        line = line.replace(sub, substitution_dict[sub])
 
         #Create a new header for Iq function
-        if search("sasfit_ff_"+model_name, line) and not search("src", line):
-            if search("scalar sasfit_ff_"+model_name+"_f", line):
+        #if search("sasfit_ff_"+model_name, line) and not search("src", line):
+        if search(r"sasfit_[ff_]+" + model_name, line):
+            #or  search("sasfit_ff_ff_" + model_name, line):
+            if search(r"scalar sasfit_[ff_]+"+model_name+"_f", line):
+                #or search("scalar sasfit_ff_ff_"+model_name+"_f", line):
                 for param in parameters[:-1]:
                     Fq_lines+=" double "+param+", "
                 Fq_lines+=" double "+parameters[-1]+")"
@@ -216,7 +219,8 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
                 output_intro_lines.append(Fq_lines+";\n")
                 allowed = 0
             #TODO: Replace this kind of statements for sake of swaping them at the end
-            elif search("sasfit_ff_" + model_name + "_f", line):
+            elif search(r"sasfit_[ff_]+" + model_name + "_f", line):
+                #or search("sasfit_ff_ff_" + model_name + "_f", line):
                 endFqline = 0
                 for sub in substitution_dict.keys():
                     if search(sub, line):
@@ -232,14 +236,16 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
                     Fqf_lines + ";"
                 output_c_lines.append(Fqf_lines + "\n")
                 allowed = 0
-            elif search("scalar sasfit_ff_"+model_name+"_v", line):
+            elif search(r"scalar sasfit_[ff_]+"+model_name+"_v", line):
+                    #or search("scalar sasfit_ff_ff_"+model_name+"_v", line):
                 for param in parameters[:-1]:
                     form_volume_lines+=" double "+param+", "
                 form_volume_lines+=" double "+parameters[-1]+")"
                 output_c_lines.append(form_volume_lines+"\n")
                 output_intro_lines.append(form_volume_lines+";\n")
                 allowed = 0
-            elif search("scalar sasfit_ff_"+model_name, line):
+            elif search(r"scalar sasfit_[ff_]+"+model_name, line):
+                #or search("scalar sasfit_ff_ff_" + model_name, line):
                 for param in parameters[:-1]:
                     Iq_lines+=" double "+param+", "
                 Iq_lines+=" double "+parameters[-1]+")"
@@ -362,18 +368,24 @@ def extract_params(model_name, tcl_file, sasfit_file):
                 parameters = map(lambda p: p.lstrip("&"),
                              params[2:2 + number_of_params])
 
-    # 2. From SASFIT_CHECK_COND1 in the c file
-    if len(parameters) == 0:
-        parameters = extract_parameters_definition_from_check_cond1(
-                model_name, sasfit_lines)
-
     # 2. From define statement in the c file
     if len(parameters) == 0:
         for line in sasfit_lines:
             # TODO: There are other define statements, so check if it is not failing
             regm = search("#define", line)
             if regm and search("param->", line):
-                parameters.append(line[regm.end() + 1:].split("\t")[0])
+                param = line[regm.end():]
+                regm = search("\s+[\w.-]+( |\t)", param)
+                #regm = search("(\s+\t+)\b", param)
+                param = param[1:regm.end()]
+                param = param.strip("\t")
+                param = param.strip(" ")
+                parameters.append(param)
+
+    # 2. From SASFIT_CHECK_COND1 in the c file
+    if len(parameters) == 0:
+        parameters = extract_parameters_definition_from_check_cond1(
+                model_name, sasfit_lines)
 
 
     # But if 2 above don't work then read it from parameters definition
@@ -383,6 +395,9 @@ def extract_params(model_name, tcl_file, sasfit_file):
             if param != "":
                 parameters.append(param)
 
+    #TODO: Quite risky but have to see if there are any consequneces
+    if "q" in parameters:
+        parameters.remove("q")
     return  parameters, parameters_definition
 
 if __name__=="__main__":

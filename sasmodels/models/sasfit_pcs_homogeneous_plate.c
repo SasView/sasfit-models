@@ -19,7 +19,9 @@ double homoXS_core(double x, sasfit_param *param)
     if (u  == 0.0)
     {
         Pcs = sas_pow_2((ETA_L-ETA_SOL)*x);
-    } else {
+    }
+    else
+    {
         Pcs = sas_pow_2((ETA_L-ETA_SOL)*x*sin(u)/u);
     }
     sasfit_init_param( &subParam );
@@ -35,14 +37,20 @@ double homogeneousXS(double q, sasfit_param * param)
     double Pcs, u;
     double tstart = 0.0, tend = 0.0;
     Q = q;
-    if (SIGMA_T == 0.0) {
+    if (SIGMA_T == 0.0)
+    {
         u = q*T*0.5;
-        if (u  == 0.0) {
+        if (u  == 0.0)
+        {
             Pcs = sas_pow_2(T);
-        } else {
+        }
+        else
+        {
             Pcs = sas_pow_2(T*sin(u)/u);
         }
-    } else {
+    }
+    else
+    {
         find_LogNorm_int_range(2,T,SIGMA_T,&tstart,&tend,param);
         Pcs 	= sasfit_integrate(tstart, tend, &homoXS_core, param);
     }

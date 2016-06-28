@@ -18,15 +18,21 @@ double sasfit_ff_radial_profile_of_linshell(double r, sasfit_param * param)
     eta_sh_in = (1- X_IN_SOL)*ETA_SHELL+ X_IN_SOL*ETA_SOL;
     eta_sh_out= (1-X_OUT_SOL)*ETA_SHELL+X_OUT_SOL*ETA_SOL;
     m=1e100;
-    if (DR !=0) {
+    if (DR !=0)
+    {
         m=(eta_sh_out-eta_sh_in)/DR;
     }
     b=-m*R_CORE+eta_sh_in;
-    if (fabs(r)<=R_CORE) {
+    if (fabs(r)<=R_CORE)
+    {
         return ETA_CORE;
-    } else if ((fabs(r)>R_CORE) && (fabs(r)<R_CORE+DR)) {
+    }
+    else if ((fabs(r)>R_CORE) && (fabs(r)<R_CORE+DR))
+    {
         return m*fabs(r)+b;
-    } else {
+    }
+    else
+    {
         return ETA_SOL;
     }
 }

@@ -4,12 +4,12 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double T, double SIGMA_T, double R0, double SIGMA_R0,
-           double EPSILON, double DUMMY, double ETA_L, double ETA_SOL);
-double Fq( double q,  double T, double SIGMA_T, double R0, double SIGMA_R0,
-           double EPSILON, double DUMMY, double ETA_L, double ETA_SOL);
-double form_volume(  double T, double SIGMA_T, double R0, double SIGMA_R0,
-                     double EPSILON, double DUMMY, double ETA_L, double ETA_SOL);
+double Iq( double q, double T,  double SIGMA_T,  double R0,  double SIGMA_R0,
+           double EPSILON,  double DUMMY,  double ETA_L,  double ETA_SOL);
+double Fq( double q,  double T,  double SIGMA_T,  double R0,  double SIGMA_R0,
+           double EPSILON,  double DUMMY,  double ETA_L,  double ETA_SOL);
+double form_volume(  double T,  double SIGMA_T,  double R0,  double SIGMA_R0,
+                     double EPSILON,  double DUMMY,  double ETA_L,  double ETA_SOL);
 double Iqxy( double qx, double qy, double T, double SIGMA_T, double R0,
              double SIGMA_R0, double EPSILON, double DUMMY, double ETA_L, double ETA_SOL);
 /*
@@ -17,8 +17,8 @@ double Iqxy( double qx, double qy, double T, double SIGMA_T, double R0,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local parameters/variables
-double Iq( double q, double T, double SIGMA_T, double R0, double SIGMA_R0,
-           double EPSILON, double DUMMY, double ETA_L, double ETA_SOL)
+double Iq( double q, double T,  double SIGMA_T,  double R0,  double SIGMA_R0,
+           double EPSILON,  double DUMMY,  double ETA_L,  double ETA_SOL)
 {
     double Pcs, Pprime;
     sasfit_param subParam;
@@ -31,14 +31,14 @@ double Iq( double q, double T, double SIGMA_T, double R0, double SIGMA_R0,
     Pprime = sasfit_sq_p__q___thin_ellipsoidal_shell(q,&subParam);
     return Pcs*Pprime;
 }
-double Fq( double q,  double T, double SIGMA_T, double R0, double SIGMA_R0,
-           double EPSILON, double DUMMY, double ETA_L, double ETA_SOL)
+double Fq( double q,  double T,  double SIGMA_T,  double R0,  double SIGMA_R0,
+           double EPSILON,  double DUMMY,  double ETA_L,  double ETA_SOL)
 {
 // insert your code here
     return 0.0;
 }
-double form_volume(  double T, double SIGMA_T, double R0, double SIGMA_R0,
-                     double EPSILON, double DUMMY, double ETA_L, double ETA_SOL)
+double form_volume(  double T,  double SIGMA_T,  double R0,  double SIGMA_R0,
+                     double EPSILON,  double DUMMY,  double ETA_L,  double ETA_SOL)
 {
 // insert your code here
     return 0.0;

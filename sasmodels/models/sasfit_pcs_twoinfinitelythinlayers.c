@@ -4,9 +4,9 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double T, double SIGMA_T, double Q);
-double Fq( double q,  double T, double SIGMA_T, double Q);
-double form_volume(  double T, double SIGMA_T, double Q);
+double Iq( double q, double T,  double SIGMA_T,  double Q);
+double Fq( double q,  double T,  double SIGMA_T,  double Q);
+double form_volume(  double T,  double SIGMA_T,  double Q);
 double Iqxy( double qx, double qy, double T, double SIGMA_T, double Q);
 /*
 * Author(s) of this file:
@@ -34,10 +34,14 @@ double thincentrosymmetriclayers(double q, sasfit_param * param)
     static double sigma_T_old = -1.;
     static double Pcs = 1.;
     Q = q;
-    if ((Q != Q_old) || (T != T0_old) || (SIGMA_T != sigma_T_old)) {
-        if (SIGMA_T == 0.0) {
+    if ((Q != Q_old) || (T != T0_old) || (SIGMA_T != sigma_T_old))
+    {
+        if (SIGMA_T == 0.0)
+        {
             Pcs = sas_pow_2(cos(q*T/2));
-        } else {
+        }
+        else
+        {
             find_LogNorm_int_range(2,T,SIGMA_T,&tstart,&tend,param);
             Pcs 	= sasfit_integrate(tstart, tend, &thincentrosymmetriclayers_core, param);
         }
@@ -47,21 +51,24 @@ double thincentrosymmetriclayers(double q, sasfit_param * param)
     }
     return Pcs;
 }
-double Iq( double q, double T, double SIGMA_T, double Q)
+double Iq( double q, double T,  double SIGMA_T,  double Q)
 {
 // insert your code here
-    if (SIGMA_T == 0) {
+    if (SIGMA_T == 0)
+    {
         return sas_pow_2(cos(q*T));
-    } else {
+    }
+    else
+    {
         return thincentrosymmetriclayers(q,param);
     }
 }
-double Fq( double q,  double T, double SIGMA_T, double Q)
+double Fq( double q,  double T,  double SIGMA_T,  double Q)
 {
 // insert your code here
     return 0.0;
 }
-double form_volume(  double T, double SIGMA_T, double Q)
+double form_volume(  double T,  double SIGMA_T,  double Q)
 {
 // insert your code here
     return 0.0;

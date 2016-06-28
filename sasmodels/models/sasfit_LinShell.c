@@ -47,8 +47,7 @@ double sasfit_ff_linshell_v(double q, sasfit_param * param, int dist)
     return 0.0;
 }
 double Iqxy( double qx, double qy, double EMPTY, double DR, double eta_core,
-             double eta_shell, double x_in_solvent, double x_out_solvent,
-             double eta_solvent)
+             double eta_shell, double x_in_solvent, double x_out_solvent, double eta_solvent)
 {
     double q = sqrt(qx*qx + qy*qy);
     return Iq( q, EMPTY, DR, eta_core, eta_shell, x_in_solvent, x_out_solvent,

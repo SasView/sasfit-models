@@ -23,7 +23,9 @@ double sasfit_ff_expshell_f(double q, sasfit_param * param)
     if (ALPHA < 0) // alpha < 0
     {
         return sasfit_kshexp1(q, param);
-    } else {
+    }
+    else
+    {
         return sasfit_kshexp2(q, param);
     }
 }

@@ -4,12 +4,12 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double N, double XMIN, double FD1, double X12, double FD2,
-           double X23, double FD3, double XMAX);
-double Fq( double q,  double N, double XMIN, double FD1, double X12,
-           double FD2, double X23, double FD3, double XMAX);
-double form_volume(  double N, double XMIN, double FD1, double X12, double FD2,
-                     double X23, double FD3, double XMAX);
+double Iq( double q, double N,  double XMIN,  double FD1,  double X12,
+           double FD2,  double X23,  double FD3,  double XMAX);
+double Fq( double q,  double N,  double XMIN,  double FD1,  double X12,
+           double FD2,  double X23,  double FD3,  double XMAX);
+double form_volume(  double N,  double XMIN,  double FD1,  double X12,
+                     double FD2,  double X23,  double FD3,  double XMAX);
 double Iqxy( double qx, double qy, double N, double XMIN, double FD1,
              double X12, double FD2, double X23, double FD3, double XMAX);
 /*
@@ -17,8 +17,8 @@ double Iqxy( double qx, double qy, double N, double XMIN, double FD1,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local parameters/variables
-double Iq( double q, double N, double XMIN, double FD1, double X12, double FD2,
-           double X23, double FD3, double XMAX)
+double Iq( double q, double N,  double XMIN,  double FD1,  double X12,
+           double FD2,  double X23,  double FD3,  double XMAX)
 {
     double a1,a2,a3;
 // insert your code here
@@ -47,14 +47,14 @@ double Iq( double q, double N, double XMIN, double FD1, double X12, double FD2,
            + fractalFF_single(q,a2,FD2,X12 ,X23,param)
            + fractalFF_single(q,a3,FD3,X23,XMAX,param);
 }
-double Fq( double q,  double N, double XMIN, double FD1, double X12,
-           double FD2, double X23, double FD3, double XMAX)
+double Fq( double q,  double N,  double XMIN,  double FD1,  double X12,
+           double FD2,  double X23,  double FD3,  double XMAX)
 {
 // insert your code here
     return 0.0;
 }
-double form_volume(  double N, double XMIN, double FD1, double X12, double FD2,
-                     double X23, double FD3, double XMAX)
+double form_volume(  double N,  double XMIN,  double FD1,  double X12,
+                     double FD2,  double X23,  double FD3,  double XMAX)
 {
 // insert your code here
     return 0.0;
