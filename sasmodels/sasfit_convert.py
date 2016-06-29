@@ -163,9 +163,6 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     """
     sasfit_lines = open(sasfit_file).readlines()
     output_c_lines = []
-    output_Fq_lines = []
-    output_Vol_lines = []
-    output_Iq_lines = []
     output_intro_lines = []
     output_python_lines = []
 
@@ -194,8 +191,9 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     print "Parameters", parameters
     Iq_lines = "double Iq( double q,"
     Fq_lines = "double Fq( double q, "
-    Fqf_lines = "return "
+    Fq_func = "Fq( q, "
     form_volume_lines = "double form_volume( "
+    form_volume_func = "form_volume("
     include_libs = []
     for line in sasfit_lines:
         line = line.strip()
@@ -208,50 +206,43 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
 
         #Create a new header for Iq function
         #if search("sasfit_ff_"+model_name, line) and not search("src", line):
-        if search(r"sasfit_[ff_]+" + model_name, line):
-            #or  search("sasfit_ff_ff_" + model_name, line):
-            if search(r"scalar sasfit_[ff_]+"+model_name+"_f", line):
-                #or search("scalar sasfit_ff_ff_"+model_name+"_f", line):
-                for param in parameters[:-1]:
-                    Fq_lines+=" double "+param+", "
-                Fq_lines+=" double "+parameters[-1]+")"
-                output_c_lines.append(Fq_lines+"\n")
-                output_intro_lines.append(Fq_lines+";\n")
-                allowed = 0
-            #TODO: Replace this kind of statements for sake of swaping them at the end
-            elif search(r"sasfit_[ff_]+" + model_name + "_f", line):
-                #or search("sasfit_ff_ff_" + model_name + "_f", line):
-                endFqline = 0
-                for sub in substitution_dict.keys():
-                    if search(sub, line):
-                        Fqf_lines += substitution_dict[sub]+"("
-                        endFqline = 1
-                Fqf_lines += "Fq(q, "
-                for param in parameters[:-1]:
-                    Fqf_lines += param + ", "
-                Fqf_lines += parameters[-1] + ")"
-                if endFqline:
-                    Fqf_lines += ");"
-                else:
-                    Fqf_lines + ";"
-                output_c_lines.append(Fqf_lines + "\n")
-                allowed = 0
-            elif search(r"scalar sasfit_[ff_]+"+model_name+"_v", line):
-                    #or search("scalar sasfit_ff_ff_"+model_name+"_v", line):
-                for param in parameters[:-1]:
-                    form_volume_lines+=" double "+param+", "
-                form_volume_lines+=" double "+parameters[-1]+")"
-                output_c_lines.append(form_volume_lines+"\n")
-                output_intro_lines.append(form_volume_lines+";\n")
-                allowed = 0
-            elif search(r"scalar sasfit_[ff_]+"+model_name, line):
-                #or search("scalar sasfit_ff_ff_" + model_name, line):
-                for param in parameters[:-1]:
-                    Iq_lines+=" double "+param+", "
-                Iq_lines+=" double "+parameters[-1]+")"
-                output_c_lines.append(Iq_lines+"\n")
-                output_intro_lines.append(Iq_lines+";\n")
-                allowed = 0
+        if search(r"scalar sasfit_[ff_]+"+model_name+"_f\((.*?)\)", line):
+            regm = search(r"sasfit_[ff_]+" + model_name + "_f", line)
+            sasfit_Fq = line[regm.start():regm.end()]
+            substitution_dict[sasfit_Fq] = "Fq"
+
+            for param in parameters[:-1]:
+                Fq_lines+=" double "+param+", "
+            Fq_lines+=" double "+parameters[-1]+")"
+            output_c_lines.append(Fq_lines+"\n")
+            output_intro_lines.append(Fq_lines+";\n")
+
+            allowed = 0
+        if search(r"scalar sasfit_[ff_]+"+model_name+"_v\((.*?)\)", line):
+            regm = search(r"scalar sasfit_[ff_]+" + model_name + "_v",line)
+            sasfit_form_volume = line[regm.start():regm.end()]
+            substitution_dict[sasfit_form_volume] = "form_volume"
+
+            for param in parameters[:-1]:
+                form_volume_lines+=" double "+param+", "
+            form_volume_lines+=" double "+parameters[-1]+")"
+            output_c_lines.append(form_volume_lines+"\n")
+            output_intro_lines.append(form_volume_lines+";\n")
+            allowed = 0
+        if search(r"scalar sasfit_[ff_]+"+model_name+"\((.*?)\)", line):
+            swap_parameters = ""
+            for param in parameters[:-1]:
+                swap_parameters += param+", "
+                Iq_lines+=" double "+param+", "
+            swap_parameters += parameters[-1]
+            Iq_lines+=" double "+parameters[-1]
+            swap_parameters_def = Iq_lines
+            Iq_lines += ")"
+            output_c_lines.append(Iq_lines+"\n")
+            output_intro_lines.append(Iq_lines+";\n")
+            substitution_dict["scalar * param"] = swap_parameters_def
+            substitution_dict["param"] = swap_parameters
+            allowed = 0
         for banned_term in exclude_list:
             if search(banned_term, line):
                 allowed = 0
@@ -263,9 +254,9 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
                         include_libs.append(libfile)
 
         #Replace string in line when need
-        for sub in substitution_dict.keys():
-            if search(sub, line):
-                line = line.replace(sub, substitution_dict[sub])
+        #for sub in substitution_dict.keys():
+        #    if search(sub, line):
+        #        line = line.replace(sub, substitution_dict[sub])
 
 
         #Skip empty lines
@@ -275,6 +266,23 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
         if allowed:
             output_c_lines.append(line+"\n")
 
+    # Replace string in line when need
+    out_c_lines = []
+    for line in output_c_lines:
+        #Replace special functions
+        # regm = search(r"sasfit_[ff_]+" + model_name + "_f\((.*?)\)",
+        #               line)
+        # if regm:
+        #     sasfit_Fq = line[regm.start():regm.end()]
+        #     line = line.replace(sasfit_Fq, Fq_func)
+        # regm = search(r"scalar sasfit_[ff_]+"+model_name+"_v\((.*?)\)", line)
+        # if regm:
+        #     sasfit_form_volume = line[regm.start():regm.end()]
+        #     line = line.replace(sasfit_form_volume, form_volume_func)
+        for sub in substitution_dict.keys():
+            if search(sub, line):
+                line = line.replace(sub, substitution_dict[sub])
+        out_c_lines.append(line)
 
     #output_c_lines += output_Vol_lines + output_Fq_lines + output_Iq_lines
 
@@ -292,7 +300,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
         header_Iqxy_line+=" "+param+","
     header_Iqxy_line+=" "+parameters[-1]+");\n"
     header_Iqxy_line+="}\n"
-    output_c_lines.append(header_Iqxy_line)
+    out_c_lines.append(header_Iqxy_line)
 
     #Generating python parameter file
     #It looks from interface that first value is set to 10.0, 4th to 1.0
@@ -335,7 +343,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
 
     output_c_file.writelines(output_intro_lines)
 
-    output_c_file.writelines(output_c_lines)
+    output_c_file.writelines(out_c_lines)
     output_python_file.writelines(output_python_lines)
 
 def extract_params(model_name, tcl_file, sasfit_file):
@@ -424,12 +432,11 @@ if __name__=="__main__":
         model_name = options.output_file
     else:
         #Remove sasfit_ff prefix and .c suffix
-        #model_name =  options.sasfit_file.split("/")[1]
         model_name = options.sasfit_file.split("/")[2]
         model_name = "_".join([name_term for name_term in model_name.split("_")
                                if name_term not in exclude_model_terms])
-        model_name = model_name.rstrip(".c")
-
+        #model_name = model_name.rstrip(".c")
+        model_name = model_name[:-2]
     print model_name, options.sasfit_file
     output_c_filename = "sasfit_"+model_name+".c"
     output_python_filename = "sasfit_"+model_name+".py"
