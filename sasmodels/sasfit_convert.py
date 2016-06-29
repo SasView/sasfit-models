@@ -32,8 +32,7 @@ import optparse
 from re import search
 from string import replace
 from string import capwords
-from string import rstrip
-from string import lstrip
+from collections import OrderedDict
 
 
 exclude_list = ["#include", "param->p",
@@ -41,25 +40,26 @@ exclude_list = ["#include", "param->p",
                 "SASFIT_ASSERT_PTR", "SASFIT_CHECK_COND1",
                 "SASFIT_CHECK_COND", "SASFIT_CHECK_SUB_ERR"]
 
+substitution_dict = OrderedDict()
+
 #Data types and GSL functions will be replcaced here
-substitution_dict = {"scalar":"double",
-                     #"ETA":"sld",
-                     "gsl_pow_2":"sas_pow_2",
-                     "gsl_pow_3":"sas_pow_3",
-                     "gsl_pow_4":"sas_pow_4",
-                     "gsl_pow_5":"sas_pow_5",
-                     "gsl_pow_6":"sas_pow_6",
-                     "gsl_pow_7":"sas_pow_7",
-                     "gsl_pow_8":"sas_pow_8",
-                     "gsl_pow_9":"sas_pow_9",
-                     "gsl_pow_int": "sas_pow_int",
-                     "gsl_sf_bessel_J0":"sas_J0",
-                     "gsl_sf_bessel_J1":"sas_J1",
-                     "gsl_sf_bessel_JN":"sas_JN",
-                     "gsl_sf_bessel_j1":"sph_j1",
-                     "gsl_sf_gamma":"sas_gamma",
-                     "gsl_sf_Si":"Si",
-                     "gsl_sf_erf":"sas_erf"}
+substitution_dict = OrderedDict([("scalar","double"),
+                                ("gsl_pow_2","sas_pow_2"),
+                                ("gsl_pow_3","sas_pow_3"),
+                                ("gsl_pow_4","sas_pow_4"),
+                                ("gsl_pow_5","sas_pow_5"),
+                                ("gsl_pow_6","sas_pow_6"),
+                                ("gsl_pow_7","sas_pow_7"),
+                                ("gsl_pow_8","sas_pow_8"),
+                                ("gsl_pow_9","sas_pow_9"),
+                                ("gsl_pow_int", "sas_pow_int"),
+                                ("gsl_sf_bessel_J0","sas_J0"),
+                                ("gsl_sf_bessel_J1","sas_J1"),
+                                ("gsl_sf_bessel_JN","sas_JN"),
+                                ("gsl_sf_bessel_j1","sph_j1"),
+                                ("gsl_sf_gamma","sas_gamma"),
+                                ("gsl_sf_Si","Si"),
+                                ("gsl_sf_erf","sas_erf")])
 
 #Data types and GSL functions will be replcaced here
 libinclude_dict = {"gsl_pow_2":["sas_pow.c"],
@@ -219,7 +219,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
 
             allowed = 0
         if search(r"scalar sasfit_[ff_]+"+model_name+"_v\((.*?)\)", line):
-            regm = search(r"scalar sasfit_[ff_]+" + model_name + "_v",line)
+            regm = search(r"sasfit_[ff_]+" + model_name + "_v",line)
             sasfit_form_volume = line[regm.start():regm.end()]
             substitution_dict[sasfit_form_volume] = "form_volume"
 
@@ -240,8 +240,9 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
             Iq_lines += ")"
             output_c_lines.append(Iq_lines+"\n")
             output_intro_lines.append(Iq_lines+";\n")
-            substitution_dict["scalar * param"] = swap_parameters_def
-            substitution_dict["param"] = swap_parameters
+            #substitution_dict["sasfit_param *param"] = swap_parameters_def
+            #substitution_dict["sasfit_param * param"] = swap_parameters_def
+            #substitution_dict["param"] = swap_parameters
             allowed = 0
         for banned_term in exclude_list:
             if search(banned_term, line):
@@ -269,16 +270,14 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     # Replace string in line when need
     out_c_lines = []
     for line in output_c_lines:
-        #Replace special functions
-        # regm = search(r"sasfit_[ff_]+" + model_name + "_f\((.*?)\)",
-        #               line)
-        # if regm:
-        #     sasfit_Fq = line[regm.start():regm.end()]
-        #     line = line.replace(sasfit_Fq, Fq_func)
-        # regm = search(r"scalar sasfit_[ff_]+"+model_name+"_v\((.*?)\)", line)
-        # if regm:
-        #     sasfit_form_volume = line[regm.start():regm.end()]
-        #     line = line.replace(sasfit_form_volume, form_volume_func)
+
+        if search("sasfit_param *param", line):
+            line = line.replace("sasfit_param *param", swap_parameters_def)
+        elif search("sasfit_param * param", line):
+            line = line.replace("sasfit_param * param", swap_parameters_def)
+        elif search("param", line):
+            line = line.replace("param", swap_parameters)
+
         for sub in substitution_dict.keys():
             if search(sub, line):
                 line = line.replace(sub, substitution_dict[sub])
