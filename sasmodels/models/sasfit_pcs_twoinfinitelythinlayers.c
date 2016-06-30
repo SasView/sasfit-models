@@ -17,7 +17,9 @@ double Iqxy( double qx, double qy, double T, double SIGMA_T, double Q,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local T, SIGMA_T, Q, P0, LB, B, L, EXVOL, CLBeters/variables
-double thincentrosymmetriclayers_core(double x, sasfit_param *param)
+double thincentrosymmetriclayers_core(double x,  double T,  double SIGMA_T,
+                                      double Q,  double P0,  double LB,  double B,  double L,  double EXVOL,
+                                      double CLB)
 {
     double Pcs, LNdistr;
     sasfit_param subParam;
@@ -30,7 +32,9 @@ double thincentrosymmetriclayers_core(double x, sasfit_param *param)
     LNdistr = sasfit_sd_LogNorm(x, &subParam);
     return LNdistr*Pcs;
 }
-double thincentrosymmetriclayers(double q, sasfit_param * param)
+double thincentrosymmetriclayers(double q,  double T,  double SIGMA_T,
+                                 double Q,  double P0,  double LB,  double B,  double L,  double EXVOL,
+                                 double CLB)
 {
     double tstart = 0.0, tend = 0.0;
     static double Q_old = -1.;

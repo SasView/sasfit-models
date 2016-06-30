@@ -17,7 +17,8 @@ double Iqxy( double qx, double qy, double R, double DELTA_Q_PERP, double ETA,
 *   <your name> (<email address>)
 */
 // define shortcuts for local R, DELTA_Q_PERP, ETA, R0, XI, D, SCALE, Q, P0eters/variables
-double FFPhiKratky(double qperp, sasfit_param * param)
+double FFPhiKratky(double qperp,  double R,  double DELTA_Q_PERP,  double ETA,
+                   double R0,  double XI,  double D,  double SCALE,  double Q,  double P0)
 {
     double P,P16, q;
     q = sqrt(qperp*qperp+Q*Q);

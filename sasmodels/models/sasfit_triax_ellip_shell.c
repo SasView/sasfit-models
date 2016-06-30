@@ -38,7 +38,8 @@ double Iqxy( double qx, double qy, double A, double B, double C, double T,
 *   Ingo Bressler (ingo@cs.tu-berlin.de)
 */
 // define shortcuts for local A, B, C, T, ETA_C, ETA_SH, ETA_SOL, P0eters/variables
-double sasfit_ff_triax_ellip_shell_core(double y, sasfit_param * param)
+double sasfit_ff_triax_ellip_shell_core(double y,  double A,  double B,
+                                        double C,  double T,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double P0)
 {
     double q, p, x, u_c, u_sh;
     double f_c, f_sh;
@@ -59,7 +60,8 @@ double sasfit_ff_triax_ellip_shell_core(double y, sasfit_param * param)
     }
     return pow(f_sh+f_c, p);
 }
-double sasfit_ff_triax_ellip_shell_core_x(double x, sasfit_param * param)
+double sasfit_ff_triax_ellip_shell_core_x(double x,  double A,  double B,
+        double C,  double T,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double P0)
 {
     double res;
     res = sasfit_integrate(0.0, 1.0, sasfit_ff_triax_ellip_shell_core, A, B, C, T,

@@ -17,7 +17,8 @@ double Iqxy( double qx, double qy, double K, double HI, double L_H, double R,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local K, HI, L_H, R, lR, P0eters/variables
-double Cr_kernel(double q, sasfit_param * param)
+double Cr_kernel(double q,  double K,  double HI,  double L_H,  double R,
+                 double lR,  double P0)
 {
     return K*sas_pow_4(R)/sas_pow_2(HI)*gsl_sf_bessel_j0(q*lR)*sas_pow_2(sph_j1(
                 q*fabs(R)))/sas_pow_2(1.0+sas_pow_2(L_H*q));

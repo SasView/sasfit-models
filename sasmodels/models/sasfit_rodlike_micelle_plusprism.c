@@ -22,7 +22,9 @@ double Iqxy( double qx, double qy, double R, double EPSILON, double L, double T,
 *   17.5.2009
 */
 // define shortcuts for local R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q, ALPHA, THETA, P0eters/variables
-double beta_cq(double q, sasfit_param *param)
+double beta_cq(double q,  double R,  double EPSILON,  double L,  double T,
+               double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
+               double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
     double cq,beta,u,S0, B,C,D,n,r;
     double B2, B3,  Vp, Ap, Rp;
@@ -101,7 +103,9 @@ double P_Rod(double q, double length)
 //	if (u < 1.0e-2) return exp(-u*u/12.0/3.0);
     return 2.0*Si(u)/u-sas_pow_2(sin(u2)/u2);
 }
-double P_L(double q, sasfit_param *param)
+double P_L(double q,  double R,  double EPSILON,  double L,  double T,
+           double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
+           double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
     return L*L*P_Rod(q,L);
 }
@@ -109,7 +113,9 @@ double r(double radius, double epsilo, double theta)
 {
     return radius*sqrt(sin(theta)*sin(theta)+epsilo*epsilo*cos(theta)*cos(theta));
 }
-double AcylSHell(double x, sasfit_param *param)
+double AcylSHell(double x,  double R,  double EPSILON,  double L,  double T,
+                 double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
+                 double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
     double Ain, Aout,A,u1,u2,v1,v2,b1,b2;
     u1 = Q*r(R,EPSILON,THETA)*sin(ALPHA);
@@ -145,7 +151,9 @@ double AcylSHell(double x, sasfit_param *param)
     A = b1*Ain+b2*Aout;
     return A;
 }
-double PcylSHell(sasfit_param *param)
+double PcylSHell( double R,  double EPSILON,  double L,  double T,
+                  double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
+                  double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
     double Ain, Aout,A,u1,u2,v1,v2,b1,b2, J1;
     u1 = Q*r(R,EPSILON,THETA)*sin(ALPHA);
@@ -185,7 +193,9 @@ double PcylSHell(sasfit_param *param)
     A = b1*Ain+b2*Aout;
     return A*A;
 }
-double PcylSHellCS(double x,sasfit_param *param)
+double PcylSHellCS(double x, double R,  double EPSILON,  double L,  double T,
+                   double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
+                   double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
     double Ain, Aout,A,u1,u2,b1,b2, J1;
     u1 = Q*r(R,EPSILON,x);
@@ -215,7 +225,9 @@ double PcylSHellCS(double x,sasfit_param *param)
     A = b1*Ain+b2*Aout;
     return A*A;
 }
-double P_cs(double q, sasfit_param *param)
+double P_cs(double q,  double R,  double EPSILON,  double L,  double T,
+            double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
+            double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
     Q = q;
     if (EPSILON == 1.0)
@@ -229,13 +241,17 @@ double P_cs(double q, sasfit_param *param)
                                          ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q, ALPHA, THETA, P0);
     }
 }
-double RM_PRISM_theta(double x,sasfit_param * param)
+double RM_PRISM_theta(double x, double R,  double EPSILON,  double L,  double T,
+                      double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
+                      double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
     THETA = x;
     return PcylSHell(R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q,
                      ALPHA, THETA, P0);
 }
-double RM_PRISM_alpha(double x,sasfit_param * param)
+double RM_PRISM_alpha(double x, double R,  double EPSILON,  double L,  double T,
+                      double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
+                      double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
     ALPHA = x;
     if (EPSILON == 1.0)

@@ -25,7 +25,10 @@ double Iqxy( double qx, double qy, double LC, double SIGMA_LC, double LSH,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local LC, SIGMA_LC, LSH, SIGMA_LSH, ETA_C, ETA_SH, ETA_SOL, SH, LL, Q, P0, LB, B, L, EXVOL, CLBeters/variables
-double layeredcentrosymmetric_FF(sasfit_param *param)
+double layeredcentrosymmetric_FF( double LC,  double SIGMA_LC,  double LSH,
+                                  double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double SH,
+                                  double LL,  double Q,  double P0,  double LB,  double B,  double L,
+                                  double EXVOL,  double CLB)
 {
     double Fc, Fsh, Pcs, LNdistr, u, v;
     sasfit_param subParam;
@@ -50,7 +53,10 @@ double layeredcentrosymmetric_FF(sasfit_param *param)
     Pcs = sas_pow_2(Fc-Fsh);
     return Pcs;
 }
-double layeredcentrosymmetric_core(double x, sasfit_param *param)
+double layeredcentrosymmetric_core(double x,  double LC,  double SIGMA_LC,
+                                   double LSH,  double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,
+                                   double SH,  double LL,  double Q,  double P0,  double LB,  double B,  double L,
+                                   double EXVOL,  double CLB)
 {
     double Fc, Fsh, Pcs, LNdistr, u, v;
     sasfit_param subParam;
@@ -65,7 +71,10 @@ double layeredcentrosymmetric_core(double x, sasfit_param *param)
     LNdistr = sasfit_sd_LogNorm(x, &subParam);
     return LNdistr*Pcs;
 }
-double layeredcentrosymmetric_SH(double x, sasfit_param * param)
+double layeredcentrosymmetric_SH(double x,  double LC,  double SIGMA_LC,
+                                 double LSH,  double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,
+                                 double SH,  double LL,  double Q,  double P0,  double LB,  double B,  double L,
+                                 double EXVOL,  double CLB)
 {
     double SHstart = 0.0, SHend = 0.0;
     double Pcs;
@@ -103,7 +112,10 @@ double layeredcentrosymmetric_SH(double x, sasfit_param * param)
     return LNdistr*Pcs;
     return Pcs;
 }
-double layeredcentrosymmetric_L(double q, sasfit_param * param)
+double layeredcentrosymmetric_L(double q,  double LC,  double SIGMA_LC,
+                                double LSH,  double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,
+                                double SH,  double LL,  double Q,  double P0,  double LB,  double B,  double L,
+                                double EXVOL,  double CLB)
 {
     double Lstart = 0.0, Lend = 0.0;
     double Pcs;

@@ -30,7 +30,10 @@ double ell_r(double radius, double epsilo, double t, double theta)
     return sqrt(sas_pow_2((radius+t)*sin(theta))+sas_pow_2((radius*epsilo+t)*cos(
                     theta)));
 }
-double sasfit_ff_pcs_ellcylsh_I_core(double x, sasfit_param *param)
+double sasfit_ff_pcs_ellcylsh_I_core(double x,  double R0,  double SIGMA_R0,
+                                     double EPSILON,  double T,  double DUMMY1,  double DUMMY2,  double DUMMY3,
+                                     double ETA_CORE,  double ETA_SHELL,  double ETA_SOLV,  double R,  double Q,
+                                     double P0,  double LB,  double B,  double L,  double EXVOL,  double CLB)
 {
     double Ain, Aout,A,u1,u2,b1,b2;
     u1 = Q*ell_r(R,EPSILON,0,x);
@@ -56,7 +59,10 @@ double sasfit_ff_pcs_ellcylsh_I_core(double x, sasfit_param *param)
     A = b1*Ain+b2*Aout;
     return A*A;
 }
-double sasfit_ff_pcs_ellcylsh_Ampl_core(double x, sasfit_param *param)
+double sasfit_ff_pcs_ellcylsh_Ampl_core(double x,  double R0,  double SIGMA_R0,
+                                        double EPSILON,  double T,  double DUMMY1,  double DUMMY2,  double DUMMY3,
+                                        double ETA_CORE,  double ETA_SHELL,  double ETA_SOLV,  double R,  double Q,
+                                        double P0,  double LB,  double B,  double L,  double EXVOL,  double CLB)
 {
     double Ain, Aout,A,u1,u2,b1,b2;
     u1 = Q*ell_r(R,EPSILON,0,x);
@@ -82,7 +88,10 @@ double sasfit_ff_pcs_ellcylsh_Ampl_core(double x, sasfit_param *param)
     A = b1*Ain+b2*Aout;
     return A;
 }
-double sasfit_ff_pcs_ellcylsh_I_core_R0(double x, sasfit_param * param)
+double sasfit_ff_pcs_ellcylsh_I_core_R0(double x,  double R0,  double SIGMA_R0,
+                                        double EPSILON,  double T,  double DUMMY1,  double DUMMY2,  double DUMMY3,
+                                        double ETA_CORE,  double ETA_SHELL,  double ETA_SOLV,  double R,  double Q,
+                                        double P0,  double LB,  double B,  double L,  double EXVOL,  double CLB)
 {
     double res, LNdistr;
     sasfit_param subParam;
@@ -117,7 +126,11 @@ double sasfit_ff_pcs_ellcylsh_I_core_R0(double x, sasfit_param * param)
     }
     return LNdistr*res;
 }
-double sasfit_ff_pcs_ellcylsh_Ampl_core_R0(double x, sasfit_param * param)
+double sasfit_ff_pcs_ellcylsh_Ampl_core_R0(double x,  double R0,
+        double SIGMA_R0,  double EPSILON,  double T,  double DUMMY1,  double DUMMY2,
+        double DUMMY3,  double ETA_CORE,  double ETA_SHELL,  double ETA_SOLV,  double R,
+        double Q,  double P0,  double LB,  double B,  double L,  double EXVOL,
+        double CLB)
 {
     double res, LNdistr;
     sasfit_param subParam;

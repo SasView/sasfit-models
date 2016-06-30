@@ -255,13 +255,15 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
             allowed = 0
         if search(r"scalar sasfit_[ff_]+"+model_name+"\((.*?)\)", line):
             swap_parameters = ""
+            swap_parameters_def = ""
             for param in parameters[:-1]:
                 swap_parameters += param+", "
+                swap_parameters_def +=" double "+param+", "
                 Iq_lines+=" double "+param+", "
             swap_parameters += parameters[-1]
-            Iq_lines+=" double "+parameters[-1]
-            swap_parameters_def = Iq_lines
-            Iq_lines += ")"
+            swap_parameters_def +=" double "+parameters[-1]
+            Iq_lines+=" double "+parameters[-1]+")"
+
             output_c_lines.append(Iq_lines+"\n")
             output_intro_lines.append(Iq_lines+";\n")
             #substitution_dict["sasfit_param *param"] = swap_parameters_def
@@ -295,11 +297,11 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     out_c_lines = []
     for line in output_c_lines:
 
-        if search("sasfit_param *param", line):
+        if search(r"sasfit_param\s+\*param", line):
             line = line.replace("sasfit_param *param", swap_parameters_def)
-        elif search("sasfit_param * param", line):
+        elif search(r"sasfit_param\s+\*\s+param", line):
             line = line.replace("sasfit_param * param", swap_parameters_def)
-        elif search("param", line) and not search("_param", line):
+        elif search(r"param", line) and not search(r"_param", line):
             line = line.replace("param", swap_parameters)
 
         for sub in substitution_dict.keys():

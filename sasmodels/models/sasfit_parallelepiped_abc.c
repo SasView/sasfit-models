@@ -31,10 +31,12 @@ double sinc(double x)
         return sin(x)/x;
     }
 }
-double Psi_P_kernel(double y, sasfit_param * param)
+double Psi_P_kernel(double y,  double A,  double B,  double C,  double ETA,
+                    double Q,  double ALPHA,  double BETA,  double P0)
 {
 }
-double Psi_kernel(double x, sasfit_param * param)
+double Psi_kernel(double x,  double A,  double B,  double C,  double ETA,
+                  double Q,  double ALPHA,  double BETA,  double P0)
 {
     return sasfit_integrate(0.0,M_PI/2.0,&Psi_P_kernel,A, B, C, ETA, Q, ALPHA, BETA,
                             P0);

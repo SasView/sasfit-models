@@ -30,7 +30,10 @@ double Iqxy( double qx, double qy, double RSH0, double THETA1, double THETA2,
 #define Sin sin
 #define Pi M_PI
 #define Sec 1./cos
-double probability(double *x, sasfit_param * param)
+double probability(double *x,  double RSH0,  double THETA1,  double THETA2,
+                   double T_SH,  double T_C,  double DETA_SH,  double DETA_CE,  double SIGMA,
+                   double PSI_DEG,  double KAPPA,  double Q,  double RKERNEL,  double GAMA,
+                   double _THETA,  double PHI,  double PSI,  double RSH)
 {
     double p, norm, u, c, LNf, theta, phi, radius;
     theta	= x[0];
@@ -64,7 +67,10 @@ double probability(double *x, sasfit_param * param)
     return p;
 }
 double sasfit_ff_magneticfieldalignedvesicle_p2psi_kernel(double *x, size_t dim,
-        sasfit_param * param)
+        double RSH0,  double THETA1,  double THETA2,  double T_SH,  double T_C,
+        double DETA_SH,  double DETA_CE,  double SIGMA,  double PSI_DEG,  double KAPPA,
+        double Q,  double RKERNEL,  double GAMA,  double _THETA,  double PHI,
+        double PSI,  double RSH)
 {
     double res,p;
     _THETA	= x[0];
@@ -82,7 +88,10 @@ int sasfit_integrate_plugin_P2Psi(sasfit_func_monte_t intKern_fct,
                                   double *xl,
                                   double *xu,
                                   size_t dim,
-                                  sasfit_param * param,
+                                  double RSH0,  double THETA1,  double THETA2,  double T_SH,  double T_C,
+                                  double DETA_SH,  double DETA_CE,  double SIGMA,  double PSI_DEG,  double KAPPA,
+                                  double Q,  double RKERNEL,  double GAMA,  double _THETA,  double PHI,
+                                  double PSI,  double RSH,
                                   size_t calls,
                                   double *res,
                                   double *err)
@@ -110,7 +119,10 @@ int sasfit_integrate_plugin_P2Psi(sasfit_func_monte_t intKern_fct,
     return status;
 }
 double sasfit_ff_magneticfieldalignedvesicle_p2psi_kernel_theta(double x,
-        sasfit_param * param)
+        double RSH0,  double THETA1,  double THETA2,  double T_SH,  double T_C,
+        double DETA_SH,  double DETA_CE,  double SIGMA,  double PSI_DEG,  double KAPPA,
+        double Q,  double RKERNEL,  double GAMA,  double _THETA,  double PHI,
+        double PSI,  double RSH)
 {
     double res,p;
     _THETA = x;
@@ -122,7 +134,10 @@ double sasfit_ff_magneticfieldalignedvesicle_p2psi_kernel_theta(double x,
     return res;
 }
 double sasfit_ff_magneticfieldalignedvesicle_p2psi_kernel_phi(double x,
-        sasfit_param * param)
+        double RSH0,  double THETA1,  double THETA2,  double T_SH,  double T_C,
+        double DETA_SH,  double DETA_CE,  double SIGMA,  double PSI_DEG,  double KAPPA,
+        double Q,  double RKERNEL,  double GAMA,  double _THETA,  double PHI,
+        double PSI,  double RSH)
 {
     double res;
     PHI = x;

@@ -21,7 +21,9 @@ double Iqxy( double qx, double qy, double T, double SIGMA_T, double DUMMY1,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local T, SIGMA_T, DUMMY1, DUMMY2, ETA_L, ETA_SOL, Q, P0, LB, B, L, EXVOL, CLBeters/variables
-double homoXS_core(double x, sasfit_param *param)
+double homoXS_core(double x,  double T,  double SIGMA_T,  double DUMMY1,
+                   double DUMMY2,  double ETA_L,  double ETA_SOL,  double Q,  double P0,
+                   double LB,  double B,  double L,  double EXVOL,  double CLB)
 {
     double Pcs, u, LNdistr;
     sasfit_param subParam;
@@ -42,7 +44,9 @@ double homoXS_core(double x, sasfit_param *param)
     LNdistr = sasfit_sd_LogNorm(x, &subParam);
     return LNdistr*Pcs;
 }
-double homogeneousXS(double q, sasfit_param * param)
+double homogeneousXS(double q,  double T,  double SIGMA_T,  double DUMMY1,
+                     double DUMMY2,  double ETA_L,  double ETA_SOL,  double Q,  double P0,
+                     double LB,  double B,  double L,  double EXVOL,  double CLB)
 {
     double Pcs, u;
     double tstart = 0.0, tend = 0.0;

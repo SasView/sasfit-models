@@ -48,7 +48,13 @@ double J1xdivx ( double x )
         return sas_J1(x)/x;
     }
 }
-double J1divQQ ( double x, sasfit_param *param)
+double J1divQQ ( double x,  double RSHMODE,  double THETA_1,  double R1,
+                 double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                 double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                 double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                 double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                 double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                 double R_1,  double R_2)
 {
     if ( PSI <= 1.0e-3 )
     {
@@ -62,7 +68,13 @@ double J1divQQ ( double x, sasfit_param *param)
 }
 /* Note functions with ** in the description need to be integrated over z */
 // (1a) Flat-capped sphere of radius R_SH (r in formulae): real part  **
-double inner_sphere_real ( double z, sasfit_param *param )
+double inner_sphere_real ( double z,  double RSHMODE,  double THETA_1,
+                           double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                           double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                           double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                           double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                           double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                           double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u;
     u = Q*sqrt(R_SH*R_SH - z*z)*sin(PSI);
@@ -71,7 +83,13 @@ double inner_sphere_real ( double z, sasfit_param *param )
     return result;
 }
 // (1b) Flat-capped sphere of radius R_SH: imaginary part **
-double inner_sphere_imag ( double z, sasfit_param *param )
+double inner_sphere_imag ( double z,  double RSHMODE,  double THETA_1,
+                           double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                           double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                           double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                           double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                           double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                           double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u;
     u = Q*sqrt(R_SH*R_SH - z*z)*sin(PSI);
@@ -80,7 +98,13 @@ double inner_sphere_imag ( double z, sasfit_param *param )
     return result;
 }
 // (2a) Flat-capped sphere of radius R_SH + T_SH (r+tsh in formulae): real part **
-double outer_sphere_real ( double z, sasfit_param *param )
+double outer_sphere_real ( double z,  double RSHMODE,  double THETA_1,
+                           double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                           double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                           double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                           double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                           double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                           double R_SH,  double R_1,  double R_2 )
 {
     double radius, temp, result, u;
     radius = R_SH + T_SH;
@@ -90,7 +114,13 @@ double outer_sphere_real ( double z, sasfit_param *param )
     return result;
 }
 // (2b) Flat-capped sphere of radius R_SH + T_SH (r+tsh in formulae): imaginary part **
-double outer_sphere_imag ( double z, sasfit_param *param )
+double outer_sphere_imag ( double z,  double RSHMODE,  double THETA_1,
+                           double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                           double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                           double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                           double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                           double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                           double R_SH,  double R_1,  double R_2 )
 {
     double radius, temp, result, u;
     radius = R_SH + T_SH;
@@ -100,7 +130,13 @@ double outer_sphere_imag ( double z, sasfit_param *param )
     return result;
 }
 // (3a) Cylindrical cap (right): real part
-double cap_right_real (sasfit_param *param )
+double cap_right_real ( double RSHMODE,  double THETA_1,  double R1,
+                        double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                        double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                        double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                        double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                        double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                        double R_1,  double R_2 )
 {
     double a, b, result, u;
     u = Q*R_SH*sin(THETA_1);
@@ -114,7 +150,13 @@ double cap_right_real (sasfit_param *param )
 //	sasfit_out ( "Other: %lf\n", 0.1e1 / Q * R_SH * sin(THETA_1) / 0.4e1 + ((-pow(Q, 0.3e1) * pow(R_SH, 0.3e1) * pow(sin(THETA_1), 0.3e1) / 0.16e2 - Q * R_SH * sin(THETA_1) / 0.12e2) * pow(Q, -0.2e1) / 0.2e1 + 0.1e1 / Q * R_SH * sin(THETA_1) / 0.6e1) * PSI * PSI );
 }
 // (3b) Cylindrical cap (right): imaginary part
-double cap_right_imag (sasfit_param *param )
+double cap_right_imag ( double RSHMODE,  double THETA_1,  double R1,
+                        double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                        double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                        double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                        double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                        double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                        double R_1,  double R_2 )
 {
     double a, b, result, u;
     u = Q*R_SH*sin(THETA_1);
@@ -127,7 +169,13 @@ double cap_right_imag (sasfit_param *param )
     return result;
 }
 // (4a) Cylindrical cap (left): real part
-double cap_left_real (sasfit_param *param )
+double cap_left_real ( double RSHMODE,  double THETA_1,  double R1,
+                       double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                       double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                       double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                       double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                       double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                       double R_1,  double R_2 )
 {
     double a, b, result, u;
     u = Q*R_SH*sin(THETA_2);
@@ -140,7 +188,13 @@ double cap_left_real (sasfit_param *param )
     return result;
 }
 // (4b) Cylindrical cap (left): imaginary part
-double cap_left_imag (sasfit_param *param )
+double cap_left_imag ( double RSHMODE,  double THETA_1,  double R1,
+                       double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                       double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                       double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                       double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                       double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                       double R_1,  double R_2 )
 {
     double a, b, result, u;
     u = Q*R_SH*sin(THETA_2);
@@ -153,7 +207,13 @@ double cap_left_imag (sasfit_param *param )
     return result;
 }
 // (5a) Domain cylindrical cap (right): real part
-double dom_cap_right_real (sasfit_param *param )
+double dom_cap_right_real ( double RSHMODE,  double THETA_1,  double R1,
+                            double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                            double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                            double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                            double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                            double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                            double R_1,  double R_2 )
 {
     double a,b,result, u;
     u = Q*R_SH*cos(THETA_1);
@@ -166,7 +226,13 @@ double dom_cap_right_real (sasfit_param *param )
     return result;
 }
 // (5b) Domain cylindrical cap (right): imaginary part
-double dom_cap_right_imag (sasfit_param *param )
+double dom_cap_right_imag ( double RSHMODE,  double THETA_1,  double R1,
+                            double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                            double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                            double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                            double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                            double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                            double R_1,  double R_2 )
 {
     double a, b, result, u;
     u = Q*R_SH*cos(THETA_1);
@@ -179,7 +245,13 @@ double dom_cap_right_imag (sasfit_param *param )
     return result;
 }
 // (6a) Domain cylindrical cap (left): real part
-double dom_cap_left_real (sasfit_param *param )
+double dom_cap_left_real ( double RSHMODE,  double THETA_1,  double R1,
+                           double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                           double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                           double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                           double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                           double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                           double R_1,  double R_2 )
 {
     double a, b, result, u;
     u = Q*R_SH*cos(THETA_2);
@@ -192,7 +264,13 @@ double dom_cap_left_real (sasfit_param *param )
     return result;
 }
 // (6b) Domain cylindrical cap (left): imaginary part
-double dom_cap_left_imag (sasfit_param *param )
+double dom_cap_left_imag ( double RSHMODE,  double THETA_1,  double R1,
+                           double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                           double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                           double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                           double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                           double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                           double R_1,  double R_2 )
 {
     double a, b, result, u;
     u = Q*R_SH*cos(THETA_2);
@@ -205,7 +283,13 @@ double dom_cap_left_imag (sasfit_param *param )
     return result;
 }
 // (7a) Domain outer curved cap (right): real part **
-double outer_curve_right_real ( double z, sasfit_param *param )
+double outer_curve_right_real ( double z,  double RSHMODE,  double THETA_1,
+                                double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                                double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                                double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                                double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                                double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                                double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u, Z;
     Z = fabs(z);
@@ -215,7 +299,13 @@ double outer_curve_right_real ( double z, sasfit_param *param )
     return result;
 }
 // (7b) Domain outer curved cap (right): imaginary part **
-double outer_curve_right_imag ( double z, sasfit_param *param )
+double outer_curve_right_imag ( double z,  double RSHMODE,  double THETA_1,
+                                double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                                double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                                double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                                double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                                double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                                double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u, Z;
     Z = fabs(z);
@@ -225,7 +315,13 @@ double outer_curve_right_imag ( double z, sasfit_param *param )
     return result;
 }
 // (8a) Domain outer curved cap (left): real part **
-double outer_curve_left_real ( double z, sasfit_param *param )
+double outer_curve_left_real ( double z,  double RSHMODE,  double THETA_1,
+                               double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                               double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                               double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                               double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                               double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                               double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u, Z;
     Z = fabs(z);
@@ -235,7 +331,13 @@ double outer_curve_left_real ( double z, sasfit_param *param )
     return result;
 }
 // (8b) Domain outer curved cap (left): imaginary part **
-double outer_curve_left_imag ( double z, sasfit_param *param )
+double outer_curve_left_imag ( double z,  double RSHMODE,  double THETA_1,
+                               double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                               double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                               double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                               double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                               double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                               double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u, Z;
     Z = fabs(z);
@@ -245,7 +347,13 @@ double outer_curve_left_imag ( double z, sasfit_param *param )
     return result;
 }
 // (9a) Domain inner curved cap (right): real part **
-double inner_curve_right_real ( double z, sasfit_param *param )
+double inner_curve_right_real ( double z,  double RSHMODE,  double THETA_1,
+                                double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                                double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                                double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                                double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                                double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                                double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u, Z;
     Z = fabs(z);
@@ -255,7 +363,13 @@ double inner_curve_right_real ( double z, sasfit_param *param )
     return result;
 }
 // (9b) Domain inner curved cap (right): imaginary part
-double inner_curve_right_imag ( double z, sasfit_param *param )
+double inner_curve_right_imag ( double z,  double RSHMODE,  double THETA_1,
+                                double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                                double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                                double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                                double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                                double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                                double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u, Z;
     Z = fabs(z);
@@ -265,7 +379,13 @@ double inner_curve_right_imag ( double z, sasfit_param *param )
     return result;
 }
 // (10a) Domain inner curved cap (left): real part
-double inner_curve_left_real ( double z, sasfit_param *param )
+double inner_curve_left_real ( double z,  double RSHMODE,  double THETA_1,
+                               double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                               double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                               double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                               double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                               double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                               double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u, Z;
     Z = fabs(z);
@@ -275,7 +395,13 @@ double inner_curve_left_real ( double z, sasfit_param *param )
     return result;
 }
 // (10b) Domain inner curved cap (left): imaginary part
-double inner_curve_left_imag ( double z, sasfit_param *param )
+double inner_curve_left_imag ( double z,  double RSHMODE,  double THETA_1,
+                               double R1,  double THETA_2,  double R2,  double T_SH,  double T_C,
+                               double ETA_SH,  double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,
+                               double KAPPA,  double Q,  double BIG_THETA_1,  double BIG_THETA_2,
+                               double DELTA_1,  double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,
+                               double DIF_ETA_C,  double GAMMA,  double _THETA,  double _PHI,  double PSI,
+                               double R_SH,  double R_1,  double R_2 )
 {
     double temp, result, u, Z;
     Z = fabs(z);
@@ -285,7 +411,13 @@ double inner_curve_left_imag ( double z, sasfit_param *param )
     return result;
 }
 /* ******************************************************************************* */
-double probability_new (double *x, sasfit_param * param)
+double probability_new (double *x,  double RSHMODE,  double THETA_1,  double R1,
+                        double THETA_2,  double R2,  double T_SH,  double T_C,  double ETA_SH,
+                        double ETA_C,  double ETA_SOL,  double _PSI,  double SIGMA,  double KAPPA,
+                        double Q,  double BIG_THETA_1,  double BIG_THETA_2,  double DELTA_1,
+                        double DELTA_2,  double D_1,  double D_2,  double DIF_ETA_SH,  double DIF_ETA_C,
+                        double GAMMA,  double _THETA,  double _PHI,  double PSI,  double R_SH,
+                        double R_1,  double R_2)
 {
     double p, norm, u, c, LNf, theta, phi, radius;
     theta	= x[0];
@@ -319,7 +451,12 @@ double probability_new (double *x, sasfit_param * param)
     return p;
 }
 double sasfit_ff_magneticfieldalignedvesicle_new_kernel(double *x, size_t dim,
-        sasfit_param * param)
+        double RSHMODE,  double THETA_1,  double R1,  double THETA_2,  double R2,
+        double T_SH,  double T_C,  double ETA_SH,  double ETA_C,  double ETA_SOL,
+        double _PSI,  double SIGMA,  double KAPPA,  double Q,  double BIG_THETA_1,
+        double BIG_THETA_2,  double DELTA_1,  double DELTA_2,  double D_1,  double D_2,
+        double DIF_ETA_SH,  double DIF_ETA_C,  double GAMMA,  double _THETA,
+        double _PHI,  double PSI,  double R_SH,  double R_1,  double R_2)
 {
     double res,p;
     double sasfit_ff_magneticfieldalignedvesicle_psi_zint();
@@ -344,7 +481,12 @@ int sasfit_integrate_plugin_new(sasfit_func_monte_t intKern_fct,
                                 double *xl,
                                 double *xu,
                                 size_t dim,
-                                sasfit_param *param,
+                                double RSHMODE,  double THETA_1,  double R1,  double THETA_2,  double R2,
+                                double T_SH,  double T_C,  double ETA_SH,  double ETA_C,  double ETA_SOL,
+                                double _PSI,  double SIGMA,  double KAPPA,  double Q,  double BIG_THETA_1,
+                                double BIG_THETA_2,  double DELTA_1,  double DELTA_2,  double D_1,  double D_2,
+                                double DIF_ETA_SH,  double DIF_ETA_C,  double GAMMA,  double _THETA,
+                                double _PHI,  double PSI,  double R_SH,  double R_1,  double R_2,
                                 size_t calls,
                                 double *res,
                                 double *err)
@@ -404,7 +546,12 @@ double Iq( double q, double RSHMODE,  double THETA_1,  double R1,
 }
 /* ******************************************************************************* */
 double sasfit_ff_magneticfieldalignedvesicle_psi_zint( double q,
-        sasfit_param *param )
+        double RSHMODE,  double THETA_1,  double R1,  double THETA_2,  double R2,
+        double T_SH,  double T_C,  double ETA_SH,  double ETA_C,  double ETA_SOL,
+        double _PSI,  double SIGMA,  double KAPPA,  double Q,  double BIG_THETA_1,
+        double BIG_THETA_2,  double DELTA_1,  double DELTA_2,  double D_1,  double D_2,
+        double DIF_ETA_SH,  double DIF_ETA_C,  double GAMMA,  double _THETA,
+        double _PHI,  double PSI,  double R_SH,  double R_1,  double R_2 )
 {
     double	r1a, r1b, r2a, r2b, r7a, r7b, r8a, r8b, r9a, r9b, r10a, r10b,
             real_amp, imag_amp,

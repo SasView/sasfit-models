@@ -17,7 +17,8 @@ double Iqxy( double qx, double qy, double K, double HI, double L_H, double R,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local K, HI, L_H, R, Q, lR, P0eters/variables
-double Iq_kernel(double r, sasfit_param * param)
+double Iq_kernel(double r,  double K,  double HI,  double L_H,  double R,
+                 double Q,  double lR,  double P0)
 {
     if (fabs(Q*r)<=1e-3)
     {

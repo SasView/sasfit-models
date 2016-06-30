@@ -18,8 +18,12 @@ double Iqxy( double qx, double qy, double R1, double dR, double eta_c,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol, P0eters/variables
-double sasfit_kshexp1(double q, sasfit_param * param);
-double sasfit_kshexp2(double q, sasfit_param * param);
+double sasfit_kshexp1(double q,  double R1,  double dR,  double eta_c,
+                      double eta_sh,  double x_in,  double x_out,  double alpha,  double eta_sol,
+                      double P0);
+double sasfit_kshexp2(double q,  double R1,  double dR,  double eta_c,
+                      double eta_sh,  double x_in,  double x_out,  double alpha,  double eta_sol,
+                      double P0);
 double Iq( double q, double R1,  double dR,  double eta_c,  double eta_sh,
            double x_in,  double x_out,  double alpha,  double eta_sol,  double P0)
 {
@@ -68,7 +72,9 @@ bool  *error)
 //                x_in_sol : amount of solvent at R1
 //               x_out_sol : amount of solvent at R1+DR
 //                  eta_sh : scattering length density of pure shell material
-double sasfit_kshexp1(double q, sasfit_param * param)
+double sasfit_kshexp1(double q,  double R1,  double dR,  double eta_c,
+                      double eta_sh,  double x_in,  double x_out,  double alpha,  double eta_sol,
+                      double P0)
 {
     double R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol;
     double t0,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t14,t15,t16,t17,t18,t19,t20,
@@ -437,7 +443,9 @@ bool  *error)
 //            x_in_solvent : amount of solvent at R1
 //           x_out_solvent : amount of solvent at R1+DR
 //               eta_shell : scattering length density of pure shell material
-double sasfit_kshexp2(double q, sasfit_param * param)
+double sasfit_kshexp2(double q,  double R1,  double dR,  double eta_c,
+                      double eta_sh,  double x_in,  double x_out,  double alpha,  double eta_sol,
+                      double P0)
 {
     double R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol;
     double t0,t1,t2,t3,t4,t5,t6,t7,t8,t10,t11,t12,t14,t15,t16,t17,t18,t20,t21,t22,

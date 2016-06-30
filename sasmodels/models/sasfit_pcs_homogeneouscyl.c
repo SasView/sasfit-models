@@ -25,7 +25,10 @@ double Iqxy( double qx, double qy, double R, double SIGMA_R, double DUMMY1,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local R, SIGMA_R, DUMMY1, DUMMY2, DUMMY3, DUMMY4, DUMMY5, ETA_CORE, DUMMY6, ETA_SOL, Q, P0, LB, B, L, EXVOL, CLBeters/variables
-double homo_cyl_Ampl_core(double x, sasfit_param *param)
+double homo_cyl_Ampl_core(double x,  double R,  double SIGMA_R,  double DUMMY1,
+                          double DUMMY2,  double DUMMY3,  double DUMMY4,  double DUMMY5,  double ETA_CORE,
+                          double DUMMY6,  double ETA_SOL,  double Q,  double P0,  double LB,  double B,
+                          double L,  double EXVOL,  double CLB)
 {
     double A,u;
     u = Q*x;
@@ -39,12 +42,18 @@ double homo_cyl_Ampl_core(double x, sasfit_param *param)
     }
     return A;
 }
-double homo_cyl_I_core(double x, sasfit_param *param)
+double homo_cyl_I_core(double x,  double R,  double SIGMA_R,  double DUMMY1,
+                       double DUMMY2,  double DUMMY3,  double DUMMY4,  double DUMMY5,  double ETA_CORE,
+                       double DUMMY6,  double ETA_SOL,  double Q,  double P0,  double LB,  double B,
+                       double L,  double EXVOL,  double CLB)
 {
     return sas_pow_2(homo_cyl_Ampl_core(x,R, SIGMA_R, DUMMY1, DUMMY2, DUMMY3,
                                         DUMMY4, DUMMY5, ETA_CORE, DUMMY6, ETA_SOL, Q, P0, LB, B, L, EXVOL, CLB));
 }
-double Ampl_homoXS_core(double x, sasfit_param *param)
+double Ampl_homoXS_core(double x,  double R,  double SIGMA_R,  double DUMMY1,
+                        double DUMMY2,  double DUMMY3,  double DUMMY4,  double DUMMY5,  double ETA_CORE,
+                        double DUMMY6,  double ETA_SOL,  double Q,  double P0,  double LB,  double B,
+                        double L,  double EXVOL,  double CLB)
 {
     double Pcs, u, LNdistr;
     sasfit_param subParam;
@@ -58,7 +67,10 @@ double Ampl_homoXS_core(double x, sasfit_param *param)
     LNdistr = sasfit_sd_LogNorm(x, &subParam);
     return LNdistr*Pcs;
 }
-double I_homoXS_core(double x, sasfit_param *param)
+double I_homoXS_core(double x,  double R,  double SIGMA_R,  double DUMMY1,
+                     double DUMMY2,  double DUMMY3,  double DUMMY4,  double DUMMY5,  double ETA_CORE,
+                     double DUMMY6,  double ETA_SOL,  double Q,  double P0,  double LB,  double B,
+                     double L,  double EXVOL,  double CLB)
 {
     double Pcs, u, LNdistr;
     sasfit_param subParam;

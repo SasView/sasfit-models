@@ -32,7 +32,12 @@ double Iqxy( double qx, double qy, double C, double MCORE, double MBRUSH,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0eters/variables
-double sasfit_ff_jjuelichcoreshell(double q, sasfit_param * param)
+double sasfit_ff_jjuelichcoreshell(double q,  double C,  double MCORE,
+                                   double MBRUSH,  double RHO_CORE,  double RHO_BRUSH,  double B_CORE,
+                                   double B_BRUSH,  double NAGG,  double D1_PLUS,  double PART23,  double D2_PLUS,
+                                   double D3_PLUS,  double SIGMA1,  double SIGMA2,  double SIGMA3,
+                                   double PARTSTAR,  double GAMMA,  double LPARABOL,  double F_BRUSH,
+                                   double F_CORE,  double RHOSOLV,  double Q,  double P0)
 {
 // insert your code here
     return 0.0;
@@ -143,7 +148,12 @@ double parabol_brush(double x, double l)
     return 1.0 - (x/yl)*(x/yl);
 }
 // for the first shot I do this with switches, may be improved later ..
-double plugin_vol_ker(double r, sasfit_param * param)
+double plugin_vol_ker(double r,  double C,  double MCORE,  double MBRUSH,
+                      double RHO_CORE,  double RHO_BRUSH,  double B_CORE,  double B_BRUSH,
+                      double NAGG,  double D1_PLUS,  double PART23,  double D2_PLUS,  double D3_PLUS,
+                      double SIGMA1,  double SIGMA2,  double SIGMA3,  double PARTSTAR,  double GAMMA,
+                      double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q,
+                      double P0)
 {
     double phi, r_para;
     int idx_dist;
@@ -190,7 +200,12 @@ double plugin_vol_ker(double r, sasfit_param * param)
                                   "integration method");
     }
 }
-double jcs_integrate(sasfit_param *param, int shellNr, int intType)
+double jcs_integrate( double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
+                      double RHO_BRUSH,  double B_CORE,  double B_BRUSH,  double NAGG,
+                      double D1_PLUS,  double PART23,  double D2_PLUS,  double D3_PLUS,
+                      double SIGMA1,  double SIGMA2,  double SIGMA3,  double PARTSTAR,  double GAMMA,
+                      double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q,
+                      double P0, int shellNr, int intType)
 {
     const double VerrorVal = 1.007;
     double res, R, sigma;

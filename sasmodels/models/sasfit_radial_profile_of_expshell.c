@@ -21,7 +21,9 @@ double Iqxy( double qx, double qy, double R_CORE, double DR, double ETA_CORE,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
 // define shortcuts for local R_CORE, DR, ETA_CORE, ETA_SHELL, X_IN_SOL, X_OUT_SOL, ALPHA, ETA_SOL, P0eters/variables
-double expprof(double x, sasfit_param * param)
+double expprof(double x,  double R_CORE,  double DR,  double ETA_CORE,
+               double ETA_SHELL,  double X_IN_SOL,  double X_OUT_SOL,  double ALPHA,
+               double ETA_SOL,  double P0)
 {
     double eta_sh_in, eta_sh_out;
     eta_sh_in	= X_IN_SOL	*ETA_SOL + (1-X_IN_SOL)*ETA_SHELL;

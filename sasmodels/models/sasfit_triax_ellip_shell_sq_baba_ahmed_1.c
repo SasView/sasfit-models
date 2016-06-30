@@ -46,8 +46,10 @@ double Iqxy( double qx, double qy, double A, double DELTA_B, double DELTA_C,
 *   Ingo Bressler (ingo@cs.tu-berlin.de)
 */
 // define shortcuts for local A, DELTA_B, DELTA_C, T, ETA_C, ETA_SH_DRY, ETA_SOL, PHI, V_POL_AP, ALPHA, Z_P, EPSILON_R, MB, ZB, TEMP, P0eters/variables
-double sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core(double y,
-        sasfit_param * param)
+double sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core(double y,  double A,
+        double DELTA_B,  double DELTA_C,  double T,  double ETA_C,  double ETA_SH_DRY,
+        double ETA_SOL,  double PHI,  double V_POL_AP,  double ALPHA,  double Z_P,
+        double EPSILON_R,  double MB,  double ZB,  double TEMP,  double P0)
 {
     double q, p, x, b, c, u_c, u_sh, eta_sh, f_c, f_sh;
     if (fabs(A*b*c) + fabs(T) == 0.0) return 0.0;
@@ -67,8 +69,10 @@ double sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core(double y,
     }
     return pow(f_sh+f_c, p);
 }
-double sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core_x(double x,
-        sasfit_param * param)
+double sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core_x(double x,  double A,
+        double DELTA_B,  double DELTA_C,  double T,  double ETA_C,  double ETA_SH_DRY,
+        double ETA_SOL,  double PHI,  double V_POL_AP,  double ALPHA,  double Z_P,
+        double EPSILON_R,  double MB,  double ZB,  double TEMP,  double P0)
 {
     double res;
     res = sasfit_integrate(0.0, 1.0,
