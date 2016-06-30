@@ -297,9 +297,10 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     out_c_lines = []
     for line in output_c_lines:
 
-        if search(r"sasfit_param\s+\*param", line):
+        #TODO:It will be better if it works for abitrary numnber of spaces
+        if search(r"sasfit_param\s\*param", line):
             line = line.replace("sasfit_param *param", swap_parameters_def)
-        elif search(r"sasfit_param\s+\*\s+param", line):
+        elif search(r"sasfit_param\s\*\sparam", line):
             line = line.replace("sasfit_param * param", swap_parameters_def)
         elif search(r"param", line) and not search(r"_param", line):
             line = line.replace("param", swap_parameters)
