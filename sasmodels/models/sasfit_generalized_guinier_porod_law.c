@@ -5,20 +5,20 @@
 ///////////////////////////////////////////////////
 
 double Iq( double q, double G2,  double S2,  double RG2,  double S1,
-           double RG1,  double M);
+           double RG1,  double M,  double P0);
 double Fq( double q,  double G2,  double S2,  double RG2,  double S1,
-           double RG1,  double M);
+           double RG1,  double M,  double P0);
 double form_volume(  double G2,  double S2,  double RG2,  double S1,
-                     double RG1,  double M);
+                     double RG1,  double M,  double P0);
 double Iqxy( double qx, double qy, double G2, double S2, double RG2, double S1,
-             double RG1, double M);
+             double RG1, double M, double P0);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local G2, S2, RG2, S1, RG1, M, P0eters/variables
 double Iq( double q, double G2,  double S2,  double RG2,  double S1,
-           double RG1,  double M)
+           double RG1,  double M,  double P0)
 {
     double Q1, Q2, G1,D;
 // insert your code here
@@ -40,20 +40,20 @@ double Iq( double q, double G2,  double S2,  double RG2,  double S1,
     }
 }
 double Fq( double q,  double G2,  double S2,  double RG2,  double S1,
-           double RG1,  double M)
+           double RG1,  double M,  double P0)
 {
 // insert your code here
     return 0.0;
 }
 double form_volume(  double G2,  double S2,  double RG2,  double S1,
-                     double RG1,  double M)
+                     double RG1,  double M,  double P0)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double G2, double S2, double RG2, double S1,
-             double RG1, double M)
+             double RG1, double M, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, G2, S2, RG2, S1, RG1, M);
+    return Iq( q, G2, S2, RG2, S1, RG1, M, P0);
 }

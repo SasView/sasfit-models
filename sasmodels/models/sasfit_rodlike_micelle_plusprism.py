@@ -31,6 +31,7 @@ parameters = [
  [ "Q", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
  [ "ALPHA", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
  [ "THETA", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -49,4 +50,5 @@ demo = dict(
 	HOW = 0.0,
 	Q = 0.0,
 	ALPHA = 0.0,
-	THETA = 0.0)
+	THETA = 0.0,
+	P0 = 0.0)

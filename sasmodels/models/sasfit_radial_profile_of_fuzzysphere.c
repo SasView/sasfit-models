@@ -4,18 +4,21 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL);
-double Fq( double q,  double R,  double SIGMA,  double ETA_SPH,
-           double ETA_SOL);
-double form_volume(  double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL);
+double Iq( double q, double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL,
+           double P0);
+double Fq( double q,  double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL,
+           double P0);
+double form_volume(  double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL,
+                     double P0);
 double Iqxy( double qx, double qy, double R, double SIGMA, double ETA_SPH,
-             double ETA_SOL);
+             double ETA_SOL, double P0);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
-double Iq( double q, double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL)
+// define shortcuts for local R, SIGMA, ETA_SPH, ETA_SOL, P0eters/variables
+double Iq( double q, double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL,
+           double P0)
 {
 // insert your code here
     if (fabs(SIGMA)==0.0)
@@ -51,19 +54,21 @@ double Iq( double q, double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL)
         }
     }
 }
-double Fq( double q,  double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL)
+double Fq( double q,  double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL,
+           double P0)
 {
 // insert your code here
     return 0.0;
 }
-double form_volume(  double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL)
+double form_volume(  double R,  double SIGMA,  double ETA_SPH,  double ETA_SOL,
+                     double P0)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double R, double SIGMA, double ETA_SPH,
-             double ETA_SOL)
+             double ETA_SOL, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, R, SIGMA, ETA_SPH, ETA_SOL);
+    return Iq( q, R, SIGMA, ETA_SPH, ETA_SOL, P0);
 }

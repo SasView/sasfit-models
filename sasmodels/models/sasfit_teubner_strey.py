@@ -21,6 +21,7 @@ parameters = [
  [ "xi", 	"", 	10.0, 	[-inf, inf], 	"", 	"xi: correlation length"],
  [ "d", 	"", 	0.0, 	[-inf, inf], 	"", 	"d: characteristic domain size (the periodicity)"],
  [ "eta", 	"", 	0.0, 	[-inf, inf], 	"", 	"eta: mean average contrast"],
+ [ "P0", 	"", 	1.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -29,4 +30,5 @@ source = [  "sasfit_teubner_strey.c" ]
 demo = dict(
 	xi = 10.0,
 	d = 0.0,
-	eta = 0.0)
+	eta = 0.0,
+	P0 = 1.0)

@@ -4,22 +4,26 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double K,  double HI,  double L_H,  double R,  double lR);
-double Fq( double q,  double K,  double HI,  double L_H,  double R,  double lR);
-double form_volume(  double K,  double HI,  double L_H,  double R,  double lR);
+double Iq( double q, double K,  double HI,  double L_H,  double R,  double lR,
+           double P0);
+double Fq( double q,  double K,  double HI,  double L_H,  double R,  double lR,
+           double P0);
+double form_volume(  double K,  double HI,  double L_H,  double R,  double lR,
+                     double P0);
 double Iqxy( double qx, double qy, double K, double HI, double L_H, double R,
-             double lR);
+             double lR, double P0);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local K, HI, L_H, R, lR, P0eters/variables
 double Cr_kernel(double q, sasfit_param * param)
 {
     return K*sas_pow_4(R)/sas_pow_2(HI)*gsl_sf_bessel_j0(q*lR)*sas_pow_2(sph_j1(
                 q*fabs(R)))/sas_pow_2(1.0+sas_pow_2(L_H*q));
 }
-double Iq( double q, double K,  double HI,  double L_H,  double R,  double lR)
+double Iq( double q, double K,  double HI,  double L_H,  double R,  double lR,
+           double P0)
 {
     double lh,Cr, Cr0,C2RLr, C2RGr, C2REr, euler;
 // insert your code here
@@ -85,22 +89,24 @@ double Iq( double q, double K,  double HI,  double L_H,  double R,  double lR)
     return K*sas_pow_4(R)/sas_pow_2(HI)*Cr;
 //} else {
 //
-//	return sasfit_integrate(0.0,GSL_POSINF,&Cr_kernel, param);
+//	return sasfit_integrate(0.0,GSL_POSINF,&Cr_kernel, K, HI, L_H, R, lR, P0);
 //}
 }
-double Fq( double q,  double K,  double HI,  double L_H,  double R,  double lR)
+double Fq( double q,  double K,  double HI,  double L_H,  double R,  double lR,
+           double P0)
 {
 // insert your code here
     return 0.0;
 }
-double form_volume(  double K,  double HI,  double L_H,  double R,  double lR)
+double form_volume(  double K,  double HI,  double L_H,  double R,  double lR,
+                     double P0)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double K, double HI, double L_H, double R,
-             double lR)
+             double lR, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, K, HI, L_H, R, lR);
+    return Iq( q, K, HI, L_H, R, lR, P0);
 }

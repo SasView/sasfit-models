@@ -1,7 +1,7 @@
 r"""
 This file has been automatically gereated by sasfit_convert
 The model calculates an empirical functional form for SAS data characterized
-by LinShell2
+by linshell
 
 Definition:
 -----------
@@ -12,7 +12,7 @@ References:
 """
 from numpy import inf
 
-name = "LinShell2"
+name = "linshell"
 title = " "
 description = ""
 category = " "
@@ -25,10 +25,11 @@ parameters = [
  [ "x_in_solvent", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "x_out_solvent", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "eta_solvent", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
-source = [ "lib/sas_pow.c",  "sasfit_LinShell2.c" ]
+source = [ "lib/sas_pow.c",  "sasfit_linshell.c" ]
 
 demo = dict(
 	EMPTY = 10.0,
@@ -37,4 +38,5 @@ demo = dict(
 	eta_shell = 1.0,
 	x_in_solvent = 0.0,
 	x_out_solvent = 0.0,
-	eta_solvent = 0.0)
+	eta_solvent = 0.0,
+	P0 = 0.0)

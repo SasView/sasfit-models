@@ -23,6 +23,7 @@ parameters = [
  [ "L_H", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "R", 	"", 	1.0, 	[-inf, inf], 	"", 	""],
  [ "lR", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -33,4 +34,5 @@ demo = dict(
 	HI = 0.0,
 	L_H = 0.0,
 	R = 1.0,
-	lR = 0.0)
+	lR = 0.0,
+	P0 = 0.0)

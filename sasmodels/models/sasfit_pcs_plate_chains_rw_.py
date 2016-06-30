@@ -30,6 +30,12 @@ parameters = [
  [ "PCHAIN", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "NAGG", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
  [ "V_CORE", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "LB", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "B", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "L", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "EXVOL", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "CLB", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -47,4 +53,10 @@ demo = dict(
 	D = 0.0,
 	PCHAIN = 0.0,
 	NAGG = 0.0,
-	V_CORE = 0.0)
+	V_CORE = 0.0,
+	P0 = 0.0,
+	LB = 0.0,
+	B = 0.0,
+	L = 0.0,
+	EXVOL = 0.0,
+	CLB = 0.0)

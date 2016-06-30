@@ -5,20 +5,20 @@
 ///////////////////////////////////////////////////
 
 double Iq( double q, double G,  double B,  double GS,  double BS,  double RG,
-           double RSUB,  double RS,  double P,  double PS);
+           double RSUB,  double RS,  double P,  double PS,  double P0);
 double Fq( double q,  double G,  double B,  double GS,  double BS,  double RG,
-           double RSUB,  double RS,  double P,  double PS);
+           double RSUB,  double RS,  double P,  double PS,  double P0);
 double form_volume(  double G,  double B,  double GS,  double BS,  double RG,
-                     double RSUB,  double RS,  double P,  double PS);
+                     double RSUB,  double RS,  double P,  double PS,  double P0);
 double Iqxy( double qx, double qy, double G, double B, double GS, double BS,
-             double RG, double RSUB, double RS, double P, double PS);
+             double RG, double RSUB, double RS, double P, double PS, double P0);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local G, B, GS, BS, RG, RSUB, RS, P, PS, P0eters/variables
 double Iq( double q, double G,  double B,  double GS,  double BS,  double RG,
-           double RSUB,  double RS,  double P,  double PS)
+           double RSUB,  double RS,  double P,  double PS,  double P0)
 {
 // insert your code here
     double x, xs, xsub, k, ks, tmp, qsub;
@@ -33,20 +33,20 @@ double Iq( double q, double G,  double B,  double GS,  double BS,  double RG,
              GS*exp(-xs*xs/3.0) + BS*  pow(qsub,PS);
 }
 double Fq( double q,  double G,  double B,  double GS,  double BS,  double RG,
-           double RSUB,  double RS,  double P,  double PS)
+           double RSUB,  double RS,  double P,  double PS,  double P0)
 {
 // insert your code here
     return 0.0;
 }
 double form_volume(  double G,  double B,  double GS,  double BS,  double RG,
-                     double RSUB,  double RS,  double P,  double PS)
+                     double RSUB,  double RS,  double P,  double PS,  double P0)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double G, double B, double GS, double BS,
-             double RG, double RSUB, double RS, double P, double PS)
+             double RG, double RSUB, double RS, double P, double PS, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, G, B, GS, BS, RG, RSUB, RS, P, PS);
+    return Iq( q, G, B, GS, BS, RG, RSUB, RS, P, PS, P0);
 }

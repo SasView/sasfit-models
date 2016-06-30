@@ -5,18 +5,18 @@
 ///////////////////////////////////////////////////
 
 double Iq( double q, double R,  double DELTA_Q_PERP,  double ETA,  double R0,
-           double XI,  double D,  double SCALE,  double Q);
+           double XI,  double D,  double SCALE,  double Q,  double P0);
 double Fq( double q,  double R,  double DELTA_Q_PERP,  double ETA,  double R0,
-           double XI,  double D,  double SCALE,  double Q);
+           double XI,  double D,  double SCALE,  double Q,  double P0);
 double form_volume(  double R,  double DELTA_Q_PERP,  double ETA,  double R0,
-                     double XI,  double D,  double SCALE,  double Q);
+                     double XI,  double D,  double SCALE,  double Q,  double P0);
 double Iqxy( double qx, double qy, double R, double DELTA_Q_PERP, double ETA,
-             double R0, double XI, double D, double SCALE, double Q);
+             double R0, double XI, double D, double SCALE, double Q, double P0);
 /*
 * Author(s) of this file:
 *   <your name> (<email address>)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local R, DELTA_Q_PERP, ETA, R0, XI, D, SCALE, Q, P0eters/variables
 double FFPhiKratky(double qperp, sasfit_param * param)
 {
     double P,P16, q;
@@ -45,27 +45,28 @@ double FFPhiKratky(double qperp, sasfit_param * param)
     return P*P16;
 }
 double Iq( double q, double R,  double DELTA_Q_PERP,  double ETA,  double R0,
-           double XI,  double D,  double SCALE,  double Q)
+           double XI,  double D,  double SCALE,  double Q,  double P0)
 {
 // insert your code here
     Q=q;
-    return sasfit_integrate(0,DELTA_Q_PERP,FFPhiKratky,param)/DELTA_Q_PERP;
+    return sasfit_integrate(0,DELTA_Q_PERP,FFPhiKratky,R, DELTA_Q_PERP, ETA, R0, XI,
+                            D, SCALE, Q, P0)/DELTA_Q_PERP;
 }
 double Fq( double q,  double R,  double DELTA_Q_PERP,  double ETA,  double R0,
-           double XI,  double D,  double SCALE,  double Q)
+           double XI,  double D,  double SCALE,  double Q,  double P0)
 {
 // insert your code here
     return 0.0;
 }
 double form_volume(  double R,  double DELTA_Q_PERP,  double ETA,  double R0,
-                     double XI,  double D,  double SCALE,  double Q)
+                     double XI,  double D,  double SCALE,  double Q,  double P0)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double R, double DELTA_Q_PERP, double ETA,
-             double R0, double XI, double D, double SCALE, double Q)
+             double R0, double XI, double D, double SCALE, double Q, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, R, DELTA_Q_PERP, ETA, R0, XI, D, SCALE, Q);
+    return Iq( q, R, DELTA_Q_PERP, ETA, R0, XI, D, SCALE, Q, P0);
 }

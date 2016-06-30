@@ -23,6 +23,7 @@ parameters = [
  [ "Q0", 	"", 	0.0, 	[-inf, inf], 	"", 	"q0:peak position which is related to the d-spacing as q0 = 2pi/d"],
  [ "M", 	"", 	1.0, 	[-inf, inf], 	"", 	"m:"],
  [ "P", 	"", 	0.0, 	[-inf, inf], 	"", 	"p:"],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -33,4 +34,5 @@ demo = dict(
 	XI = 0.0,
 	Q0 = 0.0,
 	M = 1.0,
-	P = 0.0)
+	P = 0.0,
+	P0 = 0.0)

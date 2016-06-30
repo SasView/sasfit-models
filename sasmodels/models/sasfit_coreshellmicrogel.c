@@ -6,21 +6,21 @@
 
 double Iq( double q, double W_CORE,  double SIGMA_CORE,  double W_SH,
            double SIGMA_SHIN,  double D,  double SIGMA_OUT,  double ETA_CORE,
-           double ETA_SHELL,  double ETA_SOL);
+           double ETA_SHELL,  double ETA_SOL,  double P0);
 double Fq( double q,  double W_CORE,  double SIGMA_CORE,  double W_SH,
            double SIGMA_SHIN,  double D,  double SIGMA_OUT,  double ETA_CORE,
-           double ETA_SHELL,  double ETA_SOL);
+           double ETA_SHELL,  double ETA_SOL,  double P0);
 double form_volume(  double W_CORE,  double SIGMA_CORE,  double W_SH,
                      double SIGMA_SHIN,  double D,  double SIGMA_OUT,  double ETA_CORE,
-                     double ETA_SHELL,  double ETA_SOL);
+                     double ETA_SHELL,  double ETA_SOL,  double P0);
 double Iqxy( double qx, double qy, double W_CORE, double SIGMA_CORE,
              double W_SH, double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
-             double ETA_SHELL, double ETA_SOL);
+             double ETA_SHELL, double ETA_SOL, double P0);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local W_CORE, SIGMA_CORE, W_SH, SIGMA_SHIN, D, SIGMA_OUT, ETA_CORE, ETA_SHELL, ETA_SOL, P0eters/variables
 #define R_CORE		W_CORE+SIGMA_CORE
 #define R_OUT		R_CORE+D+SIGMA_SHIN+W_SH+SIGMA_OUT
 #define R_SHIN		R_CORE+D
@@ -73,15 +73,15 @@ double ampl(double q, double rad, double sigma, double contrast)
 }
 double Iq( double q, double W_CORE,  double SIGMA_CORE,  double W_SH,
            double SIGMA_SHIN,  double D,  double SIGMA_OUT,  double ETA_CORE,
-           double ETA_SHELL,  double ETA_SOL)
+           double ETA_SHELL,  double ETA_SOL,  double P0)
 {
 // insert your code here
-    return sas_pow_2(Fq(q, W_CORE, SIGMA_CORE, W_SH, SIGMA_SHIN, D, SIGMA_OUT,
-                        ETA_CORE, ETA_SHELL, ETA_SOL));
+    return sas_pow_2(Fq(q,W_CORE, SIGMA_CORE, W_SH, SIGMA_SHIN, D, SIGMA_OUT,
+                        ETA_CORE, ETA_SHELL, ETA_SOL, P0));
 }
 double Fq( double q,  double W_CORE,  double SIGMA_CORE,  double W_SH,
            double SIGMA_SHIN,  double D,  double SIGMA_OUT,  double ETA_CORE,
-           double ETA_SHELL,  double ETA_SOL)
+           double ETA_SHELL,  double ETA_SOL,  double P0)
 {
     double u,v,w,t,s;
     return		ampl(q,R_OUT,SIGMA_OUT,(ETA_SHELL-ETA_SOL))
@@ -90,16 +90,16 @@ double Fq( double q,  double W_CORE,  double SIGMA_CORE,  double W_SH,
 }
 double form_volume(  double W_CORE,  double SIGMA_CORE,  double W_SH,
                      double SIGMA_SHIN,  double D,  double SIGMA_OUT,  double ETA_CORE,
-                     double ETA_SHELL,  double ETA_SOL)
+                     double ETA_SHELL,  double ETA_SOL,  double P0)
 {
 // insert your code here
     return 4.*M_PI*sas_pow_3(R_OUT+SIGMA_OUT)/3.;
 }
 double Iqxy( double qx, double qy, double W_CORE, double SIGMA_CORE,
              double W_SH, double SIGMA_SHIN, double D, double SIGMA_OUT, double ETA_CORE,
-             double ETA_SHELL, double ETA_SOL)
+             double ETA_SHELL, double ETA_SOL, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
     return Iq( q, W_CORE, SIGMA_CORE, W_SH, SIGMA_SHIN, D, SIGMA_OUT, ETA_CORE,
-               ETA_SHELL, ETA_SOL);
+               ETA_SHELL, ETA_SOL, P0);
 }

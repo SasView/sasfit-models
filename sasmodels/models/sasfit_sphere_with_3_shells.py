@@ -27,6 +27,7 @@ parameters = [
  [ "ETA_SH2", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "ETA_SH3", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "ETA_SOL", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -41,4 +42,5 @@ demo = dict(
 	ETA_SH1 = 0.0,
 	ETA_SH2 = 0.0,
 	ETA_SH3 = 0.0,
-	ETA_SOL = 0.0)
+	ETA_SOL = 0.0,
+	P0 = 0.0)

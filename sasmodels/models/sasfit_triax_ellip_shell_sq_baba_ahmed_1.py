@@ -33,6 +33,7 @@ parameters = [
  [ "MB", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
  [ "ZB", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
  [ "TEMP", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -53,4 +54,5 @@ demo = dict(
 	EPSILON_R = 0.0,
 	MB = 0.0,
 	ZB = 0.0,
-	TEMP = 0.0)
+	TEMP = 0.0,
+	P0 = 0.0)

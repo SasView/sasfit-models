@@ -6,21 +6,25 @@
 
 double Iq( double q, double LC,  double SIGMA_LC,  double LSH,
            double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double SH,
-           double LL,  double Q);
+           double LL,  double Q,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB);
 double Fq( double q,  double LC,  double SIGMA_LC,  double LSH,
            double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double SH,
-           double LL,  double Q);
+           double LL,  double Q,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB);
 double form_volume(  double LC,  double SIGMA_LC,  double LSH,
                      double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double SH,
-                     double LL,  double Q);
+                     double LL,  double Q,  double P0,  double LB,  double B,  double L,
+                     double EXVOL,  double CLB);
 double Iqxy( double qx, double qy, double LC, double SIGMA_LC, double LSH,
              double SIGMA_LSH, double ETA_C, double ETA_SH, double ETA_SOL, double SH,
-             double LL, double Q);
+             double LL, double Q, double P0, double LB, double B, double L, double EXVOL,
+             double CLB);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local LC, SIGMA_LC, LSH, SIGMA_LSH, ETA_C, ETA_SH, ETA_SOL, SH, LL, Q, P0, LB, B, L, EXVOL, CLBeters/variables
 double layeredcentrosymmetric_FF(sasfit_param *param)
 {
     double Fc, Fsh, Pcs, LNdistr, u, v;
@@ -51,7 +55,8 @@ double layeredcentrosymmetric_core(double x, sasfit_param *param)
     double Fc, Fsh, Pcs, LNdistr, u, v;
     sasfit_param subParam;
     SH = x;
-    Pcs = layeredcentrosymmetric_FF(param);
+    Pcs = layeredcentrosymmetric_FF(LC, SIGMA_LC, LSH, SIGMA_LSH, ETA_C, ETA_SH,
+                                    ETA_SOL, SH, LL, Q, P0, LB, B, L, EXVOL, CLB);
     sasfit_init_param( &subParam );
     subParam.p[0] = 1.0;
     subParam.p[1] = SIGMA_LSH;
@@ -84,12 +89,16 @@ double layeredcentrosymmetric_SH(double x, sasfit_param * param)
     if (SIGMA_LSH == 0.0)
     {
         SH = LSH;
-        Pcs = layeredcentrosymmetric_FF(param);
+        Pcs = layeredcentrosymmetric_FF(LC, SIGMA_LC, LSH, SIGMA_LSH, ETA_C, ETA_SH,
+                                        ETA_SOL, SH, LL, Q, P0, LB, B, L, EXVOL, CLB);
     }
     else
     {
-        find_LogNorm_int_range(2,LSH,SIGMA_LSH,&SHstart,&SHend,param);
-        Pcs = sasfit_integrate(SHstart, SHend, &layeredcentrosymmetric_core, param);
+        find_LogNorm_int_range(2,LSH,SIGMA_LSH,&SHstart,&SHend,LC, SIGMA_LC, LSH,
+                               SIGMA_LSH, ETA_C, ETA_SH, ETA_SOL, SH, LL, Q, P0, LB, B, L, EXVOL, CLB);
+        Pcs = sasfit_integrate(SHstart, SHend, &layeredcentrosymmetric_core, LC,
+                               SIGMA_LC, LSH, SIGMA_LSH, ETA_C, ETA_SH, ETA_SOL, SH, LL, Q, P0, LB, B, L,
+                               EXVOL, CLB);
     }
     return LNdistr*Pcs;
     return Pcs;
@@ -102,40 +111,49 @@ double layeredcentrosymmetric_L(double q, sasfit_param * param)
     if (SIGMA_LC == 0.0)
     {
         LL = LC;
-        Pcs = layeredcentrosymmetric_SH(q,param);
+        Pcs = layeredcentrosymmetric_SH(q,LC, SIGMA_LC, LSH, SIGMA_LSH, ETA_C, ETA_SH,
+                                        ETA_SOL, SH, LL, Q, P0, LB, B, L, EXVOL, CLB);
     }
     else
     {
-        find_LogNorm_int_range(2,LC,SIGMA_LC,&Lstart,&Lend,param);
-        Pcs = sasfit_integrate(Lstart, Lend, &layeredcentrosymmetric_SH, param);
+        find_LogNorm_int_range(2,LC,SIGMA_LC,&Lstart,&Lend,LC, SIGMA_LC, LSH, SIGMA_LSH,
+                               ETA_C, ETA_SH, ETA_SOL, SH, LL, Q, P0, LB, B, L, EXVOL, CLB);
+        Pcs = sasfit_integrate(Lstart, Lend, &layeredcentrosymmetric_SH, LC, SIGMA_LC,
+                               LSH, SIGMA_LSH, ETA_C, ETA_SH, ETA_SOL, SH, LL, Q, P0, LB, B, L, EXVOL, CLB);
     }
     return Pcs;
 }
 double Iq( double q, double LC,  double SIGMA_LC,  double LSH,
            double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double SH,
-           double LL,  double Q)
+           double LL,  double Q,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB)
 {
 // insert your code here
-    return layeredcentrosymmetric_L(q,param);
+    return layeredcentrosymmetric_L(q,LC, SIGMA_LC, LSH, SIGMA_LSH, ETA_C, ETA_SH,
+                                    ETA_SOL, SH, LL, Q, P0, LB, B, L, EXVOL, CLB);
 }
 double Fq( double q,  double LC,  double SIGMA_LC,  double LSH,
            double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double SH,
-           double LL,  double Q)
+           double LL,  double Q,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB)
 {
 // insert your code here
     return 0.0;
 }
 double form_volume(  double LC,  double SIGMA_LC,  double LSH,
                      double SIGMA_LSH,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double SH,
-                     double LL,  double Q)
+                     double LL,  double Q,  double P0,  double LB,  double B,  double L,
+                     double EXVOL,  double CLB)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double LC, double SIGMA_LC, double LSH,
              double SIGMA_LSH, double ETA_C, double ETA_SH, double ETA_SOL, double SH,
-             double LL, double Q)
+             double LL, double Q, double P0, double LB, double B, double L, double EXVOL,
+             double CLB)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, LC, SIGMA_LC, LSH, SIGMA_LSH, ETA_C, ETA_SH, ETA_SOL, SH, LL, Q);
+    return Iq( q, LC, SIGMA_LC, LSH, SIGMA_LSH, ETA_C, ETA_SH, ETA_SOL, SH, LL, Q,
+               P0, LB, B, L, EXVOL, CLB);
 }

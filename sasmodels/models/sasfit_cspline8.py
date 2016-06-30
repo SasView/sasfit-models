@@ -28,6 +28,7 @@ parameters = [
  [ "Y6", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "Y7", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "Y8", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -43,4 +44,5 @@ demo = dict(
 	Y5 = 0.0,
 	Y6 = 0.0,
 	Y7 = 0.0,
-	Y8 = 0.0)
+	Y8 = 0.0,
+	P0 = 0.0)

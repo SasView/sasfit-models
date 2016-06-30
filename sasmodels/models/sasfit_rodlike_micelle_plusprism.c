@@ -6,22 +6,22 @@
 
 double Iq( double q, double R,  double EPSILON,  double L,  double T,
            double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
-           double HOW,  double Q,  double ALPHA,  double THETA);
+           double HOW,  double Q,  double ALPHA,  double THETA,  double P0);
 double Fq( double q,  double R,  double EPSILON,  double L,  double T,
            double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
-           double HOW,  double Q,  double ALPHA,  double THETA);
+           double HOW,  double Q,  double ALPHA,  double THETA,  double P0);
 double form_volume(  double R,  double EPSILON,  double L,  double T,
                      double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
-                     double HOW,  double Q,  double ALPHA,  double THETA);
+                     double HOW,  double Q,  double ALPHA,  double THETA,  double P0);
 double Iqxy( double qx, double qy, double R, double EPSILON, double L, double T,
              double ETA_CORE, double ETA_SH, double ETA_SOL, double PHI, double PAR,
-             double HOW, double Q, double ALPHA, double THETA);
+             double HOW, double Q, double ALPHA, double THETA, double P0);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (<joachim.kohlbrecher@psi.ch>)
 *   17.5.2009
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q, ALPHA, THETA, P0eters/variables
 double beta_cq(double q, sasfit_param *param)
 {
     double cq,beta,u,S0, B,C,D,n,r;
@@ -29,7 +29,8 @@ double beta_cq(double q, sasfit_param *param)
     r=sqrt((R+T)*(R*EPSILON+T));
     u=q*2.0*r;
     cq=3*(sin(u)-u*cos(u))/sas_pow_3(u);
-    n = PHI/sasfit_ff_rodlike_micelle_plusprism_v(q,param,0);
+    n = PHI/form_volume(q,R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR,
+                        HOW, Q, ALPHA, THETA, P0,0);
     B = M_PI*r*r*(L+2.0*T)*n;
     C = 4./3.*M_PI*r*r*r*n;
     D = 0.5 * M_PI*r*(L+2.0*T)*(L+2.0*T)*n;
@@ -45,7 +46,8 @@ double beta_cq(double q, sasfit_param *param)
     if ( (int) (fmod(HOW,10)+0.5) == 3)
     {
         Rp = M_PI*r/4.0+(L+2*T)/4.0;
-        Vp = sasfit_ff_rodlike_micelle_plusprism_v(q,param,0);
+        Vp = form_volume(q,R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW,
+                         Q, ALPHA, THETA, P0,0);
         if (EPSILON == 1)
         {
             Ap = 2.0*M_PI*R;
@@ -66,7 +68,8 @@ double beta_cq(double q, sasfit_param *param)
     if ( (int) (fabs(fmod(HOW,10))+0.5) == 4)
     {
         Rp = M_PI*r/4.0+(L+2*T)/4.0;
-        Vp = sasfit_ff_rodlike_micelle_plusprism_v(q,param,0);
+        Vp = form_volume(q,R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW,
+                         Q, ALPHA, THETA, P0,0);
         if (EPSILON == 1)
         {
             Ap = 2.0*M_PI*R;
@@ -217,33 +220,38 @@ double P_cs(double q, sasfit_param *param)
     Q = q;
     if (EPSILON == 1.0)
     {
-        return PcylSHellCS(1.0,param);
+        return PcylSHellCS(1.0,R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR,
+                           HOW, Q, ALPHA, THETA, P0);
     }
     else
     {
-        return 2.0/M_PI*sasfit_integrate(0.0,M_PI/2.0,&PcylSHellCS,param);
+        return 2.0/M_PI*sasfit_integrate(0.0,M_PI/2.0,&PcylSHellCS,R, EPSILON, L, T,
+                                         ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q, ALPHA, THETA, P0);
     }
 }
 double RM_PRISM_theta(double x,sasfit_param * param)
 {
     THETA = x;
-    return PcylSHell(param);
+    return PcylSHell(R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q,
+                     ALPHA, THETA, P0);
 }
 double RM_PRISM_alpha(double x,sasfit_param * param)
 {
     ALPHA = x;
     if (EPSILON == 1.0)
     {
-        return RM_PRISM_theta(1.0,param)*sin(ALPHA);
+        return RM_PRISM_theta(1.0,R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR,
+                              HOW, Q, ALPHA, THETA, P0)*sin(ALPHA);
     }
     else
     {
-        return sasfit_integrate(0.0,M_PI/2.0,&RM_PRISM_theta,param)*2.0/M_PI*sin(ALPHA);
+        return sasfit_integrate(0.0,M_PI/2.0,&RM_PRISM_theta,R, EPSILON, L, T, ETA_CORE,
+                                ETA_SH, ETA_SOL, PHI, PAR, HOW, Q, ALPHA, THETA, P0)*2.0/M_PI*sin(ALPHA);
     }
 }
 double Iq( double q, double R,  double EPSILON,  double L,  double T,
            double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
-           double HOW,  double Q,  double ALPHA,  double THETA)
+           double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
     double P_RODSH,ProdSQ,  SQ;
     Q = q;
@@ -255,17 +263,21 @@ double Iq( double q, double R,  double EPSILON,  double L,  double T,
     {
         if (((int) floor(HOW/10)) == 1)
         {
-            P_RODSH = P_L(q,param)*P_cs(q,param);
+            P_RODSH = P_L(q,R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q,
+                          ALPHA, THETA, P0)*P_cs(q,R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR,
+                                                 HOW, Q, ALPHA, THETA, P0);
         }
         else
         {
-            P_RODSH = sasfit_integrate(0.0,M_PI/2.0,&RM_PRISM_alpha,param);
+            P_RODSH = sasfit_integrate(0.0,M_PI/2.0,&RM_PRISM_alpha,R, EPSILON, L, T,
+                                       ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q, ALPHA, THETA, P0);
         }
     }
     ProdSQ = P_Rod(q,L-2.0*R);
-    SQ=1.0/(1.0+beta_cq(q,param)*ProdSQ);
+    SQ=1.0/(1.0+beta_cq(q,R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR,
+                        HOW, Q, ALPHA, THETA, P0)*ProdSQ);
     /*
-    Bapp =   2.0/3.0*M_PI*sas_pow_3(DEFF)/sasfit_ff_rodlike_micelle_plusprism_v(q,param,0)
+    Bapp =   2.0/3.0*M_PI*sas_pow_3(DEFF)/form_volume(q,R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q, ALPHA, THETA, P0,0)
     *(1.0-sas_pow_2(DEFF*q)/10.0);
     if (Bapp < 0) {
     SQ = 1;
@@ -277,23 +289,23 @@ double Iq( double q, double R,  double EPSILON,  double L,  double T,
 }
 double Fq( double q,  double R,  double EPSILON,  double L,  double T,
            double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
-           double HOW,  double Q,  double ALPHA,  double THETA)
+           double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
 // insert your code here
     return 0.0;
 }
 double form_volume(  double R,  double EPSILON,  double L,  double T,
                      double ETA_CORE,  double ETA_SH,  double ETA_SOL,  double PHI,  double PAR,
-                     double HOW,  double Q,  double ALPHA,  double THETA)
+                     double HOW,  double Q,  double ALPHA,  double THETA,  double P0)
 {
 // insert your code here
     return M_PI*(R+T)*(R*EPSILON+T)*L;
 }
 double Iqxy( double qx, double qy, double R, double EPSILON, double L, double T,
              double ETA_CORE, double ETA_SH, double ETA_SOL, double PHI, double PAR,
-             double HOW, double Q, double ALPHA, double THETA)
+             double HOW, double Q, double ALPHA, double THETA, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
     return Iq( q, R, EPSILON, L, T, ETA_CORE, ETA_SH, ETA_SOL, PHI, PAR, HOW, Q,
-               ALPHA, THETA);
+               ALPHA, THETA, P0);
 }

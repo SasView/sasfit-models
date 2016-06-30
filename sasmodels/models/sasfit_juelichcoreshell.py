@@ -40,6 +40,7 @@ parameters = [
  [ "F_CORE", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
  [ "RHOSOLV", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
  [ "Q", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -67,4 +68,5 @@ demo = dict(
 	F_BRUSH = 0.0,
 	F_CORE = 0.0,
 	RHOSOLV = 0.0,
-	Q = 0.0)
+	Q = 0.0,
+	P0 = 0.0)

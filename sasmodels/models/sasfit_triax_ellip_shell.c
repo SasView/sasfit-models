@@ -5,20 +5,13 @@
 ///////////////////////////////////////////////////
 
 double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
-           double ETA_SH,  double ETA_SOL);
-double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
-           double ETA_SH,  double ETA_SOL) double A,  double B,  double C,  double T,
-                  double ETA_C,  double ETA_SH,  double ETA_SOL);
-double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
-           double ETA_SH,  double ETA_SOL) double A,  double B,  double C,  double T,
-double ETA_C,  double ETA_SH,  double ETA_SOL) double A,  double B,  double C,
-double T,  double ETA_C,  double ETA_SH,  double ETA_SOL);
+           double ETA_SH,  double ETA_SOL,  double P0);
 double Fq( double q,  double A,  double B,  double C,  double T,  double ETA_C,
-           double ETA_SH,  double ETA_SOL);
+           double ETA_SH,  double ETA_SOL,  double P0);
 double form_volume(  double A,  double B,  double C,  double T,  double ETA_C,
-                     double ETA_SH,  double ETA_SOL);
+                     double ETA_SH,  double ETA_SOL,  double P0);
 double Iqxy( double qx, double qy, double A, double B, double C, double T,
-             double ETA_C, double ETA_SH, double ETA_SOL);
+             double ETA_C, double ETA_SH, double ETA_SOL, double P0);
 /*
 * src/plugins/triax_ellip_shell/sasfit_ff_triax_ellip_shell.c
 *
@@ -44,9 +37,8 @@ double Iqxy( double qx, double qy, double A, double B, double C, double T,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 *   Ingo Bressler (ingo@cs.tu-berlin.de)
 */
-// define shortcuts for local parameters/variables
-double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
-           double ETA_SH,  double ETA_SOL)
+// define shortcuts for local A, B, C, T, ETA_C, ETA_SH, ETA_SOL, P0eters/variables
+double sasfit_ff_triax_ellip_shell_core(double y, sasfit_param * param)
 {
     double q, p, x, u_c, u_sh;
     double f_c, f_sh;
@@ -67,31 +59,29 @@ double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
     }
     return pow(f_sh+f_c, p);
 }
-double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
-           double ETA_SH,  double ETA_SOL) double A,  double B,  double C,  double T,
-double ETA_C,  double ETA_SH,  double ETA_SOL)
+double sasfit_ff_triax_ellip_shell_core_x(double x, sasfit_param * param)
 {
     double res;
-    res = sasfit_integrate(0.0, 1.0, sasfit_ff_triax_ellip_shell_core, param);
+    res = sasfit_integrate(0.0, 1.0, sasfit_ff_triax_ellip_shell_core, A, B, C, T,
+                           ETA_C, ETA_SH, ETA_SOL, P0);
     return res;
 }
 double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
-           double ETA_SH,  double ETA_SOL) double A,  double B,  double C,  double T,
-double ETA_C,  double ETA_SH,  double ETA_SOL) double A,  double B,  double C,
-double T,  double ETA_C,  double ETA_SH,  double ETA_SOL)
+           double ETA_SH,  double ETA_SOL,  double P0)
 {
     double res;
-    res = sasfit_integrate(0.0, 1.0, sasfit_ff_triax_ellip_shell_core_x, param);
+    res = sasfit_integrate(0.0, 1.0, sasfit_ff_triax_ellip_shell_core_x, A, B, C, T,
+                           ETA_C, ETA_SH, ETA_SOL, P0);
     return res;
 }
 double Fq( double q,  double A,  double B,  double C,  double T,  double ETA_C,
-           double ETA_SH,  double ETA_SOL)
+           double ETA_SH,  double ETA_SOL,  double P0)
 {
 // insert your code here
     return 0.0;
 }
 double form_volume(  double A,  double B,  double C,  double T,  double ETA_C,
-                     double ETA_SH,  double ETA_SOL)
+                     double ETA_SH,  double ETA_SOL,  double P0)
 {
     double V;
     switch ( dist )
@@ -115,8 +105,8 @@ double form_volume(  double A,  double B,  double C,  double T,  double ETA_C,
     return 4.0/3.0 * M_PI * x;
 }
 double Iqxy( double qx, double qy, double A, double B, double C, double T,
-             double ETA_C, double ETA_SH, double ETA_SOL)
+             double ETA_C, double ETA_SH, double ETA_SOL, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, A, B, C, T, ETA_C, ETA_SH, ETA_SOL);
+    return Iq( q, A, B, C, T, ETA_C, ETA_SH, ETA_SOL, P0);
 }

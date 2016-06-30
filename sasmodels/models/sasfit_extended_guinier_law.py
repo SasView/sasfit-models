@@ -21,6 +21,7 @@ parameters = [
  [ "I0", 	"", 	10.0, 	[-inf, inf], 	"", 	""],
  [ "A", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "RA", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	1.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -29,4 +30,5 @@ source = [  "sasfit_extended_guinier_law.c" ]
 demo = dict(
 	I0 = 10.0,
 	A = 0.0,
-	RA = 0.0)
+	RA = 0.0,
+	P0 = 1.0)

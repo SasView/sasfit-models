@@ -33,7 +33,7 @@ double Iqxy( double qx, double qy, double LENGTH, double ETA);
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 *   Ingo Bressler (ingo@cs.tu-berlin.de)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local LENGTH, ETAeters/variables
 double Iq( double q, double LENGTH,  double ETA)
 {
     if (q*LENGTH == 0.0) return ETA*ETA*LENGTH*LENGTH;

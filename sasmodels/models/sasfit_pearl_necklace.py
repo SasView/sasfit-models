@@ -23,6 +23,7 @@ parameters = [
  [ "NU", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "B", 	"", 	1.0, 	[-inf, inf], 	"", 	""],
  [ "NP", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -33,4 +34,5 @@ demo = dict(
 	l = 0.0,
 	NU = 0.0,
 	B = 1.0,
-	NP = 0.0)
+	NP = 0.0,
+	P0 = 0.0)

@@ -30,6 +30,12 @@ parameters = [
  [ "ETA_SOLV", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "R", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
  [ "Q", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "LB", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "B", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "L", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "EXVOL", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "CLB", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -47,4 +53,10 @@ demo = dict(
 	ETA_SHELL = 0.0,
 	ETA_SOLV = 0.0,
 	R = 0.0,
-	Q = 0.0)
+	Q = 0.0,
+	P0 = 0.0,
+	LB = 0.0,
+	B = 0.0,
+	L = 0.0,
+	EXVOL = 0.0,
+	CLB = 0.0)

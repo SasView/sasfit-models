@@ -4,32 +4,44 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
+double Iq( double q, double R1,  double dR,  double eta_c,  double eta_sh,
+           double x_in,  double x_out,  double alpha,  double eta_sol,  double P0);
+double Fq( double q,  double R1,  double dR,  double eta_c,  double eta_sh,
+           double x_in,  double x_out,  double alpha,  double eta_sol,  double P0);
+double form_volume(  double R1,  double dR,  double eta_c,  double eta_sh,
+                     double x_in,  double x_out,  double alpha,  double eta_sol,  double P0);
 double Iqxy( double qx, double qy, double R1, double dR, double eta_c,
-             double eta_sh, double x_in, double x_out, double alpha, double eta_sol);
+             double eta_sh, double x_in, double x_out, double alpha, double eta_sol,
+             double P0);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol, P0eters/variables
 double sasfit_kshexp1(double q, sasfit_param * param);
 double sasfit_kshexp2(double q, sasfit_param * param);
-double sasfit_ff_expshell(double q, sasfit_param * param)
+double Iq( double q, double R1,  double dR,  double eta_c,  double eta_sh,
+           double x_in,  double x_out,  double alpha,  double eta_sol,  double P0)
 {
-    return sas_pow_2(sasfit_ff_expshell_f(q,param));
+    return sas_pow_2(Fq(q,R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol, P0));
 }
-double sasfit_ff_expshell_f(double q, sasfit_param * param)
+double Fq( double q,  double R1,  double dR,  double eta_c,  double eta_sh,
+           double x_in,  double x_out,  double alpha,  double eta_sol,  double P0)
 {
 // insert your code here
     if (ALPHA < 0) // alpha < 0
     {
-        return sasfit_kshexp1(q, param);
+        return sasfit_kshexp1(q, R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol,
+                              P0);
     }
     else
     {
-        return sasfit_kshexp2(q, param);
+        return sasfit_kshexp2(q, R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol,
+                              P0);
     }
 }
-double sasfit_ff_expshell_v(double q, sasfit_param * param, int dist)
+double form_volume(  double R1,  double dR,  double eta_c,  double eta_sh,
+                     double x_in,  double x_out,  double alpha,  double eta_sol,  double P0)
 {
 // insert your code here
     return 4./3.*M_PI*sas_pow_3(R+DR);
@@ -58,6 +70,7 @@ bool  *error)
 //                  eta_sh : scattering length density of pure shell material
 double sasfit_kshexp1(double q, sasfit_param * param)
 {
+    double R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol;
     double t0,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t14,t15,t16,t17,t18,t19,t20,
            t21,
            t22,t23,t24,t26,t27,t28,t29,t30,t31,t32,t34,t35,t36,t37,t38,t39,t40,t41,
@@ -426,6 +439,7 @@ bool  *error)
 //               eta_shell : scattering length density of pure shell material
 double sasfit_kshexp2(double q, sasfit_param * param)
 {
+    double R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol;
     double t0,t1,t2,t3,t4,t5,t6,t7,t8,t10,t11,t12,t14,t15,t16,t17,t18,t20,t21,t22,
            t23,t24,t25,t26,t27,t29,t30,t31,t32,t33,t34,t35,t36,t38,t39,t40,t41,t42,t45,
            t46,t47,t48,t50,t51,t52,t53,t55,t56,t58,t59,t60,t65,t66,t67,t70,t71,t72,t73,
@@ -784,8 +798,9 @@ double sasfit_kshexp2(double q, sasfit_param * param)
     return t0+t850;
 }
 double Iqxy( double qx, double qy, double R1, double dR, double eta_c,
-             double eta_sh, double x_in, double x_out, double alpha, double eta_sol)
+             double eta_sh, double x_in, double x_out, double alpha, double eta_sol,
+             double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol);
+    return Iq( q, R1, dR, eta_c, eta_sh, x_in, x_out, alpha, eta_sol, P0);
 }

@@ -24,6 +24,7 @@ parameters = [
  [ "R_Ip1", 	"", 	1.0, 	[-inf, inf], 	"", 	""],
  [ "K", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "P", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -35,4 +36,5 @@ demo = dict(
 	R_I = 0.0,
 	R_Ip1 = 1.0,
 	K = 0.0,
-	P = 0.0)
+	P = 0.0,
+	P0 = 0.0)

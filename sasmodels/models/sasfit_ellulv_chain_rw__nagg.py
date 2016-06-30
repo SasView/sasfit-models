@@ -19,10 +19,12 @@ category = " "
 #pylint: disable=bad-whitespace, line-too-long
 parameters = [
  [ "N", 	"", 	10.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
 source = [  "sasfit_ellulv_chain_rw__nagg.c" ]
 
 demo = dict(
-	N = 10.0)
+	N = 10.0,
+	P0 = 0.0)

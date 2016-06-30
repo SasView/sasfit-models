@@ -5,20 +5,25 @@
 ///////////////////////////////////////////////////
 
 double Iq( double q, double XMIN,  double XMAX,  double Y1,  double Y2,
-           double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8);
+           double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8,
+           double P0);
 double Fq( double q,  double XMIN,  double XMAX,  double Y1,  double Y2,
-           double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8);
+           double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8,
+           double P0);
 double form_volume(  double XMIN,  double XMAX,  double Y1,  double Y2,
-                     double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8);
+                     double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8,
+                     double P0);
 double Iqxy( double qx, double qy, double XMIN, double XMAX, double Y1,
-             double Y2, double Y3, double Y4, double Y5, double Y6, double Y7, double Y8);
+             double Y2, double Y3, double Y4, double Y5, double Y6, double Y7, double Y8,
+             double P0);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local XMIN, XMAX, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8, P0eters/variables
 double Iq( double q, double XMIN,  double XMAX,  double Y1,  double Y2,
-           double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8)
+           double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8,
+           double P0)
 {
     double tmp, xcs[10], ycs[10];
     int i;
@@ -42,20 +47,23 @@ double Iq( double q, double XMIN,  double XMAX,  double Y1,  double Y2,
     return gsl_spline_eval (ffcspline8_T, x, acc_cspline);
 }
 double Fq( double q,  double XMIN,  double XMAX,  double Y1,  double Y2,
-           double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8)
+           double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8,
+           double P0)
 {
 // insert your code here
     return 0.0;
 }
 double form_volume(  double XMIN,  double XMAX,  double Y1,  double Y2,
-                     double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8)
+                     double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8,
+                     double P0)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double XMIN, double XMAX, double Y1,
-             double Y2, double Y3, double Y4, double Y5, double Y6, double Y7, double Y8)
+             double Y2, double Y3, double Y4, double Y5, double Y6, double Y7, double Y8,
+             double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, XMIN, XMAX, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8);
+    return Iq( q, XMIN, XMAX, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8, P0);
 }

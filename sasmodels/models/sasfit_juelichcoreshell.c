@@ -8,27 +8,30 @@ double Fq( double q,  double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
            double RHO_BRUSH,  double B_CORE,  double B_BRUSH,  double NAGG,
            double D1_PLUS,  double PART23,  double D2_PLUS,  double D3_PLUS,
            double SIGMA1,  double SIGMA2,  double SIGMA3,  double PARTSTAR,  double GAMMA,
-           double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q);
+           double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q,
+           double P0);
 double form_volume(  double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
                      double RHO_BRUSH,  double B_CORE,  double B_BRUSH,  double NAGG,
                      double D1_PLUS,  double PART23,  double D2_PLUS,  double D3_PLUS,
                      double SIGMA1,  double SIGMA2,  double SIGMA3,  double PARTSTAR,  double GAMMA,
-                     double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q);
+                     double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q,
+                     double P0);
 double Iq( double q, double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
            double RHO_BRUSH,  double B_CORE,  double B_BRUSH,  double NAGG,
            double D1_PLUS,  double PART23,  double D2_PLUS,  double D3_PLUS,
            double SIGMA1,  double SIGMA2,  double SIGMA3,  double PARTSTAR,  double GAMMA,
-           double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q);
+           double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q,
+           double P0);
 double Iqxy( double qx, double qy, double C, double MCORE, double MBRUSH,
              double RHO_CORE, double RHO_BRUSH, double B_CORE, double B_BRUSH, double NAGG,
              double D1_PLUS, double PART23, double D2_PLUS, double D3_PLUS, double SIGMA1,
              double SIGMA2, double SIGMA3, double PARTSTAR, double GAMMA, double LPARABOL,
-             double F_BRUSH, double F_CORE, double RHOSOLV, double Q);
+             double F_BRUSH, double F_CORE, double RHOSOLV, double Q, double P0);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0eters/variables
 double sasfit_ff_jjuelichcoreshell(double q, sasfit_param * param)
 {
 // insert your code here
@@ -38,7 +41,8 @@ double Fq( double q,  double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
            double RHO_BRUSH,  double B_CORE,  double B_BRUSH,  double NAGG,
            double D1_PLUS,  double PART23,  double D2_PLUS,  double D3_PLUS,
            double SIGMA1,  double SIGMA2,  double SIGMA3,  double PARTSTAR,  double GAMMA,
-           double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q)
+           double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q,
+           double P0)
 {
 // insert your code here
     return 0.0;
@@ -47,7 +51,8 @@ double form_volume(  double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
                      double RHO_BRUSH,  double B_CORE,  double B_BRUSH,  double NAGG,
                      double D1_PLUS,  double PART23,  double D2_PLUS,  double D3_PLUS,
                      double SIGMA1,  double SIGMA2,  double SIGMA3,  double PARTSTAR,  double GAMMA,
-                     double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q)
+                     double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q,
+                     double P0)
 {
 // insert your code here
     return 0.0;
@@ -142,8 +147,13 @@ double plugin_vol_ker(double r, sasfit_param * param)
 {
     double phi, r_para;
     int idx_dist;
-    idx_dist = (JCS_R2 - JCS_R1) * (param->kernelSelector-1);
-    switch( param->kernelSelector )	// represent the shell to calculate
+    idx_dist = (JCS_R2 - JCS_R1) * (C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE,
+                                    B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3,
+                                    PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0->kernelSelector-1);
+    switch( C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS,
+            PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL,
+            F_BRUSH, F_CORE, RHOSOLV, Q,
+            P0->kernelSelector )	// represent the shell to calculate
     {
     case 1:
         break;
@@ -161,7 +171,9 @@ double plugin_vol_ker(double r, sasfit_param * param)
     }
     break;
     default:
-        SASFIT_ERR_UNKNOWN_KERNEL(param, "shell number");
+        SASFIT_ERR_UNKNOWN_KERNEL(C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE,
+                                  B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3,
+                                  PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0, "shell number");
         break;
     }
     {
@@ -172,7 +184,10 @@ double plugin_vol_ker(double r, sasfit_param * param)
     }
     else
     {
-        SASFIT_ERR_UNKNOWN_KERNEL(param, "integration method");
+        SASFIT_ERR_UNKNOWN_KERNEL(C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE,
+                                  B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3,
+                                  PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0,
+                                  "integration method");
     }
 }
 double jcs_integrate(sasfit_param *param, int shellNr, int intType)
@@ -180,15 +195,29 @@ double jcs_integrate(sasfit_param *param, int shellNr, int intType)
     const double VerrorVal = 1.007;
     double res, R, sigma;
     int idx_dist;
-    param->kernelSelector = shellNr;
-    param->kernelSubSelector = intType;
+    C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23,
+    D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH,
+    F_CORE, RHOSOLV, Q, P0->kernelSelector = shellNr;
+    C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23,
+    D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH,
+    F_CORE, RHOSOLV, Q, P0->kernelSubSelector = intType;
 // used to add to array indices to get the correct entry
 // JCS_R1+distance = JCS_R2 ..
-    idx_dist = (JCS_R2 - JCS_R1) * (param->kernelSelector-1);
-    res = sasfit_integrate(0.0, R+sigma*10.0, plugin_vol_ker, param);
-    if ( param->errStatus != FALSE )
+    idx_dist = (JCS_R2 - JCS_R1) * (C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE,
+                                    B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3,
+                                    PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0->kernelSelector-1);
+    res = sasfit_integrate(0.0, R+sigma*10.0, plugin_vol_ker, C, MCORE, MBRUSH,
+                           RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS,
+                           SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q,
+                           P0);
+    if ( C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS,
+            PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL,
+            F_BRUSH, F_CORE, RHOSOLV, Q, P0->errStatus != FALSE )
     {
-        if ( param->kernelSubSelector == JCS_INT_V )	return VerrorVal;
+        if ( C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS,
+                PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL,
+                F_BRUSH, F_CORE, RHOSOLV, Q,
+                P0->kernelSubSelector == JCS_INT_V )	return VerrorVal;
         else 						return 0.0;	// t == JCS_INT_FF
     }
     return res;
@@ -224,7 +253,8 @@ double Iq( double q, double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
            double RHO_BRUSH,  double B_CORE,  double B_BRUSH,  double NAGG,
            double D1_PLUS,  double PART23,  double D2_PLUS,  double D3_PLUS,
            double SIGMA1,  double SIGMA2,  double SIGMA3,  double PARTSTAR,  double GAMMA,
-           double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q)
+           double LPARABOL,  double F_BRUSH,  double F_CORE,  double RHOSOLV,  double Q,
+           double P0)
 {
     double amplitu, mcore, mbrush,
            rhocore, rhobrsh, bcore, bbrush,
@@ -248,12 +278,12 @@ double Iq( double q, double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
     {
         first = 1.123779053423241;
         /*
-        params.R1_old = -1.0;
-        params.sigma1_old = -1.0;
-        params.R2_old = -1.0;
-        params.sigma2_old = -1.0;
-        params.R3_old = -1.0;
-        params.sigma3_old = -1.0;
+        C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.R1_old = -1.0;
+        C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.sigma1_old = -1.0;
+        C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.R2_old = -1.0;
+        C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.sigma2_old = -1.0;
+        C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.R3_old = -1.0;
+        C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.sigma3_old = -1.0;
         */
         subParam.p[JCS_R1_OLD] 		= -1.0;
         subParam.p[JCS_SIGMA1_OLD] 	= -1.0;
@@ -294,9 +324,9 @@ double Iq( double q, double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
 // as phi01, phi02, phi03 are anyway canceld due to the normalization F_i/V_i
 // they could be set here to 1, but I will leave it as in the original
 // fortran version from IFF
-//   params.phi01 = 1.;
-//   params.phi02 = 1.;
-//   params.phi03 = 1.;
+//   C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.phi01 = 1.;
+//   C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.phi02 = 1.;
+//   C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.phi03 = 1.;
     subParam.p[JCS_TOT_SWELL1] = swellC;
     subParam.p[JCS_TOT_SWELL2] = swellS2;
     subParam.p[JCS_TOT_SWELL3] = swellS3;
@@ -379,12 +409,12 @@ double Iq( double q, double C,  double MCORE,  double MBRUSH,  double RHO_CORE,
     f_3 = a3 * jcs_integrate( &subParam, 3, JCS_INT_FF );
     afactor = amplitu / (VC + VB);
     /*
-    if ((params.R1 != params.R1_old) || (params.sigma1 != params.sigma1_old))  {
-    IFFprint(params);
-    params.R1_old = params.R1;
-    params.sigma1_old = params.sigma1;
-    params.R2_old = params.R2;
-    params.sigma2_old = params.sigma2;
+    if ((C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.R1 != C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.R1_old) || (C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.sigma1 != C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.sigma1_old))  {
+    IFFprint(C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s);
+    C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.R1_old = C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.R1;
+    C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.sigma1_old = C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.sigma1;
+    C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.R2_old = C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.R2;
+    C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.sigma2_old = C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG, D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA, LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0s.sigma2;
     }
     */
     return afactor*pow(dbc*f_1+dbb*(f_2+f_3),2.0);
@@ -393,10 +423,10 @@ double Iqxy( double qx, double qy, double C, double MCORE, double MBRUSH,
              double RHO_CORE, double RHO_BRUSH, double B_CORE, double B_BRUSH, double NAGG,
              double D1_PLUS, double PART23, double D2_PLUS, double D3_PLUS, double SIGMA1,
              double SIGMA2, double SIGMA3, double PARTSTAR, double GAMMA, double LPARABOL,
-             double F_BRUSH, double F_CORE, double RHOSOLV, double Q)
+             double F_BRUSH, double F_CORE, double RHOSOLV, double Q, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
     return Iq( q, C, MCORE, MBRUSH, RHO_CORE, RHO_BRUSH, B_CORE, B_BRUSH, NAGG,
                D1_PLUS, PART23, D2_PLUS, D3_PLUS, SIGMA1, SIGMA2, SIGMA3, PARTSTAR, GAMMA,
-               LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q);
+               LPARABOL, F_BRUSH, F_CORE, RHOSOLV, Q, P0);
 }

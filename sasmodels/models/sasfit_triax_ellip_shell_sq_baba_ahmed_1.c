@@ -7,36 +7,19 @@
 double Iq( double q, double A,  double DELTA_B,  double DELTA_C,  double T,
            double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
            double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-           double ZB,  double TEMP);
-double Iq( double q, double A,  double DELTA_B,  double DELTA_C,  double T,
-           double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-           double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-           double ZB,  double TEMP) double A,  double DELTA_B,  double DELTA_C,  double T,
-                  double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-                  double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-                  double ZB,  double TEMP);
-double Iq( double q, double A,  double DELTA_B,  double DELTA_C,  double T,
-           double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-           double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-           double ZB,  double TEMP) double A,  double DELTA_B,  double DELTA_C,  double T,
-double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-double ZB,  double TEMP) double A,  double DELTA_B,  double DELTA_C,  double T,
-double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-double ZB,  double TEMP);
+           double ZB,  double TEMP,  double P0);
 double Fq( double q,  double A,  double DELTA_B,  double DELTA_C,  double T,
            double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
            double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-           double ZB,  double TEMP);
+           double ZB,  double TEMP,  double P0);
 double form_volume(  double A,  double DELTA_B,  double DELTA_C,  double T,
                      double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
                      double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-                     double ZB,  double TEMP);
+                     double ZB,  double TEMP,  double P0);
 double Iqxy( double qx, double qy, double A, double DELTA_B, double DELTA_C,
              double T, double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
              double V_POL_AP, double ALPHA, double Z_P, double EPSILON_R, double MB,
-             double ZB, double TEMP);
+             double ZB, double TEMP, double P0);
 /*
 * src/plugins/triax_ellip_shell/sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1.c
 *
@@ -62,11 +45,9 @@ double Iqxy( double qx, double qy, double A, double DELTA_B, double DELTA_C,
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 *   Ingo Bressler (ingo@cs.tu-berlin.de)
 */
-// define shortcuts for local parameters/variables
-double Iq( double q, double A,  double DELTA_B,  double DELTA_C,  double T,
-           double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-           double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-           double ZB,  double TEMP)
+// define shortcuts for local A, DELTA_B, DELTA_C, T, ETA_C, ETA_SH_DRY, ETA_SOL, PHI, V_POL_AP, ALPHA, Z_P, EPSILON_R, MB, ZB, TEMP, P0eters/variables
+double sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core(double y,
+        sasfit_param * param)
 {
     double q, p, x, b, c, u_c, u_sh, eta_sh, f_c, f_sh;
     if (fabs(A*b*c) + fabs(T) == 0.0) return 0.0;
@@ -86,29 +67,19 @@ double Iq( double q, double A,  double DELTA_B,  double DELTA_C,  double T,
     }
     return pow(f_sh+f_c, p);
 }
-double Iq( double q, double A,  double DELTA_B,  double DELTA_C,  double T,
-           double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-           double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-           double ZB,  double TEMP) double A,  double DELTA_B,  double DELTA_C,  double T,
-double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-double ZB,  double TEMP)
+double sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core_x(double x,
+        sasfit_param * param)
 {
     double res;
     res = sasfit_integrate(0.0, 1.0,
-                           sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core, param);
+                           sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core, A, DELTA_B, DELTA_C, T, ETA_C,
+                           ETA_SH_DRY, ETA_SOL, PHI, V_POL_AP, ALPHA, Z_P, EPSILON_R, MB, ZB, TEMP, P0);
     return res;
 }
 double Iq( double q, double A,  double DELTA_B,  double DELTA_C,  double T,
            double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
            double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-           double ZB,  double TEMP) double A,  double DELTA_B,  double DELTA_C,  double T,
-double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-double ZB,  double TEMP) double A,  double DELTA_B,  double DELTA_C,  double T,
-double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
-double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-double ZB,  double TEMP)
+           double ZB,  double TEMP,  double P0)
 {
     double res, b, c, w, eta_sh, n;
     sasfit_param subParam;
@@ -120,7 +91,9 @@ double ZB,  double TEMP)
     eta_sh = (1.0-w)*ETA_SH_DRY + w*ETA_SOL;
     n = PHI/((1.0+V_POL_AP)*4./3.*M_PI*A*b*c);
     res = sasfit_integrate(0.0, 1.0,
-                           sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core_x, param);
+                           sasfit_ff_triax_ellip_shell_sq_baba_ahmed_1_core_x, A, DELTA_B, DELTA_C, T,
+                           ETA_C, ETA_SH_DRY, ETA_SOL, PHI, V_POL_AP, ALPHA, Z_P, EPSILON_R, MB, ZB, TEMP,
+                           P0);
     sasfit_init_param(&subParam);
     subParam.p[0] = c * ALPHA; // R_ref
     subParam.p[1] = ALPHA;
@@ -135,7 +108,7 @@ double ZB,  double TEMP)
 double Fq( double q,  double A,  double DELTA_B,  double DELTA_C,  double T,
            double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
            double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-           double ZB,  double TEMP)
+           double ZB,  double TEMP,  double P0)
 {
 // insert your code here
     return 0.0;
@@ -143,7 +116,7 @@ double Fq( double q,  double A,  double DELTA_B,  double DELTA_C,  double T,
 double form_volume(  double A,  double DELTA_B,  double DELTA_C,  double T,
                      double ETA_C,  double ETA_SH_DRY,  double ETA_SOL,  double PHI,
                      double V_POL_AP,  double ALPHA,  double Z_P,  double EPSILON_R,  double MB,
-                     double ZB,  double TEMP)
+                     double ZB,  double TEMP,  double P0)
 {
     double b, c;
     b = A + DELTA_B;
@@ -171,9 +144,9 @@ double form_volume(  double A,  double DELTA_B,  double DELTA_C,  double T,
 double Iqxy( double qx, double qy, double A, double DELTA_B, double DELTA_C,
              double T, double ETA_C, double ETA_SH_DRY, double ETA_SOL, double PHI,
              double V_POL_AP, double ALPHA, double Z_P, double EPSILON_R, double MB,
-             double ZB, double TEMP)
+             double ZB, double TEMP, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
     return Iq( q, A, DELTA_B, DELTA_C, T, ETA_C, ETA_SH_DRY, ETA_SOL, PHI, V_POL_AP,
-               ALPHA, Z_P, EPSILON_R, MB, ZB, TEMP);
+               ALPHA, Z_P, EPSILON_R, MB, ZB, TEMP, P0);
 }

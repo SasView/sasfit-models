@@ -4,18 +4,22 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double R,  double l,  double NU,  double B,  double NP);
-double Fq( double q,  double R,  double l,  double NU,  double B,  double NP);
-double form_volume(  double R,  double l,  double NU,  double B,  double NP);
+double Iq( double q, double R,  double l,  double NU,  double B,  double NP,
+           double P0);
+double Fq( double q,  double R,  double l,  double NU,  double B,  double NP,
+           double P0);
+double form_volume(  double R,  double l,  double NU,  double B,  double NP,
+                     double P0);
 double Iqxy( double qx, double qy, double R, double l, double NU, double B,
-             double NP);
+             double NP, double P0);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 *   8.12.2014
 */
-// define shortcuts for local parameters/variables
-double Iq( double q, double R,  double l,  double NU,  double B,  double NP)
+// define shortcuts for local R, l, NU, B, NP, P0eters/variables
+double Iq( double q, double R,  double l,  double NU,  double B,  double NP,
+           double P0)
 {
     double  qR,ql,qA,Psi,L,Mr,mr,ms,beta,Sr,Sp,Sm,sinqA_qA,sinql2_ql2,A;
 // insert your code here
@@ -79,19 +83,21 @@ double Iq( double q, double R,  double l,  double NU,  double B,  double NP)
                          NP-1))/pow(1-sinqA_qA,2))*sinqA_qA);
     return (Sp+Sr+Sm)/pow(Mr*mr+NP*ms,2);
 }
-double Fq( double q,  double R,  double l,  double NU,  double B,  double NP)
+double Fq( double q,  double R,  double l,  double NU,  double B,  double NP,
+           double P0)
 {
 // insert your code here
     return 0.0;
 }
-double form_volume(  double R,  double l,  double NU,  double B,  double NP)
+double form_volume(  double R,  double l,  double NU,  double B,  double NP,
+                     double P0)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double R, double l, double NU, double B,
-             double NP)
+             double NP, double P0)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, R, l, NU, B, NP);
+    return Iq( q, R, l, NU, B, NP, P0);
 }

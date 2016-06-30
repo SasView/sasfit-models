@@ -5,26 +5,33 @@
 ///////////////////////////////////////////////////
 
 double Iq( double q, double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
-           double B_OUT,  double D);
+           double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB);
 double Fq( double q,  double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
-           double B_OUT,  double D);
+           double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB);
 double form_volume(  double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
-                     double B_OUT,  double D);
+                     double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+                     double EXVOL,  double CLB);
 double Iqxy( double qx, double qy, double SIGMA_CORE, double B_CORE,
-             double SIGMA_OUT, double B_OUT, double D);
+             double SIGMA_OUT, double B_OUT, double D, double P0, double LB, double B,
+             double L, double EXVOL, double CLB);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local SIGMA_CORE, B_CORE, SIGMA_OUT, B_OUT, D, P0, LB, B, L, EXVOL, CLBeters/variables
 double Iq( double q, double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
-           double B_OUT,  double D)
+           double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB)
 {
 // insert your code here
-    return sas_pow_2(Fq(q, SIGMA_CORE, B_CORE, SIGMA_OUT, B_OUT, D));
+    return sas_pow_2(Fq(q,SIGMA_CORE, B_CORE, SIGMA_OUT, B_OUT, D, P0, LB, B, L,
+                        EXVOL, CLB));
 }
 double Fq( double q,  double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
-           double B_OUT,  double D)
+           double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB)
 {
     double u_out, u_core, M, Pprime, R, Fout, Fcore;
 // insert your code here
@@ -42,14 +49,17 @@ double Fq( double q,  double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
     return Fcore+2.0*Fout;
 }
 double form_volume(  double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
-                     double B_OUT,  double D)
+                     double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+                     double EXVOL,  double CLB)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double SIGMA_CORE, double B_CORE,
-             double SIGMA_OUT, double B_OUT, double D)
+             double SIGMA_OUT, double B_OUT, double D, double P0, double LB, double B,
+             double L, double EXVOL, double CLB)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, SIGMA_CORE, B_CORE, SIGMA_OUT, B_OUT, D);
+    return Iq( q, SIGMA_CORE, B_CORE, SIGMA_OUT, B_OUT, D, P0, LB, B, L, EXVOL,
+               CLB);
 }

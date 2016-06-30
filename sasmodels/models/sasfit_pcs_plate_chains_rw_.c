@@ -6,25 +6,30 @@
 
 double Iq( double q, double LC,  double N_AGG,  double V_BRUSH,
            double ETA_CORE,  double ETA_BRUSH,  double ETA_SOLV,  double XSOLV_CORE,
-           double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE);
+           double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE,  double P0,
+           double LB,  double B,  double L,  double EXVOL,  double CLB);
 double Fq( double q,  double LC,  double N_AGG,  double V_BRUSH,
            double ETA_CORE,  double ETA_BRUSH,  double ETA_SOLV,  double XSOLV_CORE,
-           double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE);
+           double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE,  double P0,
+           double LB,  double B,  double L,  double EXVOL,  double CLB);
 double form_volume(  double LC,  double N_AGG,  double V_BRUSH,
                      double ETA_CORE,  double ETA_BRUSH,  double ETA_SOLV,  double XSOLV_CORE,
-                     double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE);
+                     double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE,  double P0,
+                     double LB,  double B,  double L,  double EXVOL,  double CLB);
 double Iqxy( double qx, double qy, double LC, double N_AGG, double V_BRUSH,
              double ETA_CORE, double ETA_BRUSH, double ETA_SOLV, double XSOLV_CORE,
-             double RG, double D, double PCHAIN, double NAGG, double V_CORE);
+             double RG, double D, double PCHAIN, double NAGG, double V_CORE, double P0,
+             double LB, double B, double L, double EXVOL, double CLB);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
+// define shortcuts for local LC, N_AGG, V_BRUSH, ETA_CORE, ETA_BRUSH, ETA_SOLV, XSOLV_CORE, RG, D, PCHAIN, NAGG, V_CORE, P0, LB, B, L, EXVOL, CLBeters/variables
 #define SURF M_PI*sas_pow_2(100*LC) // surface area is not really known for this cross section form factor and is guessed to be the one of a disc with a radius 100 times larger than the thickjness of the core layer
 double Iq( double q, double LC,  double N_AGG,  double V_BRUSH,
            double ETA_CORE,  double ETA_BRUSH,  double ETA_SOLV,  double XSOLV_CORE,
-           double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE)
+           double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE,  double P0,
+           double LB,  double B,  double L,  double EXVOL,  double CLB)
 {
     double Fc, Fs, Fcs, Scc, Ssc, w, I, rc, rs;
 // insert your code here
@@ -54,23 +59,26 @@ double Iq( double q, double LC,  double N_AGG,  double V_BRUSH,
 }
 double Fq( double q,  double LC,  double N_AGG,  double V_BRUSH,
            double ETA_CORE,  double ETA_BRUSH,  double ETA_SOLV,  double XSOLV_CORE,
-           double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE)
+           double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE,  double P0,
+           double LB,  double B,  double L,  double EXVOL,  double CLB)
 {
 // insert your code here
     return 0.0;
 }
 double form_volume(  double LC,  double N_AGG,  double V_BRUSH,
                      double ETA_CORE,  double ETA_BRUSH,  double ETA_SOLV,  double XSOLV_CORE,
-                     double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE)
+                     double RG,  double D,  double PCHAIN,  double NAGG,  double V_CORE,  double P0,
+                     double LB,  double B,  double L,  double EXVOL,  double CLB)
 {
 // insert your code here
     return 0.0;
 }
 double Iqxy( double qx, double qy, double LC, double N_AGG, double V_BRUSH,
              double ETA_CORE, double ETA_BRUSH, double ETA_SOLV, double XSOLV_CORE,
-             double RG, double D, double PCHAIN, double NAGG, double V_CORE)
+             double RG, double D, double PCHAIN, double NAGG, double V_CORE, double P0,
+             double LB, double B, double L, double EXVOL, double CLB)
 {
     double q = sqrt(qx*qx + qy*qy);
     return Iq( q, LC, N_AGG, V_BRUSH, ETA_CORE, ETA_BRUSH, ETA_SOLV, XSOLV_CORE, RG,
-               D, PCHAIN, NAGG, V_CORE);
+               D, PCHAIN, NAGG, V_CORE, P0, LB, B, L, EXVOL, CLB);
 }

@@ -1,7 +1,7 @@
 r"""
 This file has been automatically gereated by sasfit_convert
 The model calculates an empirical functional form for SAS data characterized
-by radial_profile_of_LinShell
+by radial_profile_of_linshell
 
 Definition:
 -----------
@@ -12,7 +12,7 @@ References:
 """
 from numpy import inf
 
-name = "radial_profile_of_LinShell"
+name = "radial_profile_of_linshell"
 title = " "
 description = ""
 category = " "
@@ -25,10 +25,11 @@ parameters = [
  [ "X_IN_SOL", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "X_OUT_SOL", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "ETA_SOL", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
-source = [  "sasfit_radial_profile_of_LinShell.c" ]
+source = [  "sasfit_radial_profile_of_linshell.c" ]
 
 demo = dict(
 	R_CORE = 10.0,
@@ -37,4 +38,5 @@ demo = dict(
 	ETA_SHELL = 1.0,
 	X_IN_SOL = 0.0,
 	X_OUT_SOL = 0.0,
-	ETA_SOL = 0.0)
+	ETA_SOL = 0.0,
+	P0 = 0.0)
