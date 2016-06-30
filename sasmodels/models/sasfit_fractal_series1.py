@@ -22,6 +22,7 @@ parameters = [
  [ "XMIN", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "FD1", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "XMAX", 	"", 	1.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -31,4 +32,5 @@ demo = dict(
 	N = 10.0,
 	XMIN = 0.0,
 	FD1 = 0.0,
-	XMAX = 1.0)
+	XMAX = 1.0,
+	P0 = 0.0)

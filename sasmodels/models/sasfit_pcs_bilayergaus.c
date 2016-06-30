@@ -4,49 +4,34 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double SIGMA_CORE fabs(param->p[0])
-           , double B_CORE param->p[1]
-           , double SIGMA_OUT fabs(param->p[2])
-           , double B_OUT param->p[3]
-           , double D);
-double Fq( double q,  double SIGMA_CORE fabs(param->p[0])
-           , double B_CORE param->p[1]
-           , double SIGMA_OUT fabs(param->p[2])
-           , double B_OUT param->p[3]
-           , double D);
-double form_volume(  double SIGMA_CORE fabs(param->p[0])
-                     , double B_CORE param->p[1]
-                     , double SIGMA_OUT fabs(param->p[2])
-                     , double B_OUT param->p[3]
-                     , double D);
-double Iqxy( double qx, double qy, double SIGMA_CORE fabs(param->p[0])
-             , double B_CORE param->p[1]
-             , double SIGMA_OUT fabs(param->p[2])
-             , double B_OUT param->p[3]
-             , double D);
+double Iq( double q, double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
+           double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB);
+double Fq( double q,  double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
+           double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB);
+double form_volume(  double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
+                     double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+                     double EXVOL,  double CLB);
+double Iqxy( double qx, double qy, double SIGMA_CORE, double B_CORE,
+             double SIGMA_OUT, double B_OUT, double D, double P0, double LB, double B,
+             double L, double EXVOL, double CLB);
 /*
 * Author(s) of this file:
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 */
-// define shortcuts for local parameters/variables
-double Iq( double q, double SIGMA_CORE fabs(param->p[0])
-           , double B_CORE param->p[1]
-           , double SIGMA_OUT fabs(param->p[2])
-           , double B_OUT param->p[3]
-           , double D)
+// define shortcuts for local SIGMA_CORE, B_CORE, SIGMA_OUT, B_OUT, D, P0, LB, B, L, EXVOL, CLBeters/variables
+double Iq( double q, double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
+           double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB)
 {
 // insert your code here
-    Fq(q,SIGMA_CORE fabs(param->p[0])
-       ,B_CORE param->p[1]
-       ,SIGMA_OUT fabs(param->p[2])
-       ,B_OUT param->p[3]
-       ,D);
+    return sas_pow_2(Fq(q,SIGMA_CORE, B_CORE, SIGMA_OUT, B_OUT, D, P0, LB, B, L,
+                        EXVOL, CLB));
 }
-double Fq( double q,  double SIGMA_CORE fabs(param->p[0])
-           , double B_CORE param->p[1]
-           , double SIGMA_OUT fabs(param->p[2])
-           , double B_OUT param->p[3]
-           , double D)
+double Fq( double q,  double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
+           double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+           double EXVOL,  double CLB)
 {
     double u_out, u_core, M, Pprime, R, Fout, Fcore;
 // insert your code here
@@ -63,25 +48,18 @@ double Fq( double q,  double SIGMA_CORE fabs(param->p[0])
     Fcore = sqrt(2.*M_PI)*SIGMA_CORE*B_CORE *exp(-0.5*u_core);
     return Fcore+2.0*Fout;
 }
-double form_volume(  double SIGMA_CORE fabs(param->p[0])
-                     , double B_CORE param->p[1]
-                     , double SIGMA_OUT fabs(param->p[2])
-                     , double B_OUT param->p[3]
-                     , double D)
+double form_volume(  double SIGMA_CORE,  double B_CORE,  double SIGMA_OUT,
+                     double B_OUT,  double D,  double P0,  double LB,  double B,  double L,
+                     double EXVOL,  double CLB)
 {
 // insert your code here
     return 0.0;
 }
-double Iqxy( double qx, double qy, double SIGMA_CORE fabs(param->p[0])
-             , double B_CORE param->p[1]
-             , double SIGMA_OUT fabs(param->p[2])
-             , double B_OUT param->p[3]
-             , double D)
+double Iqxy( double qx, double qy, double SIGMA_CORE, double B_CORE,
+             double SIGMA_OUT, double B_OUT, double D, double P0, double LB, double B,
+             double L, double EXVOL, double CLB)
 {
     double q = sqrt(qx*qx + qy*qy);
-    return Iq( q, SIGMA_CORE fabs(param->p[0])
-               , B_CORE param->p[1]
-               , SIGMA_OUT fabs(param->p[2])
-               , B_OUT param->p[3]
-               , D);
+    return Iq( q, SIGMA_CORE, B_CORE, SIGMA_OUT, B_OUT, D, P0, LB, B, L, EXVOL,
+               CLB);
 }

@@ -19,10 +19,11 @@ category = " "
 #pylint: disable=bad-whitespace, line-too-long
 parameters = [
  [ "I0", 	"", 	10.0, 	[-inf, inf], 	"", 	"I0: forward scattering"],
- [ "XI", 	"", 	50.0, 	[-inf, inf], 	"", 	"xi: correlation length"],
- [ "Q0", 	"", 	0.1, 	[-inf, inf], 	"", 	"q0:peak position which is related to the d-spacing as q0 = 2pi/d"],
- [ "M", 	"", 	3.0, 	[-inf, inf], 	"", 	"m:"],
- [ "P", 	"", 	2.0, 	[-inf, inf], 	"", 	"p:"],
+ [ "XI", 	"", 	0.0, 	[-inf, inf], 	"", 	"xi: correlation length"],
+ [ "Q0", 	"", 	0.0, 	[-inf, inf], 	"", 	"q0:peak position which is related to the d-spacing as q0 = 2pi/d"],
+ [ "M", 	"", 	1.0, 	[-inf, inf], 	"", 	"m:"],
+ [ "P", 	"", 	0.0, 	[-inf, inf], 	"", 	"p:"],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -30,7 +31,8 @@ source = [  "sasfit_broad_peak.c" ]
 
 demo = dict(
 	I0 = 10.0,
-	XI = 50.0,
-	Q0 = 0.1,
-	M = 3.0,
-	P = 2.0)
+	XI = 0.0,
+	Q0 = 0.0,
+	M = 1.0,
+	P = 0.0,
+	P0 = 0.0)

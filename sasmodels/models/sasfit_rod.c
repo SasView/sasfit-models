@@ -4,9 +4,9 @@
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
 
-double Iq( double q, double LENGTH, double ETA);
-double Fq( double q,  double LENGTH, double ETA);
-double form_volume(  double LENGTH, double ETA);
+double Iq( double q, double LENGTH,  double ETA);
+double Fq( double q,  double LENGTH,  double ETA);
+double form_volume(  double LENGTH,  double ETA);
 double Iqxy( double qx, double qy, double LENGTH, double ETA);
 /*
 * src/plugins/rod/sasfit_ff_rod.c
@@ -33,20 +33,20 @@ double Iqxy( double qx, double qy, double LENGTH, double ETA);
 *   Joachim Kohlbrecher (joachim.kohlbrecher@psi.ch)
 *   Ingo Bressler (ingo@cs.tu-berlin.de)
 */
-// define shortcuts for local parameters/variables
-double Iq( double q, double LENGTH, double ETA)
+// define shortcuts for local LENGTH, ETAeters/variables
+double Iq( double q, double LENGTH,  double ETA)
 {
     if (q*LENGTH == 0.0) return ETA*ETA*LENGTH*LENGTH;
     return ETA*ETA * LENGTH *
            (2.0*LENGTH*Si(q*LENGTH)/q - pow(sin(q*LENGTH*0.5)/(q*0.5),2.0));
 }
-double Fq( double q,  double LENGTH, double ETA)
+double Fq( double q,  double LENGTH,  double ETA)
 {
 // insert your code here
     if (q*LENGTH == 0.0) return ETA*LENGTH;
     return ETA *2.*Si(q*LENGTH/2.0)/q;
 }
-double form_volume(  double LENGTH, double ETA)
+double form_volume(  double LENGTH,  double ETA)
 {
 // insert your code here
     return LENGTH;

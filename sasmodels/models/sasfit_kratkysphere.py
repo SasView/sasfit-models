@@ -24,9 +24,9 @@ parameters = [
  [ "R0", 	"", 	1.0, 	[-inf, inf], 	"", 	""],
  [ "XI", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "D", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
- [ "SCALE param->p[6]
-", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "SCALE", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "Q", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -39,6 +39,6 @@ demo = dict(
 	R0 = 1.0,
 	XI = 0.0,
 	D = 0.0,
-	SCALE param->p[6]
- = 0.0,
-	Q = 0.0)
+	SCALE = 0.0,
+	Q = 0.0,
+	P0 = 0.0)

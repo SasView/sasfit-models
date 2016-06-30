@@ -26,6 +26,12 @@ parameters = [
  [ "SIGMA_H", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "ETA_L", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
  [ "ETA_SOL", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "LB", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "B", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "L", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "EXVOL", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
+ [ "CLB", 	"", 	0.0, 	[-inf, inf], 	"", 	" "],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -39,4 +45,10 @@ demo = dict(
 	H = 0.0,
 	SIGMA_H = 0.0,
 	ETA_L = 0.0,
-	ETA_SOL = 0.0)
+	ETA_SOL = 0.0,
+	P0 = 0.0,
+	LB = 0.0,
+	B = 0.0,
+	L = 0.0,
+	EXVOL = 0.0,
+	CLB = 0.0)

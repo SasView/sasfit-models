@@ -20,6 +20,7 @@ category = " "
 parameters = [
  [ "I0", 	"", 	10.0, 	[-inf, inf], 	"", 	"xi: correlation length"],
  [ "XI", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
+ [ "P0", 	"", 	0.0, 	[-inf, inf], 	"", 	""],
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
@@ -27,4 +28,5 @@ source = [  "sasfit_ornstein_zernike.c" ]
 
 demo = dict(
 	I0 = 10.0,
-	XI = 0.0)
+	XI = 0.0,
+	P0 = 0.0)
