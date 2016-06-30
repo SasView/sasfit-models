@@ -4,13 +4,8 @@ Sasview model constructor.
 Given a module defining an OpenCL kernel such as sasmodels.models.cylinder,
 create a sasview model class to run that kernel as follows::
 
-    from sasmodels.sasview_model import make_class
-    from sasmodels.models import cylinder
-    CylinderModel = make_class(cylinder, dtype='single')
-
-The model parameters for sasmodels are different from those in sasview.
-When reloading previously saved models, the parameters should be converted
-using :func:`sasmodels.convert.convert`.
+    from sasmodels.sasview_model import load_custom_model
+    CylinderModel = load_custom_model('sasmodels/models/cylinder.py')
 """
 from __future__ import print_function
 
@@ -43,6 +38,17 @@ MultiplicityInfo = collections.namedtuple(
     ["number", "control", "choices", "x_axis_label"],
 )
 
+MODELS = {}
+def find_model(modelname):
+    # TODO: used by sum/product model to load an existing model
+    # TODO: doesn't handle custom models properly
+    if modelname.endswith('.py'):
+        return load_custom_model(modelname)
+    elif modelname in MODELS:
+        return MODELS[modelname]
+    else:
+        raise ValueError("unknown model %r"%modelname)
+
 def load_standard_models():
     """
     Load and return the list of predefined models.
@@ -53,8 +59,9 @@ def load_standard_models():
     models = []
     for name in core.list_models():
         try:
-            models.append(_make_standard_model(name))
-        except:
+            MODELS[name] = _make_standard_model(name)
+            models.append(MODELS[name])
+        except Exception:
             logging.error(traceback.format_exc())
     return models
 
@@ -63,9 +70,15 @@ def load_custom_model(path):
     """
     Load a custom model given the model path.
     """
+    #print("load custom model", path)
     kernel_module = custom.load_custom_kernel_module(path)
-    model_info = generate.make_model_info(kernel_module)
-    return _make_model_from_info(model_info)
+    try:
+        model = kernel_module.Model
+    except AttributeError:
+        model_info = generate.make_model_info(kernel_module)
+        model = _make_model_from_info(model_info)
+    MODELS[model.name] = model
+    return model
 
 
 def _make_standard_model(name):
@@ -208,7 +221,7 @@ class SasviewModel(object):
         self.multiplicity = multiplicity
 
         self.params = collections.OrderedDict()
-        self.dispersion = {}
+        self.dispersion = collections.OrderedDict()
         self.details = {}
 
         for p in self._model_info['parameters']:
@@ -247,7 +260,7 @@ class SasviewModel(object):
 
         :param par_name: the parameter name to check
         """
-        return par_name.lower() in self.fixed
+        return par_name in self.fixed
         #For the future
         #return self.params[str(par_name)].is_fittable()
 
@@ -274,15 +287,15 @@ class SasviewModel(object):
         toks = name.split('.')
         if len(toks) == 2:
             for item in self.dispersion.keys():
-                if item.lower() == toks[0].lower():
+                if item == toks[0]:
                     for par in self.dispersion[item]:
-                        if par.lower() == toks[1].lower():
+                        if par == toks[1]:
                             self.dispersion[item][par] = value
                             return
         else:
             # Look for standard parameter
             for item in self.params.keys():
-                if item.lower() == name.lower():
+                if item == name:
                     self.params[item] = value
                     return
 
@@ -299,14 +312,14 @@ class SasviewModel(object):
         toks = name.split('.')
         if len(toks) == 2:
             for item in self.dispersion.keys():
-                if item.lower() == toks[0].lower():
+                if item == toks[0]:
                     for par in self.dispersion[item]:
-                        if par.lower() == toks[1].lower():
+                        if par == toks[1]:
                             return self.dispersion[item][par]
         else:
             # Look for standard parameter
             for item in self.params.keys():
-                if item.lower() == name.lower():
+                if item == name:
                     return self.params[item]
 
         raise ValueError("Model does not contain parameter %s" % name)
@@ -325,7 +338,7 @@ class SasviewModel(object):
         Return a list of polydispersity parameters for the model
         """
         # TODO: fix test so that parameter order doesn't matter
-        ret = ['%s.%s' % (d.lower(), p)
+        ret = ['%s.%s' % (d, p)
                for d in self._model_info['partype']['pd-2d']
                for p in ('npts', 'nsigmas', 'width')]
         #print(ret)
@@ -470,23 +483,10 @@ class SasviewModel(object):
         :param parameter: name of the parameter [string]
         :param dispersion: dispersion object of type Dispersion
         """
-        if parameter.lower() in (s.lower() for s in self.params.keys()):
+        if parameter in self.params:
             # TODO: Store the disperser object directly in the model.
-            # The current method of creating one on the fly whenever it is
-            # needed is kind of funky.
-            # Note: can't seem to get disperser parameters from sasview
-            # (1) Could create a sasview model that has not yet # been
-            # converted, assign the disperser to one of its polydisperse
-            # parameters, then retrieve the disperser parameters from the
-            # sasview model.  (2) Could write a disperser parameter retriever
-            # in sasview.  (3) Could modify sasview to use sasmodels.weights
-            # dispersers.
-            # For now, rely on the fact that the sasview only ever uses
-            # new dispersers in the set_dispersion call and create a new
-            # one instead of trying to assign parameters.
-            from . import weights
-            disperser = weights.dispersers[dispersion.__class__.__name__]
-            dispersion = weights.models[disperser]()
+            # The current method of relying on the sasview gui to
+            # remember them is kind of funky.
             self.dispersion[parameter] = dispersion.get_pars()
         else:
             raise ValueError("%r is not a dispersity or orientation parameter")
