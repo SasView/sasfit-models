@@ -459,7 +459,7 @@ def eval_sasfit_opencl(model_info, data, dtype='single', cutoff=0.):
         print("... trying again with single precision")
         model = core.build_model(model_info, dtype='single', platform="ocl")
     calculator = DirectModel(data, model, cutoff=cutoff)
-    calculator.engine = "OCL%s" % DTYPE_MAP[dtype]
+    calculator.engine = "SasFit-OCL%s" % DTYPE_MAP[dtype]
     return calculator
 
 def eval_sasfit_ctypes(model_info, data, dtype='double', cutoff=0.):
@@ -470,7 +470,7 @@ def eval_sasfit_ctypes(model_info, data, dtype='double', cutoff=0.):
         dtype = 'longdouble'
     model = core.build_model(model_info, dtype=dtype, platform="dll")
     calculator = DirectModel(data, model, cutoff=cutoff)
-    calculator.engine = "OMP%s"%DTYPE_MAP[dtype]
+    calculator.engine = "SasFit-OMP%s"%DTYPE_MAP[dtype]
     return calculator
 
 
@@ -524,16 +524,15 @@ def make_engine(model_info, data, dtype, cutoff, sasfit_model_info):
     """
     if dtype == 'sasview':
         return eval_sasview(model_info, data)
+    elif dtype.endswith('_sasfit!'):
+        return eval_sasfit_ctypes(sasfit_model_info, data, dtype=dtype[:-8],
+                                  cutoff=cutoff)
+    elif dtype.endswith('_sasfit'):
+        return eval_sasfit_opencl(sasfit_model_info, data, dtype=dtype[:-7],
+                                  cutoff=cutoff)
     elif dtype.endswith('!'):
         return eval_ctypes(model_info, data, dtype=dtype[:-1], cutoff=cutoff)
-        if sasfit_model_info:
-            return eval_sasfit_ctypes(sasfit_model_info, data, dtype=dtype[:-1],
-                                  cutoff=cutoff)
     else:
-        if sasfit_model_info:
-            return eval_sasfit_ctypes(sasfit_model_info, data, dtype=dtype,cutoff=cutoff)
-            #return eval_sasfit_opencl(sasfit_model_info, data, dtype=dtype,cutoff=cutoff)
-
         return eval_opencl(model_info, data, dtype=dtype, cutoff=cutoff)
 
 
@@ -675,6 +674,7 @@ NAME_OPTIONS = set([
     'plot', 'noplot',
     'half', 'fast', 'single', 'double',
     'single!', 'double!', 'quad!', 'sasview',
+    'single_sasfit!', 'double_sasfit!', 'double_sasfit', 'single_sasfit',
     'lowq', 'midq', 'highq', 'exq', 'zero',
     '2d', '1d',
     'preset', 'random',
@@ -820,8 +820,12 @@ def parse_opts():
         elif arg == '-fast':    engines.append(arg[1:])
         elif arg == '-single':  engines.append(arg[1:])
         elif arg == '-double':  engines.append(arg[1:])
+        elif arg == '-single_sasfit':  engines.append(arg[1:])
+        elif arg == '-double_sasfit':  engines.append(arg[1:])
         elif arg == '-single!': engines.append(arg[1:])
         elif arg == '-double!': engines.append(arg[1:])
+        elif arg == '-single_sasfit!': engines.append(arg[1:])
+        elif arg == '-double_sasfit!': engines.append(arg[1:])
         elif arg == '-quad!':   engines.append(arg[1:])
         elif arg == '-sasview': engines.append(arg[1:])
         elif arg == '-edit':    opts['explore'] = True
