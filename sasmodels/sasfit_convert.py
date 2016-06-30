@@ -103,6 +103,30 @@ def extract_parameters_definition( model_name, tcl_filename ):
         parameters_definition.append(pardef)
     return parameters_definition
 
+def extract_parameters_definition_from_private(private_filename):
+    """
+    Extracting the definitions of paramters that can be then supplied with the
+    parameter table
+
+    :param tcl_file:
+    :return:
+    """
+
+    private_lines = open(private_filename).readlines()
+    parameters = []
+    for line in private_lines:
+        regm = search("#define", line)
+        if regm and search("param->", line):
+            param = line[regm.end():]
+            regm = search("\s+[\w.-]+( |\t)", param)
+            # regm = search("(\s+\t+)\b", param)
+            param = param[1:regm.end()]
+            param = param.strip("\t")
+            param = param.strip(" ")
+            parameters.append(param)
+    return parameters
+
+
 def extract_parameters_definition_from_check_cond1( model_name, sasfit_lines):
     """
     Extracting the definitions of paramters that can be then supplied with the
@@ -275,7 +299,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
             line = line.replace("sasfit_param *param", swap_parameters_def)
         elif search("sasfit_param * param", line):
             line = line.replace("sasfit_param * param", swap_parameters_def)
-        elif search("param", line):
+        elif search("param", line) and not search("_param", line):
             line = line.replace("param", swap_parameters)
 
         for sub in substitution_dict.keys():
@@ -306,6 +330,8 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     #and the rest is 0.0 and apparently standard models takes no more than
     #10 pramateres
     parameters_values = [10.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                          0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                          0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
@@ -345,7 +371,7 @@ def convert_sasfit_model(model_name, sasfit_file, output_c_file,
     output_c_file.writelines(out_c_lines)
     output_python_file.writelines(output_python_lines)
 
-def extract_params(model_name, tcl_file, sasfit_file):
+def extract_params(model_name, tcl_file, sasfit_file, private_file):
     """
 
     :param model_name:
@@ -402,6 +428,9 @@ def extract_params(model_name, tcl_file, sasfit_file):
             if param != "":
                 parameters.append(param)
 
+    #Add parameters anything is included in the private include file
+    parameters+=extract_parameters_definition_from_private(private_file)
+
     #TODO: Quite risky but have to see if there are any consequneces
     if "q" in parameters:
         parameters.remove("q")
@@ -423,7 +452,8 @@ if __name__=="__main__":
                       help="Output c file and python file name [NO EXTENSION]")
     parser.add_option("-t", "--tcl_file", dest="tcl_file",
                       help="TCL file containing parameter definition c file ")
-
+    parser.add_option("-p", "--private_file", dest="private_file",
+                      help="Include private file containing parameters ")
     options, args = parser.parse_args()
 
     exclude_model_terms = ["sasfit","ff","ff_ff","../",".."]
@@ -444,7 +474,8 @@ if __name__=="__main__":
     output_python_file =  open(output_python_filename,"w")
 
     parameters, parameters_definition = extract_params(model_name,
-                                        options.tcl_file, options.sasfit_file)
+                                        options.tcl_file, options.sasfit_file,
+                                        options.private_file)
 
     #Exit when no parameters for model can be defined
     if len(parameters) == 0:
