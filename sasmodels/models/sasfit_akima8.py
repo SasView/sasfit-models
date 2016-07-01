@@ -32,7 +32,7 @@ parameters = [
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
-source = [  "sasfit_akima8.c" ]
+source = ["lib/sas_spline.c","sasfit_akima8.c"]
 
 demo = dict(
 	XMIN = 10.0,
