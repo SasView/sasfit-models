@@ -107,6 +107,9 @@ def generate_table(sasmodels_dict, sasfit_dict, cpu_list, gpu_list):
                 compiled_cpu = "YesImg"
             if "sasfit_"+sasfit_model in gpu_list:
                 compiled_gpu = "YesImg"
+            sasfit_model = \
+            "|a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__"\
+            +sasfit_model+".html|"+sasfit_model+"|_/a_|"
             x.add_row([sasview_model, descs_sv, params_sv,
                        sasfit_model, descs_sf, params_sf,
                        compiled_cpu, compiled_gpu])
@@ -128,6 +131,9 @@ def generate_table(sasmodels_dict, sasfit_dict, cpu_list, gpu_list):
                 compiled_cpu = "YesImg"
             if "sasfit_" + sasfit_model in gpu_list:
                 compiled_gpu = "YesImg"
+            sasfit_model = \
+            "|a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__"\
+            +sasfit_model+".html|"+sasfit_model+"|_/a_|"
             x.add_row(["", "", "", sasfit_model, descs, params,
                            compiled_cpu, compiled_gpu])
 
@@ -154,14 +160,16 @@ def extract_pardesc_table(model_dict, model_name):
     :param model_dict:
     :return:
     """
-    print model_name
-    model_module = __import__(model_name)
-    parameters = model_module.parameters
-    description = model_module.description
+    try:
+        model_module = __import__(model_name)
+        parameters = model_module.parameters
+        description = model_module.description
 
-    if model_name[:7] == "sasfit_":
+        if model_name[:7] == "sasfit_":
             model_name = model_name[7:]
-    model_dict[model_name] = [description, parameters]
+        model_dict[model_name] = [description, parameters]
+    except:
+        print "Cannot load module: ", model_name
 
 
 
