@@ -150,8 +150,8 @@ def parse_params(model_name):
                 value = float(value[0][1:])
                 parameters[param] = value
             if search(r"self.description = \"\"\"", line):
-                #TODO: Will need to fix it takes two first lines only
-                description+=plugin_lines[idx+1].strip("\n")+plugin_lines[idx+2].strip("\n")
+                #TODO: Will need to fix it takes the first line only
+                description+=plugin_lines[idx+1].strip("\n\r")
             #if search(r"\"\"\"[\s+]## <-----", line):
             #   desc_lines = 0
 
