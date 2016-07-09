@@ -11,7 +11,7 @@ References:
 
 """
 from numpy import inf
-
+import scipy.special            ##CHANGE THIS LINE WITH CAUTION!!!
 name = "sph_bessel_jn"
 title = " "
 description = "            Spherical Bessel Function: C*sph_jn(n, Ax+B)+D"
