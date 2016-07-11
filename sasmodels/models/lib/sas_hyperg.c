@@ -61,23 +61,22 @@
 
 extern double MACHEP;
 
-static double hy1f1p(double a, double b, double x, double *acanc);
-static double hy1f1a(double a, double b, double x, double *acanc);
-
-double hyperg(a, b, x)
+double sas_hyperg(a, b, x)
 double a, b, x;
 {
+    const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
+    const double MAXNUM =  1.79769313486231570815E308;
     double asum, psum, acanc, pcanc, temp;
 
     /* See if a Kummer transformation will help */
     temp = b - a;
     if (fabs(temp) < 0.001 * fabs(a))
-	return (exp(x) * hyperg(temp, b, -x));
+	return (exp(x) * sas_hyperg(temp, b, -x));
 
 
     /* Try power & asymptotic series, starting from the one that is likely OK */
     if (fabs(x) < 10 + fabs(a) + fabs(b)) {
-	psum = hy1f1p(a, b, x, &pcanc);
+	psum = sas_hy1f1p(a, b, x, &pcanc);
 	if (pcanc < 1.0e-15)
 	    if (pcanc > 1.0e-12) {
 	        exit();
@@ -85,16 +84,16 @@ double a, b, x;
 	    }
 
      //TODO: Check if such reference works on GPU
-	asum = hy1f1a(a, b, x, &acanc);
+	asum = sas_hy1f1p(a, b, x, &acanc);
     }
     else {
-	psum = hy1f1a(a, b, x, &pcanc);
+	psum = sas_hy1f1a(a, b, x, &pcanc);
 	if (pcanc < 1.0e-15)
 	    if (pcanc > 1.0e-12) {
 	        exit();
 	        //Or return psum but it is error mtherr("hyperg", PLOSS);
 	    }
-	asum = hy1f1p(a, b, x, &acanc);
+	asum = sas_hy1f1p(a, b, x, &acanc);
     }
 
     /* Pick the result with less estimated error */
@@ -119,8 +118,11 @@ double a, b, x;
 
 
 //FIXMIE Returning sum and error
-double hy1f1p(double a, double b, double x, double *err)
+double sas_hy1f1p(double a, double b, double x, double *err)
 {
+    const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
+    const double MAXNUM =  1.79769313486231570815E308;
+
     double n, a0, sum, t, u, temp, maxn;
     double an, bn, maxt;
     double y, c, sumc;
@@ -141,7 +143,7 @@ double hy1f1p(double a, double b, double x, double *err)
 
     while (t > MACHEP) {
 	if (bn == 0) {		/* check bn first since if both   */
-	    return (NPY_INFINITY);	/* an and bn are zero it is     */
+	    return (MAXNUM);	/* an and bn are zero it is     */
 	}
 	if (an == 0)		/* a singularity            */
 	    return (sum);
@@ -218,13 +220,16 @@ double hy1f1p(double a, double b, double x, double *err)
  *                               |  (a)                        )
  */
 
-double hy1f1a(double a, double b, double x, double *err)
+double sas_hy1f1a(double a, double b, double x, double *err)
 {
+    const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
+    const double MAXNUM =  1.79769313486231570815E308;
+
     double h1, h2, t, u, temp, acanc, asum, err1, err2;
 
     if (x == 0) {
 	    acanc = 1.0;
-	    asum = NPY_INFINITY;
+	    asum = MAXNUM;
 	    *err = acanc;
         return (asum);
     }
@@ -238,13 +243,13 @@ double hy1f1a(double a, double b, double x, double *err)
 	u += temp;
     }
 
-    h1 = hyp2f0(a, a - b + 1, -1.0 / x, 1, &err1);
+    h1 = sas_hyp2f0(a, a - b + 1, -1.0 / x, 1, &err1);
 
     temp = exp(u) / gamma(b - a);
     h1 *= temp;
     err1 *= temp;
 
-    h2 = hyp2f0(b - a, 1.0 - a, 1.0 / x, 2, &err2);
+    h2 = sas_hyp2f0(b - a, 1.0 - a, 1.0 / x, 2, &err2);
 
     if (a < 0)
 	    temp = exp(t) / sas_gamma(a);
@@ -275,7 +280,7 @@ double hy1f1a(double a, double b, double x, double *err)
 	/* nan */
 	acanc = 1.0;
 
-    if (asum == NPY_INFINITY || asum == -NPY_INFINITY)
+    if (asum == MAXNUM || asum == -MAXNUM)
 	/* infinity */
 	acanc = 0;
 
@@ -291,8 +296,11 @@ double hy1f1a(double a, double b, double x, double *err)
 
 /*                                                     hyp2f0()        */
 
-double hyp2f0(double a, double b, double x, int type, double *err)
+double sas_hyp2f0(double a, double b, double x, int type, double *err)
 {
+    const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
+    const double MAXNUM =  1.79769313486231570815E308;
+
     double a0, alast, t, tlast, maxt;
     double n, an, bn, u, sum, temp;
 
@@ -325,8 +333,8 @@ double hyp2f0(double a, double b, double x, int type, double *err)
 
 	/* check for blowup */
 	temp = fabs(u);
-	if ((temp > 1.0) && (maxt > (DBL_MAX / temp))) {
-	    *err = NPY_INFINITY;
+	if ((temp > 1.0) && (maxt > (MAXNUM / temp))) {
+	    *err = MAXNUM;
         //mtherr("hyperg", TLOSS);
         return (sum);
     }

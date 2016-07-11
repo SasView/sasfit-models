@@ -60,14 +60,14 @@ double sas_Iv (double v, double x)
 
     /* If v is a negative integer, invoke symmetry */
     if (v < 0.0 && t == v) {
-	t = v = -v;
+    	t = v = -v;
     }
 
     /* If x is negative, require v to be an integer */
     sign = 1;
     if (x < 0.0) {
-	if (t != v) {
-	    return 0.0;
+	    if (t != v) {
+	        return 0.0;
 	}
 	if (v != 2.0 * floor(v/2.0))
 	    sign = -1;
@@ -75,12 +75,12 @@ double sas_Iv (double v, double x)
 
     /* Avoid logarithm singularity */
     if (x == 0.0) {
-	if (v == 0.0)
-	    return 1.0;
-	if (v < 0.0) {
-	    return MAXNUM;
-	} else
-	    return 0.0;
+	    if (v == 0.0)
+	        return 1.0;
+	    if (v < 0.0) {
+	        return MAXNUM;
+	    } else
+	        return 0.0;
     }
 
     ax = fabs(x);

@@ -62,19 +62,11 @@ Cephes Math Library Release 2.8:  June, 2000
 Copyright 1984, 1987, 1989, 1992, 2000 by Stephen L. Moshier
 */
 
-
-double lgamma( double );
-
-double lgammma(double x)
-{
-    //FIXME: will have to fix this sign declaration
-    int sign;
-    return lgamma_sgn(x, &sign);
-}
+double sas_lgamma( double );
+double lgamma_sgn( double, int *);
 
 double lgamma_sgn( double x, int *sgngam) {
 
-#if FLOAT_SIZE > 4
     double p, q, u, w, z;
     int i;
 
@@ -121,23 +113,23 @@ double lgamma_sgn( double x, int *sgngam) {
 
     if( x < -34.0 ) {
 	    q = -x;
-	    w = lgamma_sgn(q, ); /* note this modifies sgngam! */
+	    w = lgamma_sgn(q, sgngam); /* note this modifies sgngam! */
 	    p = floor(q);
 	    if( p == q ) {
-            return( sgngam * MAXNUM );
+            return( *sgngam * MAXNUM );
 		}
 	    i = p;
 	    if( (i & 1) == 0 )
-		    sgngam = -1;
+		    *sgngam = -1;
 	    else
-		    sgngam = 1;
+		    *sgngam = 1;
 	    z = q - p;
 	    if( z > 0.5 ) {
 		    p += 1.0;
 		    z = p - q;
 		}
 	    z = q * sin( PI * z );
-	    if( z == 0.0 ) return( sgngam * MAXNUM );
+	    if( z == 0.0 ) return( *sgngam * MAXNUM );
 	    z = LOGPI - log( z ) - w;
 	    return( z );
 	}
@@ -152,17 +144,17 @@ double lgamma_sgn( double x, int *sgngam) {
 		    z *= u;
 		}
 	    while( u < 2.0 ) {
-		    if( u == 0.0 ) return( sgngam * MAXNUM );
+		    if( u == 0.0 ) return( *sgngam * MAXNUM );
 		    z /= u;
 		    p += 1.0;
 		    u = x + p;
 		}
 	    if( z < 0.0 ) {
-		    sgngam = -1;
+		    *sgngam = -1;
 		    z = -z;
 		}
 	    else
-		    sgngam = 1;
+		    *sgngam = 1;
 	    if( u == 2.0 )
 		    return( log(z) );
 	    p -= 2.0;
@@ -172,8 +164,7 @@ double lgamma_sgn( double x, int *sgngam) {
 	}
 
     if( x > MAXLGM ) {
-        loverf:
-	        return( sgngam * MAXNUM );
+	    return( * sgngam * MAXNUM );
 	}
 
     q = ( x - 0.5 ) * log(x) - x + LS2PI;
@@ -188,9 +179,18 @@ double lgamma_sgn( double x, int *sgngam) {
     else
 	    q += polevl( p, A, 4 ) / x;
     return( q );
+}
+
+double sas_gamma( double x) {
+
+#if FLOAT_SIZE > 4
+
+    int sign;
+    return lgamma_sgn(x, &sign);
+
 #else
 
-    double p, q, w, z, xx;
+    double p, q, w, z;
     double nx, tx;
     int i, direction;
     int sgngamf = 1;
@@ -226,15 +226,13 @@ double lgamma_sgn( double x, int *sgngam) {
     const double PIF = 3.141592653589793238;
     /* Logarithm of gamma function */
 
-    sgngamf = 1;
 
-    xx = x;
-    if( xx < 0.0 ) {
-	    q = -xx;
+    if( x < 0.0 ) {
+	    q = -x;
 	    w = lgamma(q); /* note this modifies sgngam! */
 	    p = floor(q);
 	    if( p == q )
-		    goto loverf;
+		    return( sgngamf * MAXNUMF );
 	    i = p;
 
 	    if( (i & 1) == 0 )
@@ -250,7 +248,7 @@ double lgamma_sgn( double x, int *sgngam) {
 	    }
 	    z = q * sin( PIF * z );
 	    if( z == 0.0 )
-		    goto loverf;
+		    return( sgngamf * MAXNUMF );
 	    z = -log( PIINV*z ) - w;
 	    return( z );
 	}
@@ -267,35 +265,52 @@ double lgamma_sgn( double x, int *sgngam) {
 			    z *=tx;
 			}
 		    x += nx - 2.0;
-            iv1r5:
+            p = x * polevl( x, B, 7 );
+		    if( z < 0.0 ) {
+		        sgngamf = -1;
+		        z = -z;
+            }
+	        else {
+		        sgngamf = 1;
+		    }
+	        q = log(z);
+	        if( direction ) q = -q;
+	        return( p + q );
+	    }
+	    if( x >= 1.25 ) {
+		    z *= x;
+		    //FIXME: Here is x changed that then goes to goto statement
+		    x -= 1.0; /* x + 1 - 2 */
+		    direction = 1;
 		    p = x * polevl( x, B, 7 );
-		    goto cont;
-	}
-	if( x >= 1.25 ) {
-		z *= x;
-		x -= 1.0; /* x + 1 - 2 */
-		direction = 1;
-		goto iv1r5;
-	}
-	if( x >= 0.75 ) {
-		x -= 1.0;
-		p = x * polevl( x, C, 7 );
-		q = 0.0;
-		goto contz;
-	}
-	while( tx < 1.5 ) {
-		if( tx == 0.0 )
-			goto loverf;
-		z *=tx;
-		nx += 1.0;
-		tx = x + nx;
-	}
-	direction = 1;
-	x += nx - 2.0;
-	p = x * polevl( x, B, 7 );
+		    if( z < 0.0 ) {
+		        sgngamf = -1;
+		        z = -z;
+            }
+	        else {
+		        sgngamf = 1;
+		    }
+	        q = log(z);
+	        if( direction ) q = -q;
+	        return( p + q );
+	    }
+	    if( x >= 0.75 ) {
+		    x -= 1.0;
+		    p = x * polevl( x, C, 7 );
+		    q = 0.0;
+		    return( p + q );
+	    }
+	    while( tx < 1.5 ) {
+		    if( tx == 0.0 ) return( sgngamf * MAXNUMF );
+		    z *=tx;
+		    nx += 1.0;
+		    tx = x + nx;
+	    }
+	    direction = 1;
+	    x += nx - 2.0;
+	    p = x * polevl( x, B, 7 );
 
-    cont:
-	    if( z < 0.0 ) {
+        if( z < 0.0 ) {
 		    sgngamf = -1;
 		    z = -z;
         }
@@ -305,13 +320,11 @@ double lgamma_sgn( double x, int *sgngam) {
 	    q = log(z);
 	    if( direction )
 		    q = -q;
-    contz:
-	    return( p + q );
+        return( p + q );
 	}
 
     if( x > MAXLGM ) {
-        loverf:
-	    return( sgngamf * MAXNUMF );
+        return( sgngamf * MAXNUMF );
 	}
 
     /* Note, though an asymptotic formula could be used for x >= 3,
