@@ -280,6 +280,7 @@ double sas_gamma( double x) {
 	    if( x >= 1.25 ) {
 		    z *= x;
 		    //FIXME: Here is x changed that then goes to goto statement
+		    //while loop?
 		    x -= 1.0; /* x + 1 - 2 */
 		    direction = 1;
 		    p = x * polevl( x, B, 7 );

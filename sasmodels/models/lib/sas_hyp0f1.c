@@ -4,7 +4,7 @@ Hypergeometric function related to Bessel functions
 Gamma[c] (-x)^(1/2(1-c)) J_{c-1}(2 Sqrt[-x])
 */
 
-inline double sas_hyp0f1 (double v, double z) {
+double sas_hyp0f1 (double v, double z) {
     double arg, v1, arg_exp, bess_val;
 
     if (v <= 0.0 && v == floor(v)) return 0.0;
@@ -36,7 +36,7 @@ inline double sas_hyp0f1 (double v, double z) {
 
 }
 
-inline double _hyp0f1_asy(double v, double z){
+double _hyp0f1_asy(double v, double z){
     //Asymptotic expansion for I_{v-1}(2*sqrt(z)) * Gamma(v)
     //for real $z > 0$ and $v\to +\infty$.
     //Based off DLMF 10.41

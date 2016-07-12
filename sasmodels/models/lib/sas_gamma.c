@@ -137,3 +137,5 @@ small:
 
 
 inline double sas_gamma( double x) { return tgamma(x+1)/x; }
+
+inline double sas_lgamma( double x) { return lgamma(x); }
