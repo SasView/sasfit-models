@@ -59,94 +59,236 @@
  * Copyright 1984, 1987, 1988, 2000 by Stephen L. Moshier
  */
 
-extern double MACHEP;
+static double sas_hyp2f0(double a, double b, double x, int type, double *err);
+static double sas_hyp2f0f(double a, double b, double x, int type, double *err);
+static double sas_hy1f1p(double a, double b, double x, double *err);
+static double sas_hy1f1pf(double a, double b, double x, double *err);
+static double sas_hy1f1a(double a, double b, double x, double *err);
+static double sas_hy1f1af(double a, double b, double x, double *err);
+static double sas_hyperg(double a, double b, double x);
 
-double sas_hyperg(a, b, x)
-double a, b, x;
+static double sas_hyp2f0(double a, double b, double x, int type, double *err)
 {
-#if FLOAT_SIZE > 4
     const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
     const double MAXNUM =  1.79769313486231570815E308;
-    double asum, psum, acanc, pcanc, temp;
 
-    /* See if a Kummer transformation will help */
-    temp = b - a;
-    if (fabs(temp) < 0.001 * fabs(a))
-	return (exp(x) * sas_hyperg(temp, b, -x));
+    double a0, alast, t, tlast, maxt;
+    double n, an, bn, u, sum, temp;
 
+    an = a;
+    bn = b;
+    a0 = 1.0e0;
+    alast = 1.0e0;
+    sum = 0.0;
+    n = 1.0e0;
+    t = 1.0e0;
+    tlast = 1.0e9;
+    maxt = 0.0;
 
-    /* Try power & asymptotic series, starting from the one that is likely OK */
-    if (fabs(x) < 10 + fabs(a) + fabs(b)) {
-	psum = sas_hy1f1p(a, b, x, &pcanc);
-	if (pcanc < 1.0e-15)
-	    if (pcanc > 1.0e-12) {
-	        exit();
-	        //Or return psum but it is error mtherr("hyperg", PLOSS);
+    while (t > MACHEP) {
+	    if (an == 0) {
+	        *err = fabs(MACHEP * (n + maxt));
+            alast = a0;
+            sum += alast;
+            return (sum);
+        }
+
+	    if (bn == 0) {
+	        *err = fabs(MACHEP * (n + maxt));
+            alast = a0;
+            sum += alast;
+            return (sum);
+        }
+
+	    u = an * (bn * x / n);
+
+	    /* check for blowup */
+	    temp = fabs(u);
+	    if ((temp > 1.0) && (maxt > (MAXNUM / temp))) {
+	        *err = MAXNUM;
+            //mtherr("hyperg", TLOSS);
+            return (sum);
+        }
+
+	    a0 *= u;
+	    t = fabs(a0);
+
+	    /* terminating condition for asymptotic series:
+	    * the series is divergent (if a or b is not a negative integer),
+	    * but its leading part can be used as an asymptotic expansion
+	    */
+	    if (t > tlast) {
+	        /* The following "Converging factors" are supposed to improve accuracy,
+            * but do not actually seem to accomplish very much. */
+
+            n -= 1.0;
+            x = 1.0 / x;
+            if (type == 1) {
+	            alast *=
+	            (0.5 + (0.125 + 0.25 * b - 0.5 * a + 0.25 * x - 0.25 * n) / x);
+	        }
+
+            if (type == 2) {
+	            alast *= 2.0 / 3.0 - b + 2.0 * a + x - n;
+	        }
+
+	        *err = MACHEP * (n + maxt)  +  fabs ( a0 );
+            sum += alast;
+            return( sum );
+        }
+
+	    tlast = t;
+	    sum += alast;		/* the sum is one term behind */
+	    alast = a0;
+
+	    if (n > 200) {
+	        n -= 1.0;
+            x = 1.0 / x;
+
+            if (type == 1) {
+	            alast *=
+	            (0.5 + (0.125 + 0.25 * b - 0.5 * a + 0.25 * x - 0.25 * n) / x);
+	        }
+
+            if (type == 2) {
+	            alast *= 2.0 / 3.0 - b + 2.0 * a + x - n;
+	        }
+
+	        *err = MACHEP * (n + maxt)  +  fabs ( a0 );
+            sum += alast;
+            return( sum );
 	    }
-
-     //TODO: Check if such reference works on GPU
-	asum = sas_hy1f1p(a, b, x, &acanc);
-    }
-    else {
-	psum = sas_hy1f1a(a, b, x, &pcanc);
-	if (pcanc < 1.0e-15)
-	    if (pcanc > 1.0e-12) {
-	        exit();
-	        //Or return psum but it is error mtherr("hyperg", PLOSS);
-	    }
-	asum = sas_hy1f1p(a, b, x, &acanc);
+	    an += 1.0e0;
+	    bn += 1.0e0;
+	    n += 1.0e0;
+	    if (t > maxt)
+	        maxt = t;
     }
 
-    /* Pick the result with less estimated error */
+    /* estimate error due to roundoff and cancellation */
+    *err = fabs(  MACHEP * (n + maxt)  );
 
-    if (acanc < pcanc) {
-	pcanc = acanc;
-	psum = asum;
-    }
-
-    if (pcanc > 1.0e-12) {
-	        exit();
-	        //Or return psum but it is error mtherr("hyperg", PLOSS);
-	}
-
-    return (psum);
-#else
-    double  asum, psum, acanc, pcanc, temp;
-    /* See if a Kummer transformation will help */
-    temp = b - a;
-    if( fabs(temp) < 0.001 * fabs(a) )
-	    return( expf(x) * sas_hyperg( temp, b, -x )  );
-
-    psum = sas_hy1f1pf( a, b, x, &pcanc );
-    if( pcanc < 1.0e-6 )
-	    return( psum );
-
-    /* try asymptotic series */
-
-    asum = sas_hy1f1a( a, b, x, &acanc );
-
-
-    /* Pick the result with less estimated error */
-
-    if( acanc < pcanc ) {
-	    pcanc = acanc;
-	    psum = asum;
-	}
-
-    //TODO: It would be good to have some error handling
-    if( pcanc > 1.0e-3 )
-	    exit();
-
-    return( psum );
-#endif
+    alast = a0;
+    sum += alast;
+    return( sum );
 }
 
+
+static double sas_hyp2f0f(double a, double b, double x, int type, double *err)
+{
+    const double MACHEPF =5.9604644775390625E-8;
+    const double MAXNUMF =3.4028234663852885981170418348451692544e38;
+    double a0, alast, t, tlast, maxt;
+    double n, an, bn, u, sum, temp;
+
+    an = a;
+    bn = b;
+    a0 = 1.0;
+    alast = 1.0;
+    sum = 0.0;
+    n = 1.0;
+    t = 1.0;
+    tlast = 1.0e9;
+    maxt = 0.0;
+
+    while( t > MACHEPF ) {
+
+	    if( an == 0 ) {
+	         /* estimate error due to roundoff and cancellation */
+            *err = fabs(  MACHEPF * (n + maxt)  );
+
+            alast = a0;
+            sum += alast;
+            return( sum );
+	    }
+
+	    if( bn == 0 ) {
+	        /* estimate error due to roundoff and cancellation */
+            *err = fabs(  MACHEPF * (n + maxt)  );
+
+            alast = a0;
+            sum += alast;
+            return( sum );
+	    }
+
+	    u = an * (bn * x / n);
+
+	    /* check for blowup */
+	    temp = fabs(u);
+	    if( (temp > 1.0 ) && (maxt > (MAXNUMF/temp)) ) {
+		    *err = MAXNUMF;
+            return( sum );
+        }
+	    a0 *= u;
+	    t = fabs(a0);
+
+	    /* terminating condition for asymptotic series */
+	    if( t > tlast ) {
+	        /* The following "Converging factors" are supposed to improve accuracy,
+             * but do not actually seem to accomplish very much. */
+
+            n -= 1.0;
+            x = 1.0/x;
+
+            if (type == 1) {
+	            alast *= ( 0.5 + (0.125 + 0.25*b - 0.5*a + 0.25*x - 0.25*n)/x );
+            }
+
+            if (type == 2) {
+	            alast *= 2.0/3.0 - b + 2.0*a + x - n;
+            }
+
+            /* estimate error due to roundoff, cancellation, and nonconvergence */
+            *err = MACHEPF * (n + maxt)  +  fabs( a0 );
+
+            sum += alast;
+            return( sum );
+	    }
+
+	    tlast = t;
+	    sum += alast;	/* the sum is one term behind */
+	    alast = a0;
+
+	    if( n > 200 ) {
+	            /* The following "Converging factors" are supposed to improve accuracy,
+             * but do not actually seem to accomplish very much. */
+
+            n -= 1.0;
+            x = 1.0/x;
+
+            if (type == 1) {
+	            alast *= ( 0.5 + (0.125 + 0.25*b - 0.5*a + 0.25*x - 0.25*n)/x );
+            }
+
+            if (type == 2) {
+	            alast *= 2.0/3.0 - b + 2.0*a + x - n;
+            }
+
+            /* estimate error due to roundoff, cancellation, and nonconvergence */
+            *err = MACHEPF * (n + maxt)  +  fabs( a0 );
+
+            sum += alast;
+            return( sum );
+	    }
+
+	    an += 1.0;
+	    bn += 1.0;
+	    n += 1.0;
+	    if( t > maxt )
+		    maxt = t;
+    }
+
+    *err = fabs(  MACHEPF * (n + maxt)  );
+    alast = a0;
+    return( sum );
+
+}
 
 /* Power series summation for confluent hypergeometric function                */
 
 
 //FIXMIE Returning sum and error
-double sas_hy1f1p(double a, double b, double x, double *err)
+static double sas_hy1f1p(double a, double b, double x, double *err)
 {
     const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
     const double MAXNUM =  1.79769313486231570815E308;
@@ -165,7 +307,7 @@ double sas_hy1f1p(double a, double b, double x, double *err)
     n = 1.0;
     t = 1.0;
     maxt = 0.0;
-    double *err = 1.0;
+    *err = 1.0;
 
     maxn = 200.0 + 2 * fabs(a) + 2 * fabs(b);
 
@@ -232,72 +374,63 @@ double sas_hy1f1p(double a, double b, double x, double *err)
 }
 
 //Single precission
-double sas_hy1f1pf(double a, double b, double x, double err)
+static double sas_hy1f1pf(double a, double b, double x, double *err)
 {
-const double  MACHEPF =5.9604644775390625E-8;
-const double MAXNUMF = 3.4028234663852885981170418348451692544e38;
-double n, a0, sum, t, u, temp;
-double an, bn, maxt, pcanc;
+    const double  MACHEPF =5.9604644775390625E-8;
+    const double MAXNUMF = 3.4028234663852885981170418348451692544e38;
+    double n, a0, sum, t, u, temp;
+    double an, bn, maxt, pcanc;
 
-/* set up for power series summation */
-an = a;
-bn = b;
-a0 = 1.0;
-sum = 1.0;
-n = 1.0;
-t = 1.0;
-maxt = 0.0;
+    /* set up for power series summation */
+    an = a;
+    bn = b;
+    a0 = 1.0;
+    sum = 1.0;
+    n = 1.0;
+    t = 1.0;
+    maxt = 0.0;
 
 
-while( t > MACHEPF )
-	{
-	if( bn == 0 )			/* check bn first since if both	*/
-	{
-		return( MAXNUMF );	/* an and bn are zero it is	*/
-	}
-	if( an == 0 )			/* a singularity		*/
-		return( sum );
-	if( n > 200 ) {
-	    if( sum != 0.0 )
-	        maxt /= fabs(sum);
-        maxt *= MACHEPF; 	/* this way avoids multiply overflow */
-        pcanc = fabs( MACHEPF * n  +  maxt );
-        *err = pcanc;
-        return( sum );
-	}
+    while( t > MACHEPF ) {
+	    if( bn == 0 ) {			/* check bn first since if both	*/
+		    return( MAXNUMF );	/* an and bn are zero it is	*/
+	    }
+	    if( an == 0 )			/* a singularity		*/
+		    return( sum );
+	    if( n > 200 ) {
+	        if( sum != 0.0 )
+	            maxt /= fabs(sum);
+            maxt *= MACHEPF; 	/* this way avoids multiply overflow */
+            pcanc = fabs( MACHEPF * n  +  maxt );
+            *err = pcanc;
+            return( sum );
+	    }
+	    u = x * ( an / (bn * n) );
 
-	u = x * ( an / (bn * n) );
+	    /* check for blowup */
+	    temp = fabs(u);
+	    if( (temp > 1.0 ) && (maxt > (MAXNUMF/temp)) ) {
+		    pcanc = 1.0;	/* estimate 100% error */
+            *err = pcanc;
+            return( sum );
+	    }
 
-	/* check for blowup */
-	temp = fabsf(u);
-	if( (temp > 1.0 ) && (maxt > (MAXNUMF/temp)) ) {
-		pcanc = 1.0;	/* estimate 100% error */
-        *err = pcanc;
-        return( sum );
-	}
+	    a0 *= u;
+	    sum += a0;
+	    t = fabs(a0);
+	    if( t > maxt )
+		    maxt = t;
 
-	a0 *= u;
-	sum += a0;
-	t = fabsf(a0);
-	if( t > maxt )
-		maxt = t;
-/*
-	if( (maxt/fabsf(sum)) > 1.0e17 )
-		{
-		pcanc = 1.0;
-		goto blowup;
-		}
-*/
-	an += 1.0;
-	bn += 1.0;
-	n += 1.0;
+        an += 1.0;
+	    bn += 1.0;
+	    n += 1.0;
 	}
 
     /* estimate error due to roundoff and cancellation */
     if( sum != 0.0 )
-	    maxt /= fabsf(sum);
+	    maxt /= fabs(sum);
     maxt *= MACHEPF; 	/* this way avoids multiply overflow */
-    pcanc = fabsf( MACHEPF * n  +  maxt );
+    pcanc = fabs( MACHEPF * n  +  maxt );
 
     *err = pcanc;
 
@@ -322,9 +455,8 @@ while( t > MACHEPF )
  *                               |  (a)                        )
  */
 
-double sas_hy1f1a(double a, double b, double x, double *err)
+static double sas_hy1f1a(double a, double b, double x, double *err)
 {
-    const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
     const double MAXNUM =  1.79769313486231570815E308;
 
     double h1, h2, t, u, temp, acanc, asum, err1, err2;
@@ -340,7 +472,7 @@ double sas_hy1f1a(double a, double b, double x, double *err)
     u = -temp * a;
 
     if (b > 0) {
-	temp = lgam(b);
+	temp = sas_lgamma(b);
 	t += temp;
 	u += temp;
     }
@@ -397,9 +529,8 @@ double sas_hy1f1a(double a, double b, double x, double *err)
 }
 
 
-double sas_hy1f1af(double a, double b, double x, double *err)
+static double sas_hy1f1af(double a, double b, double x, double *err)
 {
-    const double MACHEPF =5.9604644775390625E-8;
     const double MAXNUMF = 3.4028234663852885981170418348451692544e38;
     double h1, h2, t, u, temp, acanc, asum, err1, err2;
 
@@ -462,210 +593,83 @@ double sas_hy1f1af(double a, double b, double x, double *err)
 }
 /*                                                     hyp2f0()        */
 
-double sas_hyp2f0(double a, double b, double x, int type, double *err)
+static double sas_hyperg(double a, double b, double x)
 {
-    const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
-    const double MAXNUM =  1.79769313486231570815E308;
+#if FLOAT_SIZE > 4
+    //const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
+    //const double MAXNUM =  1.79769313486231570815E308;
+    double asum, psum, acanc, pcanc, temp;
 
-    double a0, alast, t, tlast, maxt;
-    double n, an, bn, u, sum, temp;
+    /* See if a Kummer transformation will help */
+    temp = b - a;
+    if (fabs(temp) < 0.001 * fabs(a))
+	return (exp(x) * sas_hyperg(temp, b, -x));
 
-    an = a;
-    bn = b;
-    a0 = 1.0e0;
-    alast = 1.0e0;
-    sum = 0.0;
-    n = 1.0e0;
-    t = 1.0e0;
-    tlast = 1.0e9;
-    maxt = 0.0;
 
-    while (t > MACHEP) {
-	if (an == 0) {
-	    *err = fabs(MACHEP * (n + maxt));
-        alast = a0;
-        sum += alast;
-        return (sum);
-    }
-
-	if (bn == 0) {
-	    *err = fabs(MACHEP * (n + maxt));
-        alast = a0;
-        sum += alast;
-        return (sum);
-    }
-
-	u = an * (bn * x / n);
-
-	/* check for blowup */
-	temp = fabs(u);
-	if ((temp > 1.0) && (maxt > (MAXNUM / temp))) {
-	    *err = MAXNUM;
-        //mtherr("hyperg", TLOSS);
-        return (sum);
-    }
-
-	a0 *= u;
-	t = fabs(a0);
-
-	/* terminating condition for asymptotic series:
-	 * the series is divergent (if a or b is not a negative integer),
-	 * but its leading part can be used as an asymptotic expansion
-	 */
-	if (t > tlast) {
-	    /* The following "Converging factors" are supposed to improve accuracy,
-        * but do not actually seem to accomplish very much. */
-
-        n -= 1.0;
-        x = 1.0 / x;
-        if (type == 1) {
-	        alast *=
-	        (0.5 + (0.125 + 0.25 * b - 0.5 * a + 0.25 * x - 0.25 * n) / x);
+    /* Try power & asymptotic series, starting from the one that is likely OK */
+    if (fabs(x) < 10 + fabs(a) + fabs(b)) {
+	psum = sas_hy1f1p(a, b, x, &pcanc);
+	if (pcanc < 1.0e-15)
+	    if (pcanc > 1.0e-12) {
+	        return 0;
+	        //Or return psum but it is error mtherr("hyperg", PLOSS);
 	    }
 
-        if (type == 2) {
-	        alast *= 2.0 / 3.0 - b + 2.0 * a + x - n;
+     //TODO: Check if such reference works on GPU
+	asum = sas_hy1f1p(a, b, x, &acanc);
+    }
+    else {
+	psum = sas_hy1f1a(a, b, x, &pcanc);
+	if (pcanc < 1.0e-15)
+	    if (pcanc > 1.0e-12) {
+	        return 0;
+	        //Or return psum but it is error mtherr("hyperg", PLOSS);
 	    }
-
+	asum = sas_hy1f1p(a, b, x, &acanc);
     }
 
-	tlast = t;
-	sum += alast;		/* the sum is one term behind */
-	alast = a0;
+    /* Pick the result with less estimated error */
 
-	if (n > 200) {
-	       n -= 1.0;
-        x = 1.0 / x;
-        if (type == 1) {
-	        alast *=
-	        (0.5 + (0.125 + 0.25 * b - 0.5 * a + 0.25 * x - 0.25 * n) / x);
-	    }
+    if (acanc < pcanc) {
+	pcanc = acanc;
+	psum = asum;
+    }
 
-        if (type == 2) {
-	        alast *= 2.0 / 3.0 - b + 2.0 * a + x - n;
-	    }
-
+    if (pcanc > 1.0e-12) {
+	        return 0;
+	        //Or return psum but it is error mtherr("hyperg", PLOSS);
 	}
-	an += 1.0e0;
-	bn += 1.0e0;
-	n += 1.0e0;
-	if (t > maxt)
-	    maxt = t;
-    }
+
+    return (psum);
+#else
+    //const double MACHEPF =5.9604644775390625E-8;
+    //const double MAXNUMF = 3.4028234663852885981170418348451692544e38;
+    double  asum, psum, acanc, pcanc, temp;
+    /* See if a Kummer transformation will help */
+    temp = b - a;
+    if( fabs(temp) < 0.001 * fabs(a) )
+	    return( exp(x) * sas_hyperg( temp, b, -x )  );
+
+    psum = sas_hy1f1pf( a, b, x, &pcanc );
+    if( pcanc < 1.0e-6 )
+	    return( psum );
+
+    /* try asymptotic series */
+
+    asum = sas_hy1f1af( a, b, x, &acanc );
 
 
+    /* Pick the result with less estimated error */
 
-    /* estimate error due to roundoff and cancellation */
-    *err = fabs(MACHEP * (n + maxt));
+    if( acanc < pcanc ) {
+	    pcanc = acanc;
+	    psum = asum;
+	}
 
-    alast = a0;
-    sum += alast;
-    return (sum);
-}
+    //TODO: It would be good to have some error handling
+    if( pcanc > 1.0e-3 )
+	    return 0;
 
-
-double sas_hyp2f0f(double a, double b, double x, int type, double *err)
-{
-    const double MACHEPF =5.9604644775390625E-8;
-    const double MAXNUMF = 3.4028234663852885981170418348451692544e38;
-    double a0, alast, t, tlast, maxt;
-    double n, an, bn, u, sum, temp;
-
-    an = a;
-    bn = b;
-    a0 = 1.0;
-    alast = 1.0;
-    sum = 0.0;
-    n = 1.0;
-    t = 1.0;
-    tlast = 1.0e9;
-    maxt = 0.0;
-
-    while( t > MACHEPF ) {
-
-	    if( an == 0 ) {
-	         /* estimate error due to roundoff and cancellation */
-            *err = fabs(  MACHEPF * (n + maxt)  );
-
-            alast = a0;
-            sum += alast;
-            return( sum );
-	    }
-
-	    if( bn == 0 ) {
-	        /* estimate error due to roundoff and cancellation */
-            *err = fabs(  MACHEPF * (n + maxt)  );
-
-            alast = a0;
-            sum += alast;
-            return( sum );
-	    }
-
-	    u = an * (bn * x / n);
-
-	    /* check for blowup */
-	    temp = fabs(u);
-	    if( (temp > 1.0 ) && (maxt > (MAXNUMF/temp)) ) {
-		    *err = MAXNUMF;
-            return( sum );
-        }
-	    a0 *= u;
-	    t = fabsf(a0);
-
-	    /* terminating condition for asymptotic series */
-	    if( t > tlast ) {
-	        /* The following "Converging factors" are supposed to improve accuracy,
-             * but do not actually seem to accomplish very much. */
-
-            n -= 1.0;
-            x = 1.0/x;
-
-            if (type == 1) {
-	            alast *= ( 0.5 + (0.125 + 0.25*b - 0.5*a + 0.25*x - 0.25*n)/x );
-            }
-
-            if (type == 2) {
-	            alast *= 2.0/3.0 - b + 2.0*a + x - n;
-            }
-
-            /* estimate error due to roundoff, cancellation, and nonconvergence */
-            *err = MACHEPF * (n + maxt)  +  fabsf( a0 );
-
-            sum += alast;
-            return( sum );
-	    }
-
-	    tlast = t;
-	    sum += alast;	/* the sum is one term behind */
-	    alast = a0;
-
-	    if( n > 200 ) {
-	            /* The following "Converging factors" are supposed to improve accuracy,
-             * but do not actually seem to accomplish very much. */
-
-            n -= 1.0;
-            x = 1.0/x;
-
-            if (type == 1) {
-	            alast *= ( 0.5 + (0.125 + 0.25*b - 0.5*a + 0.25*x - 0.25*n)/x );
-            }
-
-            if (type == 2) {
-	            alast *= 2.0/3.0 - b + 2.0*a + x - n;
-            }
-
-            /* estimate error due to roundoff, cancellation, and nonconvergence */
-            *err = MACHEPF * (n + maxt)  +  fabsf( a0 );
-
-            sum += alast;
-            return( sum );
-	    }
-
-	    an += 1.0;
-	    bn += 1.0;
-	    n += 1.0;
-	    if( t > maxt )
-		    maxt = t;
-    }
-
+    return( psum );
+#endif
 }

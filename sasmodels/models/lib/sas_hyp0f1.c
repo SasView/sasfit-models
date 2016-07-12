@@ -4,7 +4,35 @@ Hypergeometric function related to Bessel functions
 Gamma[c] (-x)^(1/2(1-c)) J_{c-1}(2 Sqrt[-x])
 */
 
-double sas_hyp0f1 (double v, double z) {
+//Two auxiallary functions as defined in scipy
+static double sas_xlogy(double x, double y) {
+    if (x==0)
+        return 0;
+    else
+        return x*log(y);
+}
+
+static double sas_sin_pi(double x)
+ {
+    if (floor(x) == x && fabs(x) < 1e14) {
+         /* Return 0 when at exact zero, as long as the floating point number is
+          * small enough to distinguish integer points from other points.
+         */
+        return 0;
+    }
+    return sin(M_PI * x);
+}
+
+static double sas_hyp0f1 (double v, double z) {
+
+    #if FLOAT_SIZE > 4
+        const double DBL_MIN = 2.2250738585072014e-308
+        const double DBL_MAX =  1.7976931348623157e+308;
+    #else
+        const double DBL_MIN = 1.17549435e-38
+        const double DBL_MAX = 3.40282347e+38;
+    #endif
+
     double arg, v1, arg_exp, bess_val;
 
     if (v <= 0.0 && v == floor(v)) return 0.0;
@@ -17,16 +45,15 @@ double sas_hyp0f1 (double v, double z) {
 
     if (z > 0) {
         arg = sqrt(z);
-        //TODO: xlogy,lgam,iv have to be implemented/imported
-        arg_exp = xlogy(1.0-v, arg) + lgam(v);
-        bess_val = iv(v-1, 2.0*arg);
+        arg_exp = sas_xlogy(1.0-v, arg) + sas_lgamma(v);
+        bess_val = sas_iv(v-1, 2.0*arg);
 
         if (arg_exp > log(DBL_MAX) || bess_val == 0 ||
             arg_exp < log(DBL_MIN) || isinf(bess_val)) {
-            return hyp0f1_asy(v, z);
+            return sas_hyp0f1_asy(v, z);
             }
         else {
-            return exp(arg_exp) * gammasgn(v) * bess_val
+            return exp(arg_exp) * sas_gammasgn(v) * bess_val
         }
     }
     else {
@@ -36,7 +63,7 @@ double sas_hyp0f1 (double v, double z) {
 
 }
 
-double _hyp0f1_asy(double v, double z){
+static double sas_hyp0f1_asy(double v, double z){
     //Asymptotic expansion for I_{v-1}(2*sqrt(z)) * Gamma(v)
     //for real $z > 0$ and $v\to +\infty$.
     //Based off DLMF 10.41
@@ -51,9 +78,8 @@ double _hyp0f1_asy(double v, double z){
 
     arg_exp_i = -0.5*log(p1);
     arg_exp_i -= 0.5*log(2.0*M_PI*v1);
-    arg_exp_i += lgam(v);
-    //TODO: gammasgn needs to be implemented
-    gs = gammasgn(v)
+    arg_exp_i += sas_lgamma(v);
+    gs = sas_gammasgn(v)
 
     arg_exp_k = arg_exp_i;
     arg_exp_i += v1 * eta;
@@ -70,12 +96,12 @@ double _hyp0f1_asy(double v, double z){
         * pp * p2 / 414720.0;
     u_corr_i = 1.0 + u1/v1 + u2/(v1*v1) + u3/(v1*v1*v1);
 
-    result = exp(arg_exp_i - xlogy(v1, arg)) * gs * u_corr_i;
+    result = exp(arg_exp_i - sas_xlogy(v1, arg)) * gs * u_corr_i;
     if (v - 1 < 0) {
         //DLMF 10.27.2: I_{-v} = I_{v} + (2/pi) sin(pi*v) K_v
         u_corr_k = 1.0 - u1/v1 + u2/(v1*v1) - u3/(v1*v1*v1);
         //TODO: sin_pi needs to be implemented
-        result += exp(arg_exp_k + xlogy(v1, arg)) * gs * 2.0
+        result += exp(arg_exp_k + sas_xlogy(v1, arg)) * gs * 2.0
             * sin_pi(v1) * u_corr_k;
     }
     return result

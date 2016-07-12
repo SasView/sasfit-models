@@ -51,9 +51,9 @@ Cephes Math Library Release 2.8:  June, 2000
 Copyright 1984, 1987, 1988, 2000 by Stephen L. Moshier
 */
 
-double sas_Iv (double, double );
+double sas_iv (double, double );
 
-double sas_Iv (double v, double x)
+double sas_iv (double v, double x)
 {
     double ax, t = floor(v);
     int sign;
