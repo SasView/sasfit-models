@@ -59,41 +59,33 @@
  * Copyright 1984, 1987, 1988, 2000 by Stephen L. Moshier
  */
 
-static double sas_hyp2f0(double a, double b, double x, int type, double *err);
-static double sas_hyp2f0f(double a, double b, double x, int type, double *err);
-static double sas_hy1f1p(double a, double b, double x, double *err);
-static double sas_hy1f1pf(double a, double b, double x, double *err);
-static double sas_hy1f1a(double a, double b, double x, double *err);
-static double sas_hy1f1af(double a, double b, double x, double *err);
-static double sas_hyperg(double a, double b, double x);
+double sas_hyp2f0(double a, double b, double x, int type, double *err);
+double sas_hy1f1p(double a, double b, double x, double *err);
+double sas_hy1f1a(double a, double b, double x, double *err);
+double sas_hyperg(double a, double b, double x);
 
-static double sas_hyp2f0(double a, double b, double x, int type, double *err)
+double sas_hyp2f0(double a, double b, double x, int type, double *err)
 {
+#if FLOAT_SIZE > 4
     const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
     const double MAXNUM =  1.79769313486231570815E308;
-
     double a0, alast, t, tlast, maxt;
     double n, an, bn, u, sum, temp;
 
     an = a;
     bn = b;
-    a0 = 1.0e0;
-    alast = 1.0e0;
+    a0 = 1.0;
+    alast = 1.0;
     sum = 0.0;
-    n = 1.0e0;
-    t = 1.0e0;
+    n = 1.0;
+    t = 1.0;
     tlast = 1.0e9;
     maxt = 0.0;
+    *err = 1.0;
 
     while (t > MACHEP) {
-	    if (an == 0) {
-	        *err = fabs(MACHEP * (n + maxt));
-            alast = a0;
-            sum += alast;
-            return (sum);
-        }
 
-	    if (bn == 0) {
+	    if (an == 0 || bn == 0) {
 	        *err = fabs(MACHEP * (n + maxt));
             alast = a0;
             sum += alast;
@@ -158,24 +150,20 @@ static double sas_hyp2f0(double a, double b, double x, int type, double *err)
             sum += alast;
             return( sum );
 	    }
-	    an += 1.0e0;
-	    bn += 1.0e0;
-	    n += 1.0e0;
+	    an += 1.0;
+	    bn += 1.0;
+	    n += 1.0;
 	    if (t > maxt)
 	        maxt = t;
     }
 
     /* estimate error due to roundoff and cancellation */
     *err = fabs(  MACHEP * (n + maxt)  );
-
     alast = a0;
     sum += alast;
     return( sum );
-}
 
-
-static double sas_hyp2f0f(double a, double b, double x, int type, double *err)
-{
+#else
     const double MACHEPF =5.9604644775390625E-8;
     const double MAXNUMF =3.4028234663852885981170418348451692544e38;
     double a0, alast, t, tlast, maxt;
@@ -190,20 +178,12 @@ static double sas_hyp2f0f(double a, double b, double x, int type, double *err)
     t = 1.0;
     tlast = 1.0e9;
     maxt = 0.0;
+    *err = 1.0;
 
     while( t > MACHEPF ) {
 
-	    if( an == 0 ) {
+	    if( an == 0 || bn == 0 ) {
 	         /* estimate error due to roundoff and cancellation */
-            *err = fabs(  MACHEPF * (n + maxt)  );
-
-            alast = a0;
-            sum += alast;
-            return( sum );
-	    }
-
-	    if( bn == 0 ) {
-	        /* estimate error due to roundoff and cancellation */
             *err = fabs(  MACHEPF * (n + maxt)  );
 
             alast = a0;
@@ -250,7 +230,7 @@ static double sas_hyp2f0f(double a, double b, double x, int type, double *err)
 	    alast = a0;
 
 	    if( n > 200 ) {
-	            /* The following "Converging factors" are supposed to improve accuracy,
+	         /* The following "Converging factors" are supposed to improve accuracy,
              * but do not actually seem to accomplish very much. */
 
             n -= 1.0;
@@ -280,16 +260,17 @@ static double sas_hyp2f0f(double a, double b, double x, int type, double *err)
 
     *err = fabs(  MACHEPF * (n + maxt)  );
     alast = a0;
+    sum += alast;
     return( sum );
-
+#endif
 }
 
 /* Power series summation for confluent hypergeometric function                */
 
 
-//FIXMIE Returning sum and error
-static double sas_hy1f1p(double a, double b, double x, double *err)
+double sas_hy1f1p(double a, double b, double x, double *err)
 {
+#if FLOAT_SIZE > 4
     const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
     const double MAXNUM =  1.79769313486231570815E308;
 
@@ -312,70 +293,67 @@ static double sas_hy1f1p(double a, double b, double x, double *err)
     maxn = 200.0 + 2 * fabs(a) + 2 * fabs(b);
 
     while (t > MACHEP) {
-	if (bn == 0) {		/* check bn first since if both   */
-	    return (MAXNUM);	/* an and bn are zero it is     */
-	}
-	if (an == 0)		/* a singularity            */
-	    return (sum);
-	if (n > maxn) {
-	    /* too many terms; take the last one as error estimate */
-	    c = fabs(c) + fabs(t) * 50.0;
-	    if (sum != 0.0) {
-	        *err = fabs(c / sum);
-        }
-        else {
-	        *err = fabs(c);
-        }
+	    if (bn == 0) {		/* check bn first since if both   */
+	        return (MAXNUM);	/* an and bn are zero it is     */
+	    }
+	    if (an == 0)		/* a singularity            */
+	        return (sum);
+	    if (n > maxn) {
+	        /* too many terms; take the last one as error estimate */
+	        c = fabs(c) + fabs(t) * 50.0;
+	        if (sum != 0.0) {
+	            *err = fabs(c / sum);
+            }
+            else {
+	            *err = fabs(c);
+            }
 
-        if (*err != *err) {
-	        /* nan */
-	        *err = 1.0;
-        }
-        return (sum);
-	}
-	u = x * (an / (bn * n));
+            if (*err != *err) {
+	            /* nan */
+	         *err = 1.0;
+            }
 
-	/* check for blowup */
-	temp = fabs(u);
-	if ((temp > 1.0) && (maxt > (MAXNUM / temp))) {
-	    *err = 1.0;		/* blowup: estimate 100% error */
-	    return sum;
-	}
+            return (sum);
+	    }
+	    u = x * (an / (bn * n));
 
-	a0 *= u;
+	    /* check for blowup */
+	    temp = fabs(u);
+	    if ((temp > 1.0) && (maxt > (MAXNUM / temp))) {
+	        *err = 1.0;		/* blowup: estimate 100% error */
+	        return sum;
+	    }
 
-	y = a0 - c;
-	sumc = sum + y;
-	c = (sumc - sum) - y;
-	sum = sumc;
+	    a0 *= u;
 
-	t = fabs(a0);
+	    y = a0 - c;
+	    sumc = sum + y;
+	    c = (sumc - sum) - y;
+	    sum = sumc;
 
-	an += 1.0;
-	bn += 1.0;
-	n += 1.0;
+	    t = fabs(a0);
+
+	    an += 1.0;
+	    bn += 1.0;
+	    n += 1.0;
     }
 
     /* estimate error due to roundoff and cancellation */
     if (sum != 0.0) {
-	*err = fabs(c / sum);
+	    *err = fabs(c / sum);
     }
     else {
-	*err = fabs(c);
+	    *err = fabs(c);
     }
 
     if (*err != *err) {
-	/* nan */
-	*err = 1.0;
+	    /* nan */
+	    *err = 1.0;
     }
 
 
     return (sum);
-}
-
-//Single precission
-static double sas_hy1f1pf(double a, double b, double x, double *err)
-{
+#else
     const double  MACHEPF =5.9604644775390625E-8;
     const double MAXNUMF = 3.4028234663852885981170418348451692544e38;
     double n, a0, sum, t, u, temp;
@@ -433,8 +411,9 @@ static double sas_hy1f1pf(double a, double b, double x, double *err)
     pcanc = fabs( MACHEPF * n  +  maxt );
 
     *err = pcanc;
-
     return( sum );
+
+#endif
 }
 
 
@@ -455,8 +434,10 @@ static double sas_hy1f1pf(double a, double b, double x, double *err)
  *                               |  (a)                        )
  */
 
-static double sas_hy1f1a(double a, double b, double x, double *err)
+
+double sas_hy1f1a(double a, double b, double x, double *err)
 {
+#if FLOAT_SIZE > 4
     const double MAXNUM =  1.79769313486231570815E308;
 
     double h1, h2, t, u, temp, acanc, asum, err1, err2;
@@ -472,9 +453,9 @@ static double sas_hy1f1a(double a, double b, double x, double *err)
     u = -temp * a;
 
     if (b > 0) {
-	temp = sas_lgamma(b);
-	t += temp;
-	u += temp;
+	    temp = sas_lgamma(b);
+	    t += temp;
+	    u += temp;
     }
 
     h1 = sas_hyp2f0(a, a - b + 1, -1.0 / x, 1, &err1);
@@ -494,43 +475,36 @@ static double sas_hy1f1a(double a, double b, double x, double *err)
     err2 *= temp;
 
     if (x < 0.0)
-	asum = h1;
+	    asum = h1;
     else
-	asum = h2;
+	    asum = h2;
 
     acanc = fabs(err1) + fabs(err2);
 
     if (b < 0) {
-	temp = sas_gamma(b);
-	asum *= temp;
-	acanc *= fabs(temp);
+	    temp = sas_gamma(b);
+	    asum *= temp;
+	    acanc *= fabs(temp);
     }
 
 
     if (asum != 0.0)
-	acanc /= fabs(asum);
+	    acanc /= fabs(asum);
 
     if (acanc != acanc)
-	/* nan */
-	acanc = 1.0;
+	    /* nan */
+	    acanc = 1.0;
 
     if (asum == MAXNUM || asum == -MAXNUM)
-	/* infinity */
-	acanc = 0;
+	    /* infinity */
+	    acanc = 0;
 
     acanc *= 30.0;		/* fudge factor, since error of asymptotic formula
 				 * often seems this much larger than advertised */
 
-  adone:
-
-
     *err = acanc;
     return (asum);
-}
-
-
-static double sas_hy1f1af(double a, double b, double x, double *err)
-{
+#else
     const double MAXNUMF = 3.4028234663852885981170418348451692544e38;
     double h1, h2, t, u, temp, acanc, asum, err1, err2;
 
@@ -551,13 +525,13 @@ static double sas_hy1f1af(double a, double b, double x, double *err)
 	    u += temp;
 	}
 
-    h1 = sas_hyp2f0f( a, a-b+1, -1.0/x, 1, &err1 );
+    h1 = sas_hyp2f0( a, a-b+1, -1.0/x, 1, &err1 );
 
     temp = exp(u) / sas_gamma(b-a);
     h1 *= temp;
     err1 *= temp;
 
-    h2 = sas_hyp2f0f( b-a, 1.0-a, 1.0/x, 2, &err2 );
+    h2 = sas_hyp2f0( b-a, 1.0-a, 1.0/x, 2, &err2 );
 
     if( a < 0 )
 	    temp = exp(t) / sas_gamma(a);
@@ -590,73 +564,64 @@ static double sas_hy1f1af(double a, double b, double x, double *err)
 
     *err = acanc;
     return( asum );
+#endif
 }
+
+
 /*                                                     hyp2f0()        */
 
-static double sas_hyperg(double a, double b, double x)
+
+double sas_hyperg(double a, double b, double x)
 {
 #if FLOAT_SIZE > 4
-    //const double MACHEP = 1.11022302462515654042E-16; /* 2**-53 */
-    //const double MAXNUM =  1.79769313486231570815E308;
     double asum, psum, acanc, pcanc, temp;
 
     /* See if a Kummer transformation will help */
     temp = b - a;
     if (fabs(temp) < 0.001 * fabs(a))
-	return (exp(x) * sas_hyperg(temp, b, -x));
+	    return (exp(x) * sas_hyperg(temp, b, -x));
 
+    psum = sas_hy1f1p( a, b, x, &pcanc );
 
-    /* Try power & asymptotic series, starting from the one that is likely OK */
-    if (fabs(x) < 10 + fabs(a) + fabs(b)) {
-	psum = sas_hy1f1p(a, b, x, &pcanc);
-	if (pcanc < 1.0e-15)
-	    if (pcanc > 1.0e-12) {
-	        return 0;
-	        //Or return psum but it is error mtherr("hyperg", PLOSS);
-	    }
+    if( pcanc < 1.0e-15 ) {
+        //This is from original code but it doesn't make sense 1.0e-15 < 1.0e-12
+        //if( pcanc > 1.0e-12 )
+	    //    return 0;
 
-     //TODO: Check if such reference works on GPU
-	asum = sas_hy1f1p(a, b, x, &acanc);
+        return( psum );
     }
-    else {
-	psum = sas_hy1f1a(a, b, x, &pcanc);
-	if (pcanc < 1.0e-15)
-	    if (pcanc > 1.0e-12) {
-	        return 0;
-	        //Or return psum but it is error mtherr("hyperg", PLOSS);
-	    }
-	asum = sas_hy1f1p(a, b, x, &acanc);
-    }
+
+
+    /* try asymptotic series */
+
+    asum = sas_hy1f1a( a, b, x, &acanc );
+
 
     /* Pick the result with less estimated error */
 
-    if (acanc < pcanc) {
-	pcanc = acanc;
-	psum = asum;
-    }
-
-    if (pcanc > 1.0e-12) {
-	        return 0;
-	        //Or return psum but it is error mtherr("hyperg", PLOSS);
+    if( acanc < pcanc ) {
+	    pcanc = acanc;
+	    psum = asum;
 	}
 
-    return (psum);
+    if( pcanc > 1.0e-12 )
+	    return 0;
+
+    return( psum );
 #else
-    //const double MACHEPF =5.9604644775390625E-8;
-    //const double MAXNUMF = 3.4028234663852885981170418348451692544e38;
     double  asum, psum, acanc, pcanc, temp;
     /* See if a Kummer transformation will help */
     temp = b - a;
     if( fabs(temp) < 0.001 * fabs(a) )
 	    return( exp(x) * sas_hyperg( temp, b, -x )  );
 
-    psum = sas_hy1f1pf( a, b, x, &pcanc );
+    psum = sas_hy1f1p( a, b, x, &pcanc );
     if( pcanc < 1.0e-6 )
 	    return( psum );
 
     /* try asymptotic series */
 
-    asum = sas_hy1f1af( a, b, x, &acanc );
+    asum = sas_hy1f1a( a, b, x, &acanc );
 
 
     /* Pick the result with less estimated error */
