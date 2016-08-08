@@ -13,541 +13,861 @@
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">teubner_strey</td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">   Scattering model class for the Teubner-Strey model given by     Provide F(x) = 1/( a2 + c1 q^2+  c2 q^4 ) + background     a2&gt;0, c1&lt;0, c2&gt;0, 4 a2 c2 - c1^2 &gt; 0 </td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'a2', '', 0.1, [0, inf], '', 'a2'<br>'c1', '1e-6/Ang^2', -30.0, [-inf, 0], '', 'c1'<br>'c2', 'Ang', 5000.0, [0, inf], 'volume', 'c2'</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">teubner_strey</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__teubner_strey.html>teubner_strey</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">F^2(Q,Rg,I0) = eta^2*8*pi/xi/(a^2-2bq^2+q^4) with k=2pi/d, a=k^2+1/xi^2, b=k^2-1/xi^2</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'xi', '', 10.0, [-inf, inf], '', 'xi: correlation length'<br>'d', '', 0.0, [-inf, inf], '', 'd: characteristic domain size (the periodicity)'<br>'eta', '', 0.0, [-inf, inf], '', 'eta: mean average contrast'</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'xi', '', 10.0, [-inf, inf], '', 'xi: correlation length'<br>'d', '', 0.0, [-inf, inf], '', 'd: characteristic domain size (the periodicity)'<br>'eta', '', 0.0, [-inf, inf], '', 'eta: mean average contrast'<br>'P0', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fuzzy_sphere</td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">scale: scale factor times volume fraction, or just volume fraction for absolute scale data radius: radius of the solid sphere fuzziness = the standard deviation of the fuzzy interfacial thickness (ie., so-called interfacial roughness) sld: the SLD of the sphere solvend_sld: the SLD of the solvent background: incoherent background Note: By definition, this function works only when fuzziness &lt;&lt; radius. </td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'sld', '1e-6/Ang^2', 1, [-inf, inf], '', 'Particle scattering length density'<br>'sld_solvent', '1e-6/Ang^2', 3, [-inf, inf], '', 'Solvent scattering length density'<br>'radius', 'Ang', 60, [0, inf], 'volume', 'Sphere radius'<br>'fuzziness', 'Ang', 10, [0, inf], '', 'std deviation of Gaussian convolution for interface (must be &lt;&lt; radius)'</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fuzzysphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__fuzzysphere.html>fuzzysphere</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'SIGMA', '', 0.0, [-inf, inf], '', ''<br>'ETA_SPH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 1.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'SIGMA', '', 0.0, [-inf, inf], '', ''<br>'ETA_SPH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 1.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">broad_peak</td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">      I(q) = scale_p/pow(q,exponent)+scale_l/       (1.0 + pow((fabs(q-q_peak)*length_l),exponent_l) )+ background        List of default parameters:       porod_scale = Porod term scaling       porod_exp = Porod exponent       lorentz_scale = Lorentzian term scaling       lorentz_length = Lorentzian screening length [A]       peak_pos = peak location [1/A]       lorentz_exp = Lorentzian exponent       background = Incoherent background</td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'porod_scale', '', 1e-05, [-inf, inf], '', 'Power law scale factor'<br>'porod_exp', '', 3.0, [-inf, inf], '', 'Exponent of power law'<br>'lorentz_scale', '', 10.0, [-inf, inf], '', 'Scale factor for broad Lorentzian peak'<br>'lorentz_length', 'Ang', 50.0, [-inf, inf], '', 'Lorentzian screening length'<br>'peak_pos', '1/Ang', 0.1, [-inf, inf], '', 'Peak position in q'<br>'lorentz_exp', '', 2.0, [-inf, inf], '', 'Exponent of Lorentz function'</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">broad_peak</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__broad_peak.html>broad_peak</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">F^2(q,I0,xi,m,q0) = I0/(1+(|q-q0|*xi)^m)^p</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', 'I0: forward scattering'<br>'XI', '', 0.0, [-inf, inf], '', 'xi: correlation length'<br>'Q0', '', 0.0, [-inf, inf], '', 'q0:peak position which is related to the d-spacing as q0 = 2pi/d'<br>'M', '', 1.0, [-inf, inf], '', 'm:'<br>'P', '', 0.0, [-inf, inf], '', 'p:'</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', 'I0: forward scattering'<br>'XI', '', 0.0, [-inf, inf], '', 'xi: correlation length'<br>'Q0', '', 0.0, [-inf, inf], '', 'q0:peak position which is related to the d-spacing as q0 = 2pi/d'<br>'M', '', 1.0, [-inf, inf], '', 'm:'<br>'P', '', 0.0, [-inf, inf], '', 'p:'<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pearl_necklace</td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"> Calculate form factor for Pearl Necklace Model [Macromol. Symp. 2004, 211, 25-42] Parameters: background:background scale: scale factor sld: the SLD of the pearl spheres sld_string: the SLD of the strings sld_solvent: the SLD of the solvent number_of_pearls: number of the pearls radius: the radius of a pearl edge_separation: the length of string segment; surface to surface string_thickness: thickness (ie, diameter) of the string </td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'radius', 'Ang', 80.0, [0, inf], 'volume', 'Mean radius of the chained spheres'<br>'edge_separation', 'Ang', 350.0, [0, inf], 'volume', 'Mean separation of chained particles'<br>'string_thickness', 'Ang', 2.5, [0, inf], 'volume', 'Thickness of the chain linkage'<br>'number_of_pearls', 'none', 3, [0, inf], 'volume', 'Number of pearls in the necklace (must be integer)'<br>'sld', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Scattering length density of the chained spheres'<br>'sld_string', '1e-6/Ang^2', 1.0, [-inf, inf], '', 'Scattering length density of the chain linkage'<br>'sld_solvent', '1e-6/Ang^2', 6.3, [-inf, inf], '', 'Scattering length density of the solvent'</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pearl_necklace</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__pearl_necklace.html>pearl_necklace</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'l', '', 0.0, [-inf, inf], '', ''<br>'NU', '', 0.0, [-inf, inf], '', ''<br>'B', '', 1.0, [-inf, inf], '', ''<br>'NP', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'l', '', 0.0, [-inf, inf], '', ''<br>'NU', '', 0.0, [-inf, inf], '', ''<br>'B', '', 1.0, [-inf, inf], '', ''<br>'NP', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">spinodal</td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">             I(q) = I_max * (1 + gamma/2) *x**2 / (gamma/2 +x**(2+gamma)             I_max =  The scattering intensity at peak position [1/cm]             q_max = The position of the correlation peak [1/A]             ganmna = The decomposition epxonent             background = Incoherent background [1/cm]         </td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I_max', '', 1.0, [-inf, inf], '', 'Scattering intensity at peak position'<br>'qmax', '1/Ang', 0.04, [-inf, inf], '', 'Croleation peak position'<br>'gamma', '', 2.0, [-inf, inf], '', 'Decomposition exponent'</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">spinodal</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__spinodal.html>spinodal</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">F^2(Q,gamma,Qmax,I0) = I0 (1+gamma/2)(Q/Qmax)^2/(gamma/2+(Q/Qmax)^(2+gamma))</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'IMAX', '', 10.0, [-inf, inf], '', 'Qmax:'<br>'QMAX', '', 0.0, [-inf, inf], '', 'gamma: the exponent gamma is equal to d+1 for off-critical concentration mixtures\nand 2d for critical concentration mixtures (d:dimension)'<br>'GAMMA', '', 0.0, [-inf, inf], '', 'Imax: scattering intensity at peak position I(Q=Qmax)'</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'IMAX', '', 10.0, [-inf, inf], '', 'Qmax:'<br>'QMAX', '', 0.0, [-inf, inf], '', 'gamma: the exponent gamma is equal to d+1 for off-critical concentration mixtures\nand 2d for critical concentration mixtures (d:dimension)'<br>'GAMMA', '', 0.0, [-inf, inf], '', 'Imax: scattering intensity at peak position I(Q=Qmax)'<br>'P0', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">beaucage_exppowlaw</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__cspline8.html>cspline8</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'G', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'GS', '', 0.0, [-inf, inf], '', ''<br>'BS', '', 1.0, [-inf, inf], '', ''<br>'RG', '', 0.0, [-inf, inf], '', ''<br>'RSUB', '', 0.0, [-inf, inf], '', ''<br>'RS', '', 0.0, [-inf, inf], '', ''<br>'P', '', 0.0, [-inf, inf], '', ''<br>'PS', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'XMIN', '', 10.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''<br>'Y1', '', 0.0, [-inf, inf], '', ''<br>'Y2', '', 1.0, [-inf, inf], '', ''<br>'Y3', '', 0.0, [-inf, inf], '', ''<br>'Y4', '', 0.0, [-inf, inf], '', ''<br>'Y5', '', 0.0, [-inf, inf], '', ''<br>'Y6', '', 0.0, [-inf, inf], '', ''<br>'Y7', '', 0.0, [-inf, inf], '', ''<br>'Y8', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylulv_chain_rw__nagg</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__parallelepiped_abc.html>parallelepiped_abc</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'C', '', 0.0, [-inf, inf], '', ''<br>'ETA', '', 1.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'BETA', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_coreshellmicrogel</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'W_CORE', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_CORE', '', 0.0, [-inf, inf], '', ''<br>'W_SH', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_SHIN', '', 1.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_OUT', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-    </tr>
-    <tr>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ornstein_zernike</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">F^2(Q,Rg,I0) = I0/(1+Q^2*xi^2)</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', 'xi: correlation length'<br>'XI', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-    </tr>
-    <tr>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cspline8</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'XMIN', '', 10.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''<br>'Y1', '', 0.0, [-inf, inf], '', ''<br>'Y2', '', 1.0, [-inf, inf], '', ''<br>'Y3', '', 0.0, [-inf, inf], '', ''<br>'Y4', '', 0.0, [-inf, inf], '', ''<br>'Y5', '', 0.0, [-inf, inf], '', ''<br>'Y6', '', 0.0, [-inf, inf], '', ''<br>'Y7', '', 0.0, [-inf, inf], '', ''<br>'Y8', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-    </tr>
-    <tr>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ExpShell</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R1', '', 10.0, [-inf, inf], '', ''<br>'dR', '', 0.0, [-inf, inf], '', ''<br>'eta_c', '', 0.0, [-inf, inf], '', ''<br>'eta_sh', '', 1.0, [-inf, inf], '', ''<br>'x_in', '', 0.0, [-inf, inf], '', ''<br>'x_out', '', 0.0, [-inf, inf], '', ''<br>'alpha', '', 0.0, [-inf, inf], '', ''<br>'eta_sol', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-    </tr>
-    <tr>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">rod</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__rod.html>rod</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">Formfactor of very long cylindrical block copolymer micelles</td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'LENGTH', '', 10.0, [-inf, inf], '', 'Vpolym_core: molecular volume of the block in the core \nin nm\\^3 if Q in nm\\^-1, in A\\^3 if Q in A\\^-1'<br>'ETA', '', 0.0, [-inf, inf], '', 'Vpolym_brsh: molecular volume of the block bilding the shell \nin nm\\^3 if Q in nm\\^-1, in A\\^3 if Q in A\\^-1'</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_ExpShell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellcylsh_sd_rod.html>ellcylsh_sd_rod</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_CORE', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 1.0, [-inf, inf], '', ''<br>'X_IN_SOL', '', 0.0, [-inf, inf], '', ''<br>'X_OUT_SOL', '', 0.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R0', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_R0', '', 0.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'DUMMY1', '', 0.0, [-inf, inf], '', ''<br>'LL', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOLV', '', 0.0, [-inf, inf], '', ''<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '<br>'LB', '', 0.0, [-inf, inf], '', ' '<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">boucher_sphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__radial_profile_of_expshell.html>radial_profile_of_expshell</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_CORE', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 1.0, [-inf, inf], '', ''<br>'X_IN_SOL', '', 0.0, [-inf, inf], '', ''<br>'X_OUT_SOL', '', 0.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_fuzzysphere</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__kratkysphere.html>kratkysphere</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'SIGMA', '', 0.0, [-inf, inf], '', ''<br>'ETA_SPH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 1.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'DELTA_Q_PERP', '', 0.0, [-inf, inf], '', ''<br>'ETA', '', 0.0, [-inf, inf], '', ''<br>'R0', '', 1.0, [-inf, inf], '', ''<br>'XI', '', 0.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'SCALE', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pcs_twoinfinitelythinlayers</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__disc_chain_rw__nagg.html>disc_chain_rw__nagg</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NAGG', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sphulv_chain_rw__t</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__linshell2.html>linshell2</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'EMPTY', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'eta_core', '', 0.0, [-inf, inf], '', ''<br>'eta_shell', '', 1.0, [-inf, inf], '', ''<br>'x_in_solvent', '', 0.0, [-inf, inf], '', ''<br>'x_out_solvent', '', 0.0, [-inf, inf], '', ''<br>'eta_solvent', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pcs_homogeneous_plate</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__disc_chain_rw__lc.html>disc_chain_rw__lc</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'DUMMY1', '', 0.0, [-inf, inf], '', ''<br>'DUMMY2', '', 1.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'LC', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_LinShell2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__pcs_bilayergaus.html>pcs_bilayergaus</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_TOT', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 1.0, [-inf, inf], '', ''<br>'X_IN_SOL', '', 0.0, [-inf, inf], '', ''<br>'X_OUT_SOL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'SIGMA_CORE', '', 10.0, [-inf, inf], '', ''<br>'B_CORE', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_OUT', '', 0.0, [-inf, inf], '', ''<br>'B_OUT', '', 1.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''<br>'LB', '', 0.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'L', '', 0.0, [-inf, inf], '', ''<br>'EXVOL', '', 0.0, [-inf, inf], '', ''<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">disc_chain_rw__nagg</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__debye_anderson_brumberger.html>debye_anderson_brumberger</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NAGG', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', ''<br>'XI', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">pcs_layeredcentrosymmetricxs</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__magneticfieldalignedvesicle_p2psi.html>magneticfieldalignedvesicle_p2psi</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'LC', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_LC', '', 0.0, [-inf, inf], '', ''<br>'LSH', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_LSH', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'SH', '', 0.0, [-inf, inf], '', ''<br>'LL', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'RSH0', '', 10.0, [-inf, inf], '', ''<br>'THETA1', '', 0.0, [-inf, inf], '', ''<br>'THETA2', '', 0.0, [-inf, inf], '', ''<br>'T_SH', '', 1.0, [-inf, inf], '', ''<br>'T_C', '', 0.0, [-inf, inf], '', ''<br>'DETA_SH', '', 0.0, [-inf, inf], '', ''<br>'DETA_CE', '', 0.0, [-inf, inf], '', ''<br>'SIGMA', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'KAPPA', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'RKERNEL', '', 0.0, [-inf, inf], '', ' '<br>'GAMA', '', 0.0, [-inf, inf], '', ' '<br>'_THETA', '', 0.0, [-inf, inf], '', ' '<br>'PHI', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '<br>'RSH', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellulv_chain_rw__nagg</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__boucher_sphere.html>boucher_sphere</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">generalized_guinier_porod_law</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__triax_ellip_shell_syl.html>triax_ellip_shell_syl</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'G2', '', 10.0, [-inf, inf], '', ''<br>'S2', '', 0.0, [-inf, inf], '', ''<br>'RG2', '', 0.0, [-inf, inf], '', ''<br>'S1', '', 1.0, [-inf, inf], '', ''<br>'RG1', '', 0.0, [-inf, inf], '', ''<br>'M', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'DELTA_B', '', 0.0, [-inf, inf], '', ''<br>'DELTA_C', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH_DRY', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'PHI', '', 0.0, [-inf, inf], '', ''<br>'V_POL_AP', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">akima8</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_static_down_down.html>langevin_static_down_down</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'XMIN', '', 10.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''<br>'Y1', '', 0.0, [-inf, inf], '', ''<br>'Y2', '', 1.0, [-inf, inf], '', ''<br>'Y3', '', 0.0, [-inf, inf], '', ''<br>'Y4', '', 0.0, [-inf, inf], '', ''<br>'Y5', '', 0.0, [-inf, inf], '', ''<br>'Y6', '', 0.0, [-inf, inf], '', ''<br>'Y7', '', 0.0, [-inf, inf], '', ''<br>'Y8', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sphulv_chain_rw__nagg</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__sphulv_chain_rw__tc.html>sphulv_chain_rw__tc</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">coreshellmicrogel</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__cylulv_chain_rw__nagg.html>cylulv_chain_rw__nagg</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'W_CORE', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_CORE', '', 0.0, [-inf, inf], '', ''<br>'W_SH', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_SHIN', '', 1.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_OUT', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">disc_chain_rw__l</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'LC', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ornstein_zernike.html>ornstein_zernike</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">F^2(Q,Rg,I0) = I0/(1+Q^2*xi^2)</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', 'xi: correlation length'<br>'XI', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sphere_with_3_shells</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__pcs_homogeneousplate.html>pcs_homogeneousplate</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_CORE', '', 10.0, [-inf, inf], '', ''<br>'T_SH1', '', 0.0, [-inf, inf], '', ''<br>'T_SH2', '', 0.0, [-inf, inf], '', ''<br>'T_SH3', '', 1.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH1', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH2', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH3', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'DUMMY1', '', 0.0, [-inf, inf], '', ''<br>'DUMMY2', '', 1.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''<br>'LB', '', 0.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylsh_sd_homoxs</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_tau.html>langevin_tau</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'R', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_R', '', 1.0, [-inf, inf], '', ''<br>'H', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_H', '', 0.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 1.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">LinShell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellulv_chain_rw__tc.html>ellulv_chain_rw__tc</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'EMPTY', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'eta_core', '', 0.0, [-inf, inf], '', ''<br>'eta_shell', '', 1.0, [-inf, inf], '', ''<br>'x_in_solvent', '', 0.0, [-inf, inf], '', ''<br>'x_out_solvent', '', 0.0, [-inf, inf], '', ''<br>'eta_solvent', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">boucher_sphere2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__pcs_twoinfinitelythinlayers.html>pcs_twoinfinitelythinlayers</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 1.0, [-inf, inf], '', ''<br>'LB', '', 0.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'L', '', 0.0, [-inf, inf], '', ''<br>'EXVOL', '', 0.0, [-inf, inf], '', ''<br>'CLB', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellsh_sd_bilayergauss</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__pcs_ellcylsh.html>pcs_ellcylsh</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R0', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_R0', '', 0.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'DUMMY1', '', 0.0, [-inf, inf], '', ''<br>'DUMMY2', '', 0.0, [-inf, inf], '', ''<br>'DUMMY3', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOLV', '', 0.0, [-inf, inf], '', ''<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '<br>'LB', '', 0.0, [-inf, inf], '', ' '<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">radial_profile_of_LinShell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin.html>langevin</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_CORE', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 1.0, [-inf, inf], '', ''<br>'X_IN_SOL', '', 0.0, [-inf, inf], '', ''<br>'X_OUT_SOL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylulv_chain_rw_</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__boucher_profiles.html>boucher_profiles</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellsh_sd_homoxs</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__boucher_sphere2.html>boucher_sphere2</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'R0', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_R0', '', 1.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'DUMMY', '', 0.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">debye_anderson_brumberger</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__juelichcoreshell.html>juelichcoreshell</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', ''<br>'XI', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'C', '', 10.0, [-inf, inf], '', ''<br>'MCORE', '', 0.0, [-inf, inf], '', ''<br>'MBRUSH', '', 0.0, [-inf, inf], '', ''<br>'RHO_CORE', '', 1.0, [-inf, inf], '', ''<br>'RHO_BRUSH', '', 0.0, [-inf, inf], '', ''<br>'B_CORE', '', 0.0, [-inf, inf], '', ''<br>'B_BRUSH', '', 0.0, [-inf, inf], '', ''<br>'NAGG', '', 0.0, [-inf, inf], '', ''<br>'D1_PLUS', '', 0.0, [-inf, inf], '', ''<br>'PART23', '', 0.0, [-inf, inf], '', ''<br>'D2_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'D3_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'SIGMA1', '', 0.0, [-inf, inf], '', ' '<br>'SIGMA2', '', 0.0, [-inf, inf], '', ' '<br>'SIGMA3', '', 0.0, [-inf, inf], '', ' '<br>'PARTSTAR', '', 0.0, [-inf, inf], '', ' '<br>'GAMMA', '', 0.0, [-inf, inf], '', ' '<br>'LPARABOL', '', 0.0, [-inf, inf], '', ' '<br>'F_BRUSH', '', 0.0, [-inf, inf], '', ' '<br>'F_CORE', '', 0.0, [-inf, inf], '', ' '<br>'RHOSOLV', '', 0.0, [-inf, inf], '', ' '<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylulv_chain_rw__t</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellsh_sd_homoxs.html>ellsh_sd_homoxs</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'R0', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_R0', '', 1.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'DUMMY', '', 0.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''<br>'LB', '', 0.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">cylsh_sd_bilayergauss</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__cylsh_sd_bilayergauss.html>cylsh_sd_bilayergauss</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''<br>'LB', '', 0.0, [-inf, inf], '', ''<br>'B', '', 1.0, [-inf, inf], '', ''<br>'L', '', 0.0, [-inf, inf], '', ''<br>'EXVOL', '', 0.0, [-inf, inf], '', ''<br>'CLB', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellulv_chain_rw_</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__beaucage_exppowlaw_2.html>beaucage_exppowlaw_2</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'G', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'R_I', '', 0.0, [-inf, inf], '', ''<br>'R_Ip1', '', 1.0, [-inf, inf], '', ''<br>'K', '', 0.0, [-inf, inf], '', ''<br>'P', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">beaucage_exppowlaw_2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__sphulv_chain_rw_.html>sphulv_chain_rw_</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'G', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'R_I', '', 0.0, [-inf, inf], '', ''<br>'R_Ip1', '', 1.0, [-inf, inf], '', ''<br>'K', '', 0.0, [-inf, inf], '', ''<br>'P', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">sphulv_chain_rw_</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__boucher_profiles2.html>boucher_profiles2</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">disc_chain_rw_</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__c_r__for_spin_misalignment.html>c_r__for_spin_misalignment</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'K', '', 10.0, [-inf, inf], '', ''<br>'HI', '', 0.0, [-inf, inf], '', ''<br>'L_H', '', 0.0, [-inf, inf], '', ''<br>'R', '', 1.0, [-inf, inf], '', ''<br>'lR', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">parallelepiped_ab</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_down_down.html>langevin_down_down</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'C', '', 0.0, [-inf, inf], '', ''<br>'ETA', '', 1.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'BETA', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">disc_sd_homoxs</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__linshell.html>linshell</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_D', '', 1.0, [-inf, inf], '', ''<br>'DUMMY1', '', 0.0, [-inf, inf], '', ''<br>'DUMMY2', '', 0.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'EMPTY', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'eta_core', '', 0.0, [-inf, inf], '', ''<br>'eta_shell', '', 1.0, [-inf, inf], '', ''<br>'x_in_solvent', '', 0.0, [-inf, inf], '', ''<br>'x_out_solvent', '', 0.0, [-inf, inf], '', ''<br>'eta_solvent', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">LinShell2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__fractal_series2.html>fractal_series2</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'EMPTY', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'eta_core', '', 0.0, [-inf, inf], '', ''<br>'eta_shell', '', 1.0, [-inf, inf], '', ''<br>'x_in_solvent', '', 0.0, [-inf, inf], '', ''<br>'x_out_solvent', '', 0.0, [-inf, inf], '', ''<br>'eta_solvent', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'XMIN', '', 0.0, [-inf, inf], '', ''<br>'FD1', '', 0.0, [-inf, inf], '', ''<br>'X12', '', 1.0, [-inf, inf], '', ''<br>'FD2', '', 0.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">boucher_profiles2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__fractal_series3.html>fractal_series3</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'XMIN', '', 0.0, [-inf, inf], '', ''<br>'FD1', '', 0.0, [-inf, inf], '', ''<br>'X12', '', 1.0, [-inf, inf], '', ''<br>'FD2', '', 0.0, [-inf, inf], '', ''<br>'X23', '', 0.0, [-inf, inf], '', ''<br>'FD3', '', 0.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">boucher_profiles</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__radial_profile_of_coreshellmicrogel.html>radial_profile_of_coreshellmicrogel</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'DELTA_ETA', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'W_CORE', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_CORE', '', 0.0, [-inf, inf], '', ''<br>'W_SH', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_SHIN', '', 1.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_OUT', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">ellulv_chain_rw__t</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__expshell.html>expshell</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R1', '', 10.0, [-inf, inf], '', ''<br>'dR', '', 0.0, [-inf, inf], '', ''<br>'eta_c', '', 0.0, [-inf, inf], '', ''<br>'eta_sh', '', 1.0, [-inf, inf], '', ''<br>'x_in', '', 0.0, [-inf, inf], '', ''<br>'x_out', '', 0.0, [-inf, inf], '', ''<br>'alpha', '', 0.0, [-inf, inf], '', ''<br>'eta_sol', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">triax_ellip_shell_syl</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_down.html>langevin_down</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'DELTA_B', '', 0.0, [-inf, inf], '', ''<br>'DELTA_C', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH_DRY', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'PHI', '', 0.0, [-inf, inf], '', ''<br>'V_POL_AP', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">extended_guinier_law</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__i_q__for_spin_misalignment.html>i_q__for_spin_misalignment</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', ''<br>'A', '', 0.0, [-inf, inf], '', ''<br>'RA', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_green.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'K', '', 10.0, [-inf, inf], '', ''<br>'HI', '', 0.0, [-inf, inf], '', ''<br>'L_H', '', 0.0, [-inf, inf], '', ''<br>'R', '', 1.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''<br>'lR', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">triax_ellip_shell</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__pcs_layeredcentrosymmetricxs.html>pcs_layeredcentrosymmetricxs</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'C', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'LC', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_LC', '', 0.0, [-inf, inf], '', ''<br>'LSH', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_LSH', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'SH', '', 0.0, [-inf, inf], '', ''<br>'LL', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ' '<br>'LB', '', 0.0, [-inf, inf], '', ' '<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fractal_series1</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__cylulv_chain_rw__tc.html>cylulv_chain_rw__tc</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'XMIN', '', 0.0, [-inf, inf], '', ''<br>'FD1', '', 0.0, [-inf, inf], '', ''<br>'XMAX', '', 1.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fractal_series2</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellulv_chain_rw__nagg.html>ellulv_chain_rw__nagg</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'XMIN', '', 0.0, [-inf, inf], '', ''<br>'FD1', '', 0.0, [-inf, inf], '', ''<br>'X12', '', 1.0, [-inf, inf], '', ''<br>'FD2', '', 0.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">fractal_series3</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__sphulv_chain_rw__nagg.html>sphulv_chain_rw__nagg</a></td>
         <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'XMIN', '', 0.0, [-inf, inf], '', ''<br>'FD1', '', 0.0, [-inf, inf], '', ''<br>'X12', '', 1.0, [-inf, inf], '', ''<br>'FD2', '', 0.0, [-inf, inf], '', ''<br>'X23', '', 0.0, [-inf, inf], '', ''<br>'FD3', '', 0.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''</td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
-        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="aqua_ball_red.png"  style="width:15px;height:15px;"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__coreshellmicrogel.html>coreshellmicrogel</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'W_CORE', '', 10.0, [-inf, inf], 'volume', ''<br>'SIGMA_CORE', '', 3.0, [-inf, inf], 'volume', ''<br>'W_SH', '', 4.0, [-inf, inf], 'volume', ''<br>'SIGMA_SHIN', '', 3.0, [-inf, inf], 'volume', ''<br>'D', '', 3.0, [-inf, inf], 'volume', ''<br>'SIGMA_OUT', '', 4.0, [-inf, inf], 'volume', ''<br>'ETA_CORE', '', 3.5, [-inf, inf], '', ''<br>'ETA_SHELL', '', 2.5, [-inf, inf], '', ''<br>'ETA_SOL', '', 1.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_static_down_up.html>langevin_static_down_up</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_static.html>langevin_static</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__cylsh_sd_homoxs.html>cylsh_sd_homoxs</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'R', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_R', '', 1.0, [-inf, inf], '', ''<br>'H', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_H', '', 0.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''<br>'LB', '', 0.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellcylsh_sd_worm_ps2.html>ellcylsh_sd_worm_ps2</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R0', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_R0', '', 0.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'LLB', '', 0.0, [-inf, inf], '', ''<br>'LL', '', 0.0, [-inf, inf], '', ''<br>'LEXV', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOLV', '', 0.0, [-inf, inf], '', ''<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '<br>'LB', '', 0.0, [-inf, inf], '', ' '<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellcylsh_sd_worm_ps3.html>ellcylsh_sd_worm_ps3</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R0', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_R0', '', 0.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'LLB', '', 0.0, [-inf, inf], '', ''<br>'LL', '', 0.0, [-inf, inf], '', ''<br>'LEXV', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOLV', '', 0.0, [-inf, inf], '', ''<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '<br>'LB', '', 0.0, [-inf, inf], '', ' '<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellcylsh_sd_worm_ps1.html>ellcylsh_sd_worm_ps1</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R0', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_R0', '', 0.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'LLB', '', 0.0, [-inf, inf], '', ''<br>'LL', '', 0.0, [-inf, inf], '', ''<br>'LEXV', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOLV', '', 0.0, [-inf, inf], '', ''<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '<br>'LB', '', 0.0, [-inf, inf], '', ' '<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__rodlike_micelle_plusprism.html>rodlike_micelle_plusprism</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'L', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'PHI', '', 0.0, [-inf, inf], '', ''<br>'PAR', '', 0.0, [-inf, inf], '', ''<br>'HOW', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'THETA', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__magneticfieldalignedvesicle_psi_new.html>magneticfieldalignedvesicle_psi_new</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'RSHMODE', '', 10.0, [-inf, inf], '', ''<br>'THETA_1', '', 0.0, [-inf, inf], '', ''<br>'R1', '', 0.0, [-inf, inf], '', ''<br>'THETA_2', '', 1.0, [-inf, inf], '', ''<br>'R2', '', 0.0, [-inf, inf], '', ''<br>'T_SH', '', 0.0, [-inf, inf], '', ''<br>'T_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH', '', 0.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'_PSI', '', 0.0, [-inf, inf], '', ' '<br>'SIGMA', '', 0.0, [-inf, inf], '', ' '<br>'KAPPA', '', 0.0, [-inf, inf], '', ' '<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'BIG_THETA_1', '', 0.0, [-inf, inf], '', ' '<br>'BIG_THETA_2', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_1', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_2', '', 0.0, [-inf, inf], '', ' '<br>'D_1', '', 0.0, [-inf, inf], '', ' '<br>'D_2', '', 0.0, [-inf, inf], '', ' '<br>'DIF_ETA_SH', '', 0.0, [-inf, inf], '', ' '<br>'DIF_ETA_C', '', 0.0, [-inf, inf], '', ' '<br>'GAMMA', '', 0.0, [-inf, inf], '', ' '<br>'_THETA', '', 0.0, [-inf, inf], '', ' '<br>'_PHI', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '<br>'R_SH', '', 0.0, [-inf, inf], '', ' '<br>'R_1', '', 0.0, [-inf, inf], '', ' '<br>'R_2', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellulv_chain_rw_.html>ellulv_chain_rw_</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__pcs_plate_chains_rw_.html>pcs_plate_chains_rw_</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'LC', '', 10.0, [-inf, inf], '', ''<br>'N_AGG', '', 0.0, [-inf, inf], '', ''<br>'V_BRUSH', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 1.0, [-inf, inf], '', ''<br>'ETA_BRUSH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOLV', '', 0.0, [-inf, inf], '', ''<br>'XSOLV_CORE', '', 0.0, [-inf, inf], '', ''<br>'RG', '', 0.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'PCHAIN', '', 0.0, [-inf, inf], '', ''<br>'NAGG', '', 0.0, [-inf, inf], '', ' '<br>'V_CORE', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '<br>'LB', '', 0.0, [-inf, inf], '', ' '<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__disc_chain_rw_.html>disc_chain_rw_</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__disc_sd_homoxs.html>disc_sd_homoxs</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_T', '', 0.0, [-inf, inf], '', ''<br>'D', '', 0.0, [-inf, inf], '', ''<br>'SIGMA_D', '', 1.0, [-inf, inf], '', ''<br>'DUMMY1', '', 0.0, [-inf, inf], '', ''<br>'DUMMY2', '', 0.0, [-inf, inf], '', ''<br>'ETA_L', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''<br>'LB', '', 0.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__triax_ellip_shell_sq_baba_ahmed_1.html>triax_ellip_shell_sq_baba_ahmed_1</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'DELTA_B', '', 0.0, [-inf, inf], '', ''<br>'DELTA_C', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH_DRY', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'PHI', '', 0.0, [-inf, inf], '', ''<br>'V_POL_AP', '', 0.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'Z_P', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_R', '', 0.0, [-inf, inf], '', ' '<br>'MB', '', 0.0, [-inf, inf], '', ' '<br>'ZB', '', 0.0, [-inf, inf], '', ' '<br>'TEMP', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__triax_ellip_shell_sq_baba_ahmed_2.html>triax_ellip_shell_sq_baba_ahmed_2</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'DELTA_B', '', 0.0, [-inf, inf], '', ''<br>'DELTA_C', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH_DRY', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'PHI', '', 0.0, [-inf, inf], '', ''<br>'V_POL_AP', '', 0.0, [-inf, inf], '', ''<br>'ALPHA', '', 0.0, [-inf, inf], '', ''<br>'Z_P', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_R', '', 0.0, [-inf, inf], '', ' '<br>'MB', '', 0.0, [-inf, inf], '', ' '<br>'ZB', '', 0.0, [-inf, inf], '', ' '<br>'TEMP', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__extended_guinier_law.html>extended_guinier_law</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'I0', '', 10.0, [-inf, inf], '', ''<br>'A', '', 0.0, [-inf, inf], '', ''<br>'RA', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 1.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__triax_ellip_shell.html>triax_ellip_shell</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'A', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'C', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'ETA_C', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_up.html>langevin_up</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_static_down.html>langevin_static_down</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__beaucage_exppowlaw.html>beaucage_exppowlaw</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'G', '', 10.0, [-inf, inf], '', ''<br>'B', '', 0.0, [-inf, inf], '', ''<br>'GS', '', 0.0, [-inf, inf], '', ''<br>'BS', '', 1.0, [-inf, inf], '', ''<br>'RG', '', 0.0, [-inf, inf], '', ''<br>'RSUB', '', 0.0, [-inf, inf], '', ''<br>'RS', '', 0.0, [-inf, inf], '', ''<br>'P', '', 0.0, [-inf, inf], '', ''<br>'PS', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__magneticfieldalignedvesicle_psi.html>magneticfieldalignedvesicle_psi</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'RSH0', '', 10.0, [-inf, inf], '', ''<br>'THETA1', '', 0.0, [-inf, inf], '', ''<br>'THETA2', '', 0.0, [-inf, inf], '', ''<br>'T_SH', '', 1.0, [-inf, inf], '', ''<br>'T_C', '', 0.0, [-inf, inf], '', ''<br>'DETA_SH', '', 0.0, [-inf, inf], '', ''<br>'DETA_CE', '', 0.0, [-inf, inf], '', ''<br>'SIGMA', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'KAPPA', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'RKERNEL', '', 0.0, [-inf, inf], '', ' '<br>'GAMA', '', 0.0, [-inf, inf], '', ' '<br>'_THETA', '', 0.0, [-inf, inf], '', ' '<br>'PHI', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '<br>'RSH', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__radial_profile_of_fuzzysphere.html>radial_profile_of_fuzzysphere</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'SIGMA', '', 0.0, [-inf, inf], '', ''<br>'ETA_SPH', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 1.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_up_down.html>langevin_up_down</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__radial_profile_of_linshell2.html>radial_profile_of_linshell2</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_TOT', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 1.0, [-inf, inf], '', ''<br>'X_IN_SOL', '', 0.0, [-inf, inf], '', ''<br>'X_OUT_SOL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__generalized_guinier_porod_law.html>generalized_guinier_porod_law</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'G2', '', 10.0, [-inf, inf], '', ''<br>'S2', '', 0.0, [-inf, inf], '', ''<br>'RG2', '', 0.0, [-inf, inf], '', ''<br>'S1', '', 1.0, [-inf, inf], '', ''<br>'RG1', '', 0.0, [-inf, inf], '', ''<br>'M', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_static_up_up.html>langevin_static_up_up</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__akima8.html>akima8</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'XMIN', '', 10.0, [-inf, inf], '', ''<br>'XMAX', '', 0.0, [-inf, inf], '', ''<br>'Y1', '', 0.0, [-inf, inf], '', ''<br>'Y2', '', 1.0, [-inf, inf], '', ''<br>'Y3', '', 0.0, [-inf, inf], '', ''<br>'Y4', '', 0.0, [-inf, inf], '', ''<br>'Y5', '', 0.0, [-inf, inf], '', ''<br>'Y6', '', 0.0, [-inf, inf], '', ''<br>'Y7', '', 0.0, [-inf, inf], '', ''<br>'Y8', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_down_up.html>langevin_down_up</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__pcs_homogeneouscyl.html>pcs_homogeneouscyl</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_R', '', 0.0, [-inf, inf], '', ''<br>'DUMMY1', '', 0.0, [-inf, inf], '', ''<br>'DUMMY2', '', 1.0, [-inf, inf], '', ''<br>'DUMMY3', '', 0.0, [-inf, inf], '', ''<br>'DUMMY4', '', 0.0, [-inf, inf], '', ''<br>'DUMMY5', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'DUMMY6', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '<br>'LB', '', 0.0, [-inf, inf], '', ' '<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellcylsh_sd_worm_kholodenko.html>ellcylsh_sd_worm_kholodenko</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R0', '', 10.0, [-inf, inf], '', ''<br>'SIGMA_R0', '', 0.0, [-inf, inf], '', ''<br>'EPSILON', '', 0.0, [-inf, inf], '', ''<br>'T', '', 1.0, [-inf, inf], '', ''<br>'LLB', '', 0.0, [-inf, inf], '', ''<br>'LL', '', 0.0, [-inf, inf], '', ''<br>'LEXV', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOLV', '', 0.0, [-inf, inf], '', ''<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'Q', '', 0.0, [-inf, inf], '', ' '<br>'P0', '', 0.0, [-inf, inf], '', ' '<br>'LB', '', 0.0, [-inf, inf], '', ' '<br>'B', '', 0.0, [-inf, inf], '', ' '<br>'L', '', 0.0, [-inf, inf], '', ' '<br>'EXVOL', '', 0.0, [-inf, inf], '', ' '<br>'CLB', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__sphere_with_3_shells.html>sphere_with_3_shells</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_CORE', '', 10.0, [-inf, inf], '', ''<br>'T_SH1', '', 0.0, [-inf, inf], '', ''<br>'T_SH2', '', 0.0, [-inf, inf], '', ''<br>'T_SH3', '', 1.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH1', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH2', '', 0.0, [-inf, inf], '', ''<br>'ETA_SH3', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__langevin_up_up.html>langevin_up_up</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'NU', '', 10.0, [-inf, inf], '', ''<br>'B0', '', 0.0, [-inf, inf], '', ''<br>'B1', '', 0.0, [-inf, inf], '', ''<br>'RHO_0', '', 0.0, [-inf, inf], '', ''<br>'PHASE_PAR', '', 0.0, [-inf, inf], '', ''<br>'PSI_DEG', '', 0.0, [-inf, inf], '', ''<br>'SQ_AMPL', '', 0.0, [-inf, inf], '', ''<br>'SQ_PHASE', '', 0.0, [-inf, inf], '', ''<br>'SQ_STATIC', '', 0.0, [-inf, inf], '', ''<br>'FNUC_FMAG', '', 0.0, [-inf, inf], '', ' '<br>'MU_KT', '', 0.0, [-inf, inf], '', ' '<br>'LAM_CENTER', '', 0.0, [-inf, inf], '', ' '<br>'D_LAM_LAM', '', 0.0, [-inf, inf], '', ' '<br>'SD', '', 0.0, [-inf, inf], '', ' '<br>'P_POL', '', 0.0, [-inf, inf], '', ' '<br>'EPSILON_FLIPPER', '', 0.0, [-inf, inf], '', ' '<br>'T_PLUS', '', 0.0, [-inf, inf], '', ' '<br>'T_MINUS', '', 0.0, [-inf, inf], '', ' '<br>'B_STATIC', '', 0.0, [-inf, inf], '', ' '<br>'B_STAT_PHI_DEG', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_BOTTOM', '', 0.0, [-inf, inf], '', ' '<br>'DELTA_T_TOP', '', 0.0, [-inf, inf], '', ' '<br>'ALPHA_PHASE', '', 0.0, [-inf, inf], '', ' '<br>'LAMBDA', '', 0.0, [-inf, inf], '', ' '<br>'MU', '', 0.0, [-inf, inf], '', ' '<br>'DAMP_ALPHA', '', 0.0, [-inf, inf], '', ' '<br>'SQ_TIME', '', 0.0, [-inf, inf], '', ' '<br>'TEMPERATURE', '', 0.0, [-inf, inf], '', ' '<br>'AD', '', 0.0, [-inf, inf], '', ' '<br>'AD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'NONAD_FUNC', '', 0.0, [-inf, inf], '', ' '<br>'FNUC', '', 0.0, [-inf, inf], '', ' '<br>'FMAG', '', 0.0, [-inf, inf], '', ' '<br>'S1', '', 0.0, [-inf, inf], '', ' '<br>'S2', '', 0.0, [-inf, inf], '', ' '<br>'R', '', 0.0, [-inf, inf], '', ' '<br>'R_AV', '', 0.0, [-inf, inf], '', ' '<br>'TIME', '', 0.0, [-inf, inf], '', ' '<br>'STATIC', '', 0.0, [-inf, inf], '', ' '<br>'PSI', '', 0.0, [-inf, inf], '', ' '</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__ellsh_sd_bilayergauss.html>ellsh_sd_bilayergauss</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'T', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''<br>'LB', '', 0.0, [-inf, inf], '', ''<br>'B', '', 1.0, [-inf, inf], '', ''<br>'L', '', 0.0, [-inf, inf], '', ''<br>'EXVOL', '', 0.0, [-inf, inf], '', ''<br>'CLB', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__cylulv_chain_rw_.html>cylulv_chain_rw_</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_green.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__radial_profile_of_linshell.html>radial_profile_of_linshell</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'R_CORE', '', 10.0, [-inf, inf], '', ''<br>'DR', '', 0.0, [-inf, inf], '', ''<br>'ETA_CORE', '', 0.0, [-inf, inf], '', ''<br>'ETA_SHELL', '', 1.0, [-inf, inf], '', ''<br>'X_IN_SOL', '', 0.0, [-inf, inf], '', ''<br>'X_OUT_SOL', '', 0.0, [-inf, inf], '', ''<br>'ETA_SOL', '', 0.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><a href = https://kur.web.psi.ch/sans1/SANSSoft/versions/doc/html/group__ff__fractal_series1.html>fractal_series1</a></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top">'N', '', 10.0, [-inf, inf], '', ''<br>'XMIN', '', 0.0, [-inf, inf], '', ''<br>'FD1', '', 0.0, [-inf, inf], '', ''<br>'XMAX', '', 1.0, [-inf, inf], '', ''<br>'P0', '', 0.0, [-inf, inf], '', ''</td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
+        <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top"><img src="/wiki/download/thumbnails/116392145/aqua_ball_red.png"  width="20"></td>
     </tr>
     <tr>
         <td style="padding-left: 1em; padding-right: 1em; text-align: center; vertical-align: top">guinier</td>

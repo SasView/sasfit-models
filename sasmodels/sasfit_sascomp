@@ -63,7 +63,7 @@
 ../sascomp sasfit_ellulv_chain_rw_ -single -single -noplot >sasfit_ellulv_chain_rw_.out
 ../sascomp sasfit_ellulv_chain_rw__nagg -single -single -noplot >sasfit_ellulv_chain_rw__nagg.out
 ../sascomp sasfit_ellulv_chain_rw__t -single -single -noplot >sasfit_ellulv_chain_rw__t.out
-../sascomp sasfit_ExpShell -single -single -noplot >sasfit_ExpShell.out
+../sascomp sasfit_expshell -single -single -noplot >sasfit_expshell.out
 ../sascomp sasfit_extended_guinier_law -single -single -noplot >sasfit_extended_guinier_law.out
 ../sascomp sasfit_fractal_series1 -single -single -noplot >sasfit_fractal_series1.out
 ../sascomp sasfit_fractal_series2 -single -single -noplot >sasfit_fractal_series2.out
@@ -77,7 +77,7 @@
 ../sascomp sasfit_langevin_down -single -single -noplot >sasfit_langevin_down.out
 ../sascomp sasfit_langevin_down_down -single -single -noplot >sasfit_langevin_down_down.out
 ../sascomp sasfit_langevin_down_up -single -single -noplot >sasfit_langevin_down_up.out
-../sascomp sasfit_langevin_stati -single -single -noplot >sasfit_langevin_stati.out
+../sascomp sasfit_langevin_static -single -single -noplot >sasfit_langevin_static.out
 ../sascomp sasfit_langevin_static_down -single -single -noplot >sasfit_langevin_static_down.out
 ../sascomp sasfit_langevin_static_down_down -single -single -noplot >sasfit_langevin_static_down_down.out
 ../sascomp sasfit_langevin_static_down_up -single -single -noplot >sasfit_langevin_static_down_up.out
@@ -88,8 +88,8 @@
 ../sascomp sasfit_langevin_up -single -single -noplot >sasfit_langevin_up.out
 ../sascomp sasfit_langevin_up_down -single -single -noplot >sasfit_langevin_up_down.out
 ../sascomp sasfit_langevin_up_up -single -single -noplot >sasfit_langevin_up_up.out
-../sascomp sasfit_LinShell2 -single -single -noplot >sasfit_LinShell2.out
-../sascomp sasfit_LinShell -single -single -noplot >sasfit_LinShell.out
+../sascomp sasfit_linshell2 -single -single -noplot >sasfit_linshell2.out
+../sascomp sasfit_linshell -single -single -noplot >sasfit_linshell.out
 ../sascomp sasfit_magneticfieldalignedvesicleP2Psi -single -single -noplot >sasfit_magneticfieldalignedvesicleP2Psi.out
 ../sascomp sasfit_magneticfieldalignedvesiclePsi -single -single -noplot >sasfit_magneticfieldalignedvesiclePsi.out
 ../sascomp sasfit_magneticfieldalignedvesiclePsi_new -single -single -noplot >sasfit_magneticfieldalignedvesiclePsi_new.out
@@ -105,10 +105,10 @@
 ../sascomp sasfit_pcs_twoinfinitelythinlayers -single -single -noplot >sasfit_pcs_twoinfinitelythinlayers.out
 ../sascomp sasfit_pearl_necklace -single -single -noplot >sasfit_pearl_necklace.out
 ../sascomp sasfit_radial_profile_of_coreshellmicrogel -single -single -noplot >sasfit_radial_profile_of_coreshellmicrogel.out
-../sascomp sasfit_radial_profile_of_ExpShell -single -single -noplot >sasfit_radial_profile_of_ExpShell.out
+../sascomp sasfit_radial_profile_of_expshell -single -single -noplot >sasfit_radial_profile_of_expshell.out
 ../sascomp sasfit_radial_profile_of_fuzzysphere -single -single -noplot >sasfit_radial_profile_of_fuzzysphere.out
-../sascomp sasfit_radial_profile_of_LinShell2 -single -single -noplot >sasfit_radial_profile_of_LinShell2.out
-../sascomp sasfit_radial_profile_of_LinShell -single -single -noplot >sasfit_radial_profile_of_LinShell.out
+../sascomp sasfit_radial_profile_of_linshell2 -single -single -noplot >sasfit_radial_profile_of_linshell2.out
+../sascomp sasfit_radial_profile_of_linshell -single -single -noplot >sasfit_radial_profile_of_linshell.out
 ../sascomp sasfit_rod -single -single -noplot >sasfit_rod.out
 ../sascomp sasfit_rodlike_micelle_plusprism -single -single -noplot >sasfit_rodlike_micelle_plusprism.out
 ../sascomp sasfit_sphere_with_3_shells -single -single -noplot >sasfit_sphere_with_3_shells.out
@@ -118,7 +118,7 @@
 ../sascomp sasfit_spinodal -single -single -noplot >sasfit_spinodal.out
 ../sascomp sasfit_teubner_strey -single -single -noplot >sasfit_teubner_strey.out
 ../sascomp sasfit_tisane -single -single -noplot >sasfit_tisane.out
-../sascomp sasfit_tisane_stati -single -single -noplot >sasfit_tisane_stati.out
+../sascomp sasfit_tisane_static -single -single -noplot >sasfit_tisane_static.out
 ../sascomp sasfit_tisane_tau -single -single -noplot >sasfit_tisane_tau.out
 ../sascomp sasfit_triax_ellip_shell -single -single -noplot >sasfit_triax_ellip_shell.out
 ../sascomp sasfit_triax_ellip_shell_sq_baba_ahmed_1 -single -single -noplot >sasfit_triax_ellip_shell_sq_baba_ahmed_1.out
