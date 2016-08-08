@@ -33,14 +33,22 @@ import math
 import datetime
 import traceback
 
-import numpy as np
+import numpy as np  # type: ignore
 
 from . import core
 from . import kerneldll
-from . import product
 from .data import plot_theory, empty_data1D, empty_data2D
 from .direct_model import DirectModel
 from .convert import revert_name, revert_pars, constrain_new_to_old
+
+try:
+    from typing import Optional, Dict, Any, Callable, Tuple
+except:
+    pass
+else:
+    from .modelinfo import ModelInfo, Parameter, ParameterSet
+    from .data import Data
+    Calculator = Callable[[float], np.ndarray]
 
 USAGE = """
 usage: compare.py model N1 N2 [options...] [key=val]
@@ -97,8 +105,6 @@ Program description
            + USAGE)
 
 kerneldll.ALLOW_SINGLE_PRECISION_DLLS = True
-
-MODELS = core.list_models()
 
 # CRUFT python 2.6
 if not hasattr(datetime.timedelta, 'total_seconds'):
@@ -161,7 +167,7 @@ class push_seed(object):
         ...        with push_seed(24):
         ...            print(randint(0,1000000,3))
         ...            raise Exception()
-        ...    except:
+        ...    except Exception:
         ...        print("Exception raised")
         ...    print(randint(0,1000000))
         242082
@@ -170,16 +176,21 @@ class push_seed(object):
         899
     """
     def __init__(self, seed=None):
+        # type: (Optional[int]) -> None
         self._state = np.random.get_state()
         np.random.seed(seed)
 
     def __enter__(self):
-        return None
+        # type: () -> None
+        pass
 
-    def __exit__(self, *args):
+    def __exit__(self, exc_type, exc_value, traceback):
+        # type: (Any, BaseException, Any) -> None
+        # TODO: better typing for __exit__ method
         np.random.set_state(self._state)
 
 def tic():
+    # type: () -> Callable[[], float]
     """
     Timer function.
 
@@ -191,10 +202,11 @@ def tic():
 
 
 def set_beam_stop(data, radius, outer=None):
+    # type: (Data, float, float) -> None
     """
     Add a beam stop of the given *radius*.  If *outer*, make an annulus.
 
-    Note: this function does not use the sasview package
+    Note: this function does not require sasview
     """
     if hasattr(data, 'qx_data'):
         q = np.sqrt(data.qx_data**2 + data.qy_data**2)
@@ -208,50 +220,66 @@ def set_beam_stop(data, radius, outer=None):
 
 
 def parameter_range(p, v):
+    # type: (str, float) -> Tuple[float, float]
     """
     Choose a parameter range based on parameter name and initial value.
     """
+    # process the polydispersity options
     if p.endswith('_pd_n'):
-        return [0, 100]
+        return 0., 100.
     elif p.endswith('_pd_nsigma'):
-        return [0, 5]
+        return 0., 5.
     elif p.endswith('_pd_type'):
-        return v
+        raise ValueError("Cannot return a range for a string value")
     elif any(s in p for s in ('theta', 'phi', 'psi')):
         # orientation in [-180,180], orientation pd in [0,45]
         if p.endswith('_pd'):
-            return [0, 45]
+            return 0., 45.
         else:
-            return [-180, 180]
-    elif 'sld' in p:
-        return [-0.5, 10]
+            return -180., 180.
     elif p.endswith('_pd'):
-        return [0, 1]
+        return 0., 1.
+    elif 'sld' in p:
+        return -0.5, 10.
     elif p == 'background':
-        return [0, 10]
+        return 0., 10.
     elif p == 'scale':
-        return [0, 1e3]
-    elif p == 'case_num':
-        # RPA hack
-        return [0, 10]
-    elif v < 0:
-        # Kxy parameters in rpa model can be negative
-        return [2*v, -2*v]
+        return 0., 1.e3
+    elif v < 0.:
+        return 2.*v, -2.*v
     else:
-        return [0, (2*v if v > 0 else 1)]
+        return 0., (2.*v if v > 0. else 1.)
 
 
-def _randomize_one(p, v):
+def _randomize_one(model_info, p, v):
+    # type: (ModelInfo, str, float) -> float
+    # type: (ModelInfo, str, str) -> str
     """
     Randomize a single parameter.
     """
-    if any(p.endswith(s) for s in ('_pd_n', '_pd_nsigma', '_pd_type')):
+    if any(p.endswith(s) for s in ('_pd', '_pd_n', '_pd_nsigma', '_pd_type')):
         return v
+
+    # Find the parameter definition
+    for par in model_info.parameters.call_parameters:
+        if par.name == p:
+            break
     else:
-        return np.random.uniform(*parameter_range(p, v))
+        raise ValueError("unknown parameter %r"%p)
+
+    if len(par.limits) > 2:  # choice list
+        return np.random.randint(len(par.limits))
+
+    limits = par.limits
+    if not np.isfinite(limits).all():
+        low, high = parameter_range(p, v)
+        limits = (max(limits[0], low), min(limits[1], high))
+
+    return np.random.uniform(*limits)
 
 
-def randomize_pars(pars, seed=None):
+def randomize_pars(model_info, pars, seed=None):
+    # type: (ModelInfo, ParameterSet, int) -> ParameterSet
     """
     Generate random values for all of the parameters.
 
@@ -262,19 +290,22 @@ def randomize_pars(pars, seed=None):
     """
     with push_seed(seed):
         # Note: the sort guarantees order `of calls to random number generator
-        pars = dict((p, _randomize_one(p, v))
-                    for p, v in sorted(pars.items()))
-    return pars
+        random_pars = dict((p, _randomize_one(model_info, p, v))
+                           for p, v in sorted(pars.items()))
+    return random_pars
 
 def constrain_pars(model_info, pars):
+    # type: (ModelInfo, ParameterSet) -> None
     """
     Restrict parameters to valid values.
 
     This includes model specific code for models such as capped_cylinder
     which need to support within model constraints (cap radius more than
     cylinder radius in this case).
+
+    Warning: this updates the *pars* dictionary in place.
     """
-    name = model_info['id']
+    name = model_info.id
     # if it is a product model, then just look at the form factor since
     # none of the structure factors need any constraints.
     if '*' in name:
@@ -295,46 +326,48 @@ def constrain_pars(model_info, pars):
     if name == 'rpa':
         # Make sure phi sums to 1.0
         if pars['case_num'] < 2:
-            pars['Phia'] = 0.
-            pars['Phib'] = 0.
+            pars['Phi1'] = 0.
+            pars['Phi2'] = 0.
         elif pars['case_num'] < 5:
-            pars['Phia'] = 0.
-        total = sum(pars['Phi'+c] for c in 'abcd')
-        for c in 'abcd':
+            pars['Phi1'] = 0.
+        total = sum(pars['Phi'+c] for c in '1234')
+        for c in '1234':
             pars['Phi'+c] /= total
 
 def parlist(model_info, pars, is2d):
+    # type: (ModelInfo, ParameterSet, bool) -> str
     """
     Format the parameter list for printing.
     """
-    if is2d:
-        exclude = lambda n: False
-    else:
-        partype = model_info['partype']
-        par1d = set(partype['fixed-1d']+partype['pd-1d'])
-        exclude = lambda n: n not in par1d
     lines = []
-    for p in model_info['parameters']:
-        if exclude(p.name): continue
+    parameters = model_info.parameters
+    for p in parameters.user_parameters(pars, is2d):
         fields = dict(
-            value=pars.get(p.name, p.default),
-            pd=pars.get(p.name+"_pd", 0.),
-            n=int(pars.get(p.name+"_pd_n", 0)),
-            nsigma=pars.get(p.name+"_pd_nsgima", 3.),
-            type=pars.get(p.name+"_pd_type", 'gaussian'))
+            value=pars.get(p.id, p.default),
+            pd=pars.get(p.id+"_pd", 0.),
+            n=int(pars.get(p.id+"_pd_n", 0)),
+            nsigma=pars.get(p.id+"_pd_nsgima", 3.),
+            pdtype=pars.get(p.id+"_pd_type", 'gaussian'),
+            relative_pd=p.relative_pd,
+        )
         lines.append(_format_par(p.name, **fields))
     return "\n".join(lines)
 
     #return "\n".join("%s: %s"%(p, v) for p, v in sorted(pars.items()))
 
-def _format_par(name, value=0., pd=0., n=0, nsigma=3., type='gaussian'):
+def _format_par(name, value=0., pd=0., n=0, nsigma=3., pdtype='gaussian',
+                relative_pd=False):
+    # type: (str, float, float, int, float, str) -> str
     line = "%s: %g"%(name, value)
     if pd != 0.  and n != 0:
+        if relative_pd:
+            pd *= value
         line += " +/- %g  (%d points in [-%g,%g] sigma %s)"\
-                % (pd, n, nsigma, nsigma, type)
+                % (pd, n, nsigma, nsigma, pdtype)
     return line
 
 def suppress_pd(pars):
+    # type: (ParameterSet) -> ParameterSet
     """
     Suppress theta_pd for now until the normalization is resolved.
 
@@ -347,33 +380,48 @@ def suppress_pd(pars):
     return pars
 
 def eval_sasview(model_info, data):
+    # type: (Modelinfo, Data) -> Calculator
     """
     Return a model calculator using the pre-4.0 SasView models.
     """
     # importing sas here so that the error message will be that sas failed to
     # import rather than the more obscure smear_selection not imported error
     import sas
+    import sas.models
     from sas.models.qsmearing import smear_selection
+    from sas.models.MultiplicationModel import MultiplicationModel
 
-    def get_model(name):
+    def get_model_class(name):
+        # type: (str) -> "sas.models.BaseComponent"
         #print("new",sorted(_pars.items()))
-        sas = __import__('sas.models.' + name)
+        __import__('sas.models.' + name)
         ModelClass = getattr(getattr(sas.models, name, None), name, None)
         if ModelClass is None:
             raise ValueError("could not find model %r in sas.models"%name)
-        return ModelClass()
+        return ModelClass
+
+    # WARNING: ugly hack when handling model!
+    # Sasview models with multiplicity need to be created with the target
+    # multiplicity, so we cannot create the target model ahead of time for
+    # for multiplicity models.  Instead we store the model in a list and
+    # update the first element of that list with the new multiplicity model
+    # every time we evaluate.
 
     # grab the sasview model, or create it if it is a product model
-    if model_info['composition']:
-        composition_type, parts = model_info['composition']
+    if model_info.composition:
+        composition_type, parts = model_info.composition
         if composition_type == 'product':
-            from sas.models.MultiplicationModel import MultiplicationModel
-            P, S = [get_model(revert_name(p)) for p in parts]
-            model = MultiplicationModel(P, S)
+            P, S = [get_model_class(revert_name(p))() for p in parts]
+            model = [MultiplicationModel(P, S)]
         else:
             raise ValueError("sasview mixture models not supported by compare")
     else:
-        model = get_model(revert_name(model_info))
+        old_name = revert_name(model_info)
+        if old_name is None:
+            raise ValueError("model %r does not exist in old sasview"
+                            % model_info.id)
+        ModelClass = get_model_class(old_name)
+        model = [ModelClass()]
 
     # build a smearer with which to call the model, if necessary
     smearer = smear_selection(data, model=model)
@@ -385,27 +433,38 @@ def eval_sasview(model_info, data):
             smearer.model = model  # because smear_selection has a bug
             smearer.accuracy = data.accuracy
             smearer.set_index(index)
-            theory = lambda: smearer.get_value()
+            def _call_smearer():
+                smearer.model = model[0]
+                return smearer.get_value()
+            theory = _call_smearer
         else:
-            theory = lambda: model.evalDistribution([data.qx_data[index],
-                                                     data.qy_data[index]])
+            theory = lambda: model[0].evalDistribution([data.qx_data[index],
+                                                        data.qy_data[index]])
     elif smearer is not None:
-        theory = lambda: smearer(model.evalDistribution(data.x))
+        theory = lambda: smearer(model[0].evalDistribution(data.x))
     else:
-        theory = lambda: model.evalDistribution(data.x)
+        theory = lambda: model[0].evalDistribution(data.x)
 
     def calculator(**pars):
+        # type: (float, ...) -> np.ndarray
         """
         Sasview calculator for model.
         """
+        oldpars = revert_pars(model_info, pars)
+        # For multiplicity models, create a model with the correct multiplicity
+        control = oldpars.pop("CONTROL", None)
+        if control is not None:
+            # sphericalSLD has one fewer multiplicity.  This update should
+            # happen in revert_pars, but it hasn't been called yet.
+            model[0] = ModelClass(control)
         # paying for parameter conversion each time to keep life simple, if not fast
-        pars = revert_pars(model_info, pars)
-        for k, v in pars.items():
-            parts = k.split('.')  # polydispersity components
-            if len(parts) == 2:
-                model.dispersion[parts[0]][parts[1]] = v
+        #print("sasview pars",oldpars)
+        for k, v in oldpars.items():
+            name_attr = k.split('.')  # polydispersity components
+            if len(name_attr) == 2:
+                model[0].dispersion[name_attr[0]][name_attr[1]] = v
             else:
-                model.setParam(k, v)
+                model[0].setParam(k, v)
         return theory()
 
     calculator.engine = "sasview"
@@ -423,30 +482,26 @@ DTYPE_MAP = {
     'longdouble': '128',
 }
 def eval_opencl(model_info, data, dtype='single', cutoff=0.):
+    # type: (ModelInfo, Data, str, float) -> Calculator
     """
     Return a model calculator using the OpenCL calculation engine.
     """
-    try:
-        model = core.build_model(model_info, dtype=dtype, platform="ocl")
-    except Exception as exc:
-        print(exc)
-        print("... trying again with single precision")
-        model = core.build_model(model_info, dtype='single', platform="ocl")
+    if not core.HAVE_OPENCL:
+        raise RuntimeError("OpenCL not available")
+    model = core.build_model(model_info, dtype=dtype, platform="ocl")
     calculator = DirectModel(data, model, cutoff=cutoff)
     calculator.engine = "OCL%s"%DTYPE_MAP[dtype]
     return calculator
 
 def eval_ctypes(model_info, data, dtype='double', cutoff=0.):
+    # type: (ModelInfo, Data, str, float) -> Calculator
     """
     Return a model calculator using the DLL calculation engine.
     """
-    if dtype == 'quad':
-        dtype = 'longdouble'
     model = core.build_model(model_info, dtype=dtype, platform="dll")
     calculator = DirectModel(data, model, cutoff=cutoff)
     calculator.engine = "OMP%s"%DTYPE_MAP[dtype]
     return calculator
-
 
 def eval_sasfit_opencl(model_info, data, dtype='single', cutoff=0.):
     """
@@ -474,7 +529,8 @@ def eval_sasfit_ctypes(model_info, data, dtype='double', cutoff=0.):
     return calculator
 
 
-def time_calculation(calculator, pars, Nevals=1):
+def time_calculation(calculator, pars, evals=1):
+    # type: (Calculator, ParameterSet, int) -> Tuple[np.ndarray, float]
     """
     Compute the average calculation time over N evaluations.
 
@@ -482,14 +538,19 @@ def time_calculation(calculator, pars, Nevals=1):
     initialize the calculation engine, and make the average more stable.
     """
     # initialize the code so time is more accurate
-    value = calculator(**suppress_pd(pars))
+    if evals > 1:
+        calculator(**suppress_pd(pars))
     toc = tic()
-    for _ in range(max(Nevals, 1)):  # make sure there is at least one eval
+    # make sure there is at least one eval
+    value = calculator(**pars)
+    for _ in range(evals-1):
         value = calculator(**pars)
-    average_time = toc()*1000./Nevals
+    average_time = toc()*1000. / evals
+    #print("I(q)",value)
     return value, average_time
 
 def make_data(opts):
+    # type: (Dict[str, Any]) -> Tuple[Data, np.ndarray]
     """
     Generate an empty dataset, used with the model to set Q points
     and resolution.
@@ -499,7 +560,8 @@ def make_data(opts):
     """
     qmax, nq, res = opts['qmax'], opts['nq'], opts['res']
     if opts['is2d']:
-        data = empty_data2D(np.linspace(-qmax, qmax, nq), resolution=res)
+        q = np.linspace(-qmax, qmax, nq)  # type: np.ndarray
+        data = empty_data2D(q, resolution=res)
         data.accuracy = opts['accuracy']
         set_beam_stop(data, 0.0004)
         index = ~data.mask
@@ -516,6 +578,7 @@ def make_data(opts):
     return data, index
 
 def make_engine(model_info, data, dtype, cutoff, sasfit_model_info):
+    # type: (ModelInfo, Data, str, float) -> Calculator
     """
     Generate the appropriate calculation engine for the given datatype.
 
@@ -538,15 +601,20 @@ def make_engine(model_info, data, dtype, cutoff, sasfit_model_info):
 
 
 def _show_invalid(data, theory):
+    # type: (Data, np.ma.ndarray) -> None
+    """
+    Display a list of the non-finite values in theory.
+    """
     if not theory.mask.any():
         return
 
     if hasattr(data, 'x'):
         bad = zip(data.x[theory.mask], theory[theory.mask])
-        print("   *** ", ", ".join("I(%g)=%g"%(x, y) for x,y in bad))
+        print("   *** ", ", ".join("I(%g)=%g"%(x, y) for x, y in bad))
 
 
 def compare(opts, limits=None):
+    # type: (Dict[str, Any], Optional[Tuple[float, float]]) -> Tuple[float, float]
     """
     Preform a comparison using options from the command line.
 
@@ -557,40 +625,44 @@ def compare(opts, limits=None):
     as the values are adjusted, making it easier to see the effects of the
     parameters.
     """
-    Nbase, Ncomp = opts['n1'], opts['n2']
+    n_base, n_comp = opts['n1'], opts['n2']
     pars = opts['pars']
     data = opts['data']
 
+    # silence the linter
+    base = opts['engines'][0] if n_base else None
+    comp = opts['engines'][1] if n_comp else None
+    base_time = comp_time = None
+    base_value = comp_value = resid = relerr = None
+
     # Base calculation
-    if Nbase > 0:
-        base = opts['engines'][0]
+    if n_base > 0:
         try:
-            base_value, base_time = time_calculation(base, pars, Nbase)
-            base_value = np.ma.masked_invalid(base_value)
+            base_raw, base_time = time_calculation(base, pars, n_base)
+            base_value = np.ma.masked_invalid(base_raw)
             print("%s t=%.2f ms, intensity=%.0f"
                   % (base.engine, base_time, base_value.sum()))
             _show_invalid(data, base_value)
         except ImportError:
             traceback.print_exc()
-            Nbase = 0
+            n_base = 0
 
     # Comparison calculation
-    if Ncomp > 0:
-        comp = opts['engines'][1]
+    if n_comp > 0:
         try:
-            comp_value, comp_time = time_calculation(comp, pars, Ncomp)
-            comp_value = np.ma.masked_invalid(comp_value)
+            comp_raw, comp_time = time_calculation(comp, pars, n_comp)
+            comp_value = np.ma.masked_invalid(comp_raw)
             print("%s t=%.2f ms, intensity=%.0f"
                   % (comp.engine, comp_time, comp_value.sum()))
             _show_invalid(data, comp_value)
         except ImportError:
             traceback.print_exc()
-            Ncomp = 0
+            n_comp = 0
 
     # Compare, but only if computing both forms
-    if Nbase > 0 and Ncomp > 0:
+    if n_base > 0 and n_comp > 0:
         resid = (base_value - comp_value)
-        relerr = resid/comp_value
+        relerr = resid/np.where(comp_value != 0., abs(comp_value), 1.0)
         _print_stats("|%s-%s|"
                      % (base.engine, comp.engine) + (" "*(3+len(comp.engine))),
                      resid)
@@ -604,25 +676,25 @@ def compare(opts, limits=None):
     import matplotlib.pyplot as plt
     if limits is None:
         vmin, vmax = np.Inf, -np.Inf
-        if Nbase > 0:
+        if n_base > 0:
             vmin = min(vmin, base_value.min())
             vmax = max(vmax, base_value.max())
-        if Ncomp > 0:
+        if n_comp > 0:
             vmin = min(vmin, comp_value.min())
             vmax = max(vmax, comp_value.max())
         limits = vmin, vmax
 
-    if Nbase > 0:
-        if Ncomp > 0: plt.subplot(131)
+    if n_base > 0:
+        if n_comp > 0: plt.subplot(131)
         plot_theory(data, base_value, view=view, use_data=False, limits=limits)
         plt.title("%s t=%.2f ms"%(base.engine, base_time))
         #cbar_title = "log I"
-    if Ncomp > 0:
-        if Nbase > 0: plt.subplot(132)
+    if n_comp > 0:
+        if n_base > 0: plt.subplot(132)
         plot_theory(data, comp_value, view=view, use_data=False, limits=limits)
         plt.title("%s t=%.2f ms"%(comp.engine, comp_time))
         #cbar_title = "log I"
-    if Ncomp > 0 and Nbase > 0:
+    if n_comp > 0 and n_base > 0:
         plt.subplot(133)
         if not opts['rel_err']:
             err, errstr, errview = resid, "abs err", "linear"
@@ -637,8 +709,10 @@ def compare(opts, limits=None):
     #if is2D:
     #    h = plt.colorbar()
     #    h.ax.set_title(cbar_title)
+    fig = plt.gcf()
+    fig.suptitle(opts['name'])
 
-    if Ncomp > 0 and Nbase > 0 and '-hist' in opts:
+    if n_comp > 0 and n_base > 0 and '-hist' in opts:
         plt.figure()
         v = relerr
         v[v == 0] = 0.5*np.min(np.abs(v[v != 0]))
@@ -654,15 +728,17 @@ def compare(opts, limits=None):
     return limits
 
 def _print_stats(label, err):
+    # type: (str, np.ma.ndarray) -> None
+    # work with trimmed data, not the full set
     sorted_err = np.sort(abs(err.compressed()))
-    p50 = int((len(err)-1)*0.50)
-    p98 = int((len(err)-1)*0.98)
+    p50 = int((len(sorted_err)-1)*0.50)
+    p98 = int((len(sorted_err)-1)*0.98)
     data = [
         "max:%.3e"%sorted_err[-1],
         "median:%.3e"%sorted_err[p50],
         "98%%:%.3e"%sorted_err[p98],
-        "rms:%.3e"%np.sqrt(np.mean(err**2)),
-        "zero-offset:%+.3e"%np.mean(err),
+        "rms:%.3e"%np.sqrt(np.mean(sorted_err**2)),
+        "zero-offset:%+.3e"%np.mean(sorted_err),
         ]
     print(label+"  "+"  ".join(data))
 
@@ -691,17 +767,18 @@ VALUE_OPTIONS = [
     'cutoff', 'random', 'nq', 'res', 'accuracy', 'sasfit',
     ]
 
-def columnize(L, indent="", width=79):
+def columnize(items, indent="", width=79):
+    # type: (List[str], str, int) -> str
     """
     Format a list of strings into columns.
 
     Returns a string with carriage returns ready for printing.
     """
-    column_width = max(len(w) for w in L) + 1
+    column_width = max(len(w) for w in items) + 1
     num_columns = (width - len(indent)) // column_width
-    num_rows = len(L) // num_columns
-    L = L + [""] * (num_rows*num_columns - len(L))
-    columns = [L[k*num_rows:(k+1)*num_rows] for k in range(num_columns)]
+    num_rows = len(items) // num_columns
+    items = items + [""] * (num_rows * num_columns - len(items))
+    columns = [items[k*num_rows:(k+1)*num_rows] for k in range(num_columns)]
     lines = [" ".join("%-*s"%(column_width, entry) for entry in row)
              for row in zip(*columns)]
     output = indent + ("\n"+indent).join(lines)
@@ -709,27 +786,34 @@ def columnize(L, indent="", width=79):
 
 
 def get_pars(model_info, use_demo=False):
+    # type: (ModelInfo, bool) -> ParameterSet
     """
     Extract demo parameters from the model definition.
     """
     # Get the default values for the parameters
-    pars = dict((p.name, p.default) for p in model_info['parameters'])
-
-    # Fill in default values for the polydispersity parameters
-    for p in model_info['parameters']:
-        if p.type in ('volume', 'orientation'):
-            pars[p.name+'_pd'] = 0.0
-            pars[p.name+'_pd_n'] = 0
-            pars[p.name+'_pd_nsigma'] = 3.0
-            pars[p.name+'_pd_type'] = "gaussian"
+    pars = {}
+    for p in model_info.parameters.call_parameters:
+        parts = [('', p.default)]
+        if p.polydisperse:
+            parts.append(('_pd', 0.0))
+            parts.append(('_pd_n', 0))
+            parts.append(('_pd_nsigma', 3.0))
+            parts.append(('_pd_type', "gaussian"))
+        for ext, val in parts:
+            if p.length > 1:
+                dict(("%s%d%s" % (p.id, k, ext), val)
+                     for k in range(1, p.length+1))
+            else:
+                pars[p.id + ext] = val
 
     # Plug in values given in demo
     if use_demo:
-        pars.update(model_info['demo'])
+        pars.update(model_info.demo)
     return pars
 
 
 def parse_opts():
+    # type: () -> Dict[str, Any]
     """
     Parse command line options.
     """
@@ -806,7 +890,7 @@ def parse_opts():
         elif arg.startswith('-cutoff='):   opts['cutoff'] = float(arg[8:])
         elif arg.startswith('-random='):   opts['seed'] = int(arg[8:])
         elif arg.startswith('-sasfit='):   opts['sasfit_model'] = arg[8:]
-        elif arg == '-random':  opts['seed'] = np.random.randint(1e6)
+        elif arg == '-random':  opts['seed'] = np.random.randint(1000000)
         elif arg == '-preset':  opts['seed'] = -1
         elif arg == '-mono':    opts['mono'] = True
         elif arg == '-poly':    opts['mono'] = False
@@ -845,18 +929,18 @@ def parse_opts():
             sys.exit(1)
 
     if len(engines) == 0:
-        engines.extend(['single', 'sasview'])
+        engines.extend(['single', 'double'])
     elif len(engines) == 1:
-        if engines[0][0] != 'sasview':
-            engines.append('sasview')
-        else:
+        if engines[0][0] == 'double':
             engines.append('single')
+        else:
+            engines.append('double')
     elif len(engines) > 2:
         del engines[2:]
 
     n1 = int(args[1]) if len(args) > 1 else 1
     n2 = int(args[2]) if len(args) > 2 else 1
-    use_sasview = any(engine=='sasview' and count>0
+    use_sasview = any(engine == 'sasview' and count > 0
                       for engine, count in zip(engines, [n1, n2]))
 
     # Get demo parameters from model definition, or use default parameters
@@ -889,7 +973,7 @@ def parse_opts():
     # randomize parameters
     #pars.update(set_pars)  # set value before random to control range
     if opts['seed'] > -1:
-        pars = randomize_pars(pars, seed=opts['seed'])
+        pars = randomize_pars(model_info, pars, seed=opts['seed'])
         print("Randomize using -random=%i"%opts['seed'])
     if opts['mono']:
         pars = suppress_pd(pars)
@@ -938,12 +1022,13 @@ def parse_opts():
     return opts
 
 def explore(opts):
+    # type: (Dict[str, Any]) -> None
     """
     Explore the model using the Bumps GUI.
     """
-    import wx
-    from bumps.names import FitProblem
-    from bumps.gui.app_frame import AppFrame
+    import wx  # type: ignore
+    from bumps.names import FitProblem  # type: ignore
+    from bumps.gui.app_frame import AppFrame  # type: ignore
 
     problem = FitProblem(Explore(opts))
     is_mac = "cocoa" in wx.version()
@@ -964,20 +1049,21 @@ class Explore(object):
     parameters can be adjusted in the GUI, with plots updated on the fly.
     """
     def __init__(self, opts):
-        from bumps.cli import config_matplotlib
+        # type: (Dict[str, Any]) -> None
+        from bumps.cli import config_matplotlib  # type: ignore
         from . import bumps_model
         config_matplotlib()
         self.opts = opts
         model_info = opts['def']
         pars, pd_types = bumps_model.create_parameters(model_info, **opts['pars'])
+        # Initialize parameter ranges, fixing the 2D parameters for 1D data.
         if not opts['is2d']:
-            active = [base + ext
-                      for base in model_info['partype']['pd-1d']
-                      for ext in ['', '_pd', '_pd_n', '_pd_nsigma']]
-            active.extend(model_info['partype']['fixed-1d'])
-            for k in active:
-                v = pars[k]
-                v.range(*parameter_range(k, v.value))
+            for p in model_info.parameters.user_parameters(is2d=False):
+                for ext in ['', '_pd', '_pd_n', '_pd_nsigma']:
+                    k = p.name+ext
+                    v = pars.get(k, None)
+                    if v is not None:
+                        v.range(*parameter_range(k, v.value))
         else:
             for k, v in pars.items():
                 v.range(*parameter_range(k, v.value))
@@ -987,18 +1073,21 @@ class Explore(object):
         self.limits = None
 
     def numpoints(self):
+        # type: () -> int
         """
         Return the number of points.
         """
         return len(self.pars) + 1  # so dof is 1
 
     def parameters(self):
+        # type: () -> Any   # Dict/List hierarchy of parameters
         """
         Return a dictionary of parameters.
         """
         return self.pars
 
     def nllf(self):
+        # type: () -> float
         """
         Return cost.
         """
@@ -1006,6 +1095,7 @@ class Explore(object):
         return 0.  # No nllf
 
     def plot(self, view='log'):
+        # type: (str) -> None
         """
         Plot the data and residuals.
         """
@@ -1015,12 +1105,11 @@ class Explore(object):
         limits = compare(self.opts, limits=self.limits)
         if self.limits is None:
             vmin, vmax = limits
-            vmax = 1.3*vmax
-            vmin = vmax*1e-7
-            self.limits = vmin, vmax
+            self.limits = vmax*1e-7, 1.3*vmax
 
 
 def main():
+    # type: () -> None
     """
     Main program.
     """

@@ -11,8 +11,8 @@ of shells. The scattering length density profile for the default sld values
     SLD profile of the core_multi_shell object from the center of sphere out
     for the default SLDs.*
 
-The 2D scattering intensity is the same as *P(q)* above, regardless of the
-orientation of the *q* vector which is defined as
+The 2D scattering intensity is the same as $P(q)$ above, regardless of the
+orientation of the $q$ vector which is defined as
 
 .. math::
 
@@ -22,7 +22,7 @@ orientation of the *q* vector which is defined as
          many of these parameters fixed as possible.
 
 .. note:: The outer most radius (= *radius* + *thickness*) is used as the
-          effective radius for *S(Q)* when *P(Q)* \* *S(Q)* is applied.
+          effective radius for $S(Q)$ when $P(Q)*S(Q)$ is applied.
 
 For information about polarised and magnetic scattering, see 
 the :doc:`magnetic help <../sasgui/perspectives/fitting/mag_help>` documentation.
@@ -86,110 +86,65 @@ category = "shape:sphere"
 
 
 #             ["name", "units", default, [lower, upper], "type","description"],
-parameters = [["volfraction", "", 0.05, [0,1],"",
-               "volume fraction of spheres"],
-              ["sld_core", "1e-6/Ang^2", 1.0, [-inf, inf], "",
+parameters = [["sld_core", "1e-6/Ang^2", 1.0, [-inf, inf], "sld",
                "Core scattering length density"],
               ["radius", "Ang", 200., [0, inf], "volume",
                "Radius of the core"],
-              ["sld_solvent", "1e-6/Ang^2", 6.4, [-inf, inf], "",
+              ["sld_solvent", "1e-6/Ang^2", 6.4, [-inf, inf], "sld",
                "Solvent scattering length density"],
               ["n", "", 1, [0, 10], "volume",
                "number of shells"],
-              ["sld[n]", "1e-6/Ang^2", 1.7, [-inf, inf], "",
+              ["sld[n]", "1e-6/Ang^2", 1.7, [-inf, inf], "sld",
                "scattering length density of shell k"],
               ["thickness[n]", "Ang", 40., [0, inf], "volume",
                "Thickness of shell k"],
               ]
 
-#source = ["lib/sph_j1c.c", "onion.c"]
+source = ["lib/sph_j1c.c", "core_multi_shell.c"]
 
-def Iq(q, *args, **kw):
-    return q
-
-def Iqxy(qx, *args, **kw):
-    return qx
-
-
-def profile(volfraction, sld_core, radius, sld_solvent, n, sld, thickness):
+def profile(sld_core, radius, sld_solvent, n, sld, thickness):
     """
-    SLD profile
-    
-    :return: (r, beta) where r is a list of radius of the transition points\
-      and beta is a list of the corresponding SLD values.
-
+    Returns the SLD profile *r* (Ang), and *rho* (1e-6/Ang^2).
     """
-#        r = []
-#        beta = []
-#        # for core at r=0
-#        r.append(0)
-#        beta.append(self.params['sld_core0'])
-#        # for core at r=rad_core
-#        r.append(self.params['rad_core0'])
-#        beta.append(self.params['sld_core0'])
-#
-#        # for shells
-#        for n in range(1, self.n_shells+1):
-#            # Left side of each shells
-#            r0 = r[len(r)-1]
-#            r.append(r0)
-#            exec "beta.append(self.params['sld_shell%s'% str(n)])"
-#
-#            # Right side of each shells
-#            exec "r0 += self.params['thick_shell%s'% str(n)]"
-#            r.append(r0)
-#            exec "beta.append(self.params['sld_shell%s'% str(n)])"
-#
-#        # for solvent
-#        r0 = r[len(r)-1]            
-#        r.append(r0)
-#        beta.append(self.params['sld_solv'])
-#        r_solv = 5*r0/4
-#        r.append(r_solv)
-#        beta.append(self.params['sld_solv'])
-#
-#        return r, beta
-# above is directly from old code -- below is alotered from Woitek's first
-# cut an the onion.  Seems like we should be consistant?
-
-    total_radius = 1.25*(sum(thickness[:n]) + radius + 1)
-
     r = []
-    beta = []
+    rho = []
 
     # add in the core
     r.append(0)
-    beta.append(sld)
+    rho.append(sld_core)
     r.append(radius)
-    beta.append(sld)
+    rho.append(sld_core)
 
     # add in the shells
     for k in range(n):
         # Left side of each shells
-        r0 = r[-1]
-        r.append(r0)
-        beta.append(sld[k])
-        r.append(r0 + thickness[k])
-        beta.append(sld[k])
-   # add in the solvent
+        r.append(r[-1])
+        rho.append(sld[k])
+        r.append(r[-1] + thickness[k])
+        rho.append(sld[k])
+    # add in the solvent
     r.append(r[-1])
-    beta.append(sld_solvent)
-    r.append(total_radius)
-    beta.append(sld_solvent)
+    rho.append(sld_solvent)
+    r.append(r[-1]*1.25)
+    rho.append(sld_solvent)
 
-    return np.asarray(r), np.asarray(beta)
+    return np.asarray(r), np.asarray(rho)
 
 def ER(radius, n, thickness):
     n = n[0]  # n cannot be polydisperse
     return np.sum(thickness[:n], axis=0) + radius
 
-def VR(radius, n, thick_shell):
+def VR(radius, n, thickness):
     return 1.0, 1.0
 
-demo = dict(volfraction = 1.0,
-            sld = 6.4,
+demo = dict(sld_core = 6.4,
             radius = 60,
             sld_solvent = 6.4,
-            n = 1,
-            sld_shell = [2.0],
-            thick_shell = [10])
+            n = 2,
+            sld = [2.0, 3.0],
+            thickness = 20,
+            thickness1_pd = 0.3,
+            thickness2_pd = 0.3,
+            thickness1_pd_n = 10,
+            thickness2_pd_n = 10,
+            )

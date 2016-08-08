@@ -1,0 +1,4 @@
+OMP32 t=0.04 ms, intensity=0
+OMP32 t=0.03 ms, intensity=0
+|OMP32-OMP32|          max:0.000e+00  median:0.000e+00  98%:0.000e+00  rms:0.000e+00  zero-offset:+0.000e+00
+|(OMP32-OMP32)/OMP32|  max:0.000e+00  median:0.000e+00  98%:0.000e+00  rms:0.000e+00  zero-offset:+0.000e+00

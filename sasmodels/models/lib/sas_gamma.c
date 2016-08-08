@@ -133,7 +133,7 @@ small:
 	else
 		return(z / ((1.0 + 0.5772156649015329 * x) * x));
 }
-#endif
+#endif // NEED_TGAMMA
 
 //Sign of the gamma function as implemented in scipy
 static double sas_gammasgn(double x) {

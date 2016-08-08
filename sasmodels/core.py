@@ -1,31 +1,37 @@
 """
 Core model handling routines.
 """
-#__all__ = [
-#    "list_models", "load_model_info", "precompile_dll",
-#    "build_model", "make_kernel", "call_kernel", "call_ER_VR",
-#    ]
+from __future__ import print_function
+
+__all__ = [
+    "list_models", "load_model", "load_model_info",
+    "build_model", "precompile_dlls",
+    ]
 
 import os
-from os.path import basename, dirname, join as joinpath, splitext
+from os.path import basename, dirname, join as joinpath
 from glob import glob
 
-import numpy as np
+import numpy as np # type: ignore
 
-from . import models
-from . import weights
 from . import generate
-# TODO: remove circular references between product and core
-# product uses call_ER/call_VR, core uses make_product_info/ProductModel
-#from . import product
+from . import modelinfo
+from . import product
 from . import mixture
 from . import kernelpy
 from . import kerneldll
 try:
     from . import kernelcl
     HAVE_OPENCL = True
-except:
+except Exception:
     HAVE_OPENCL = False
+
+try:
+    from typing import List, Union, Optional, Any
+    from .kernel import KernelModel
+    from .modelinfo import ModelInfo
+except ImportError:
+    pass
 
 try:
     np.meshgrid([])
@@ -50,47 +56,59 @@ except Exception:
 #    load_model_info
 #    build_model
 
-def list_models():
+KINDS = ("all", "py", "c", "double", "single", "1d", "2d",
+         "nonmagnetic", "magnetic")
+def list_models(kind=None):
+    # type: () -> List[str]
     """
     Return the list of available models on the model path.
     """
+    if kind and kind not in KINDS:
+        raise ValueError("kind not in " + ", ".join(KINDS))
     root = dirname(__file__)
-    available_models = []
     files = sorted(glob(joinpath(root, 'models', "[a-zA-Z]*.py")))
-    if not files and os.name=='nt':
-        # Look inside library.zip on windows,
-        # being careful as the library stores only .pyc.
-        import zipfile
-        location = root[:root.find('.zip')+4]
-        zf = zipfile.ZipFile(location,'r')
-        for filepath in zf.namelist():
-            # directory structure in library.zip uses "/"
-            models_loc = "sasmodels/models"
-            if models_loc in filepath:
-                base = basename(filepath)[:-4]
-                # Careful with non-models.
-                if base[0] != "_":
-                    available_models.append(base)
-    else:
-        available_models = [basename(f)[:-3] for f in files]
-    return available_models
+    available_models = [basename(f)[:-3] for f in files]
+    selected = [name for name in available_models if _matches(name, kind)]
 
-def isstr(s):
-    """
-    Return True if *s* is a string-like object.
-    """
-    try: s + ''
-    except: return False
-    return True
+    return selected
 
-def load_model(model_name, **kw):
+def _matches(name, kind):
+    if kind is None or kind == "all":
+        return True
+    info = load_model_info(name)
+    pars = info.parameters.kernel_parameters
+    if kind == "py" and callable(info.Iq):
+        return True
+    elif kind == "c" and not callable(info.Iq):
+        return True
+    elif kind == "double" and not info.single:
+        return True
+    elif kind == "single" and info.single:
+        return True
+    elif kind == "2d" and any(p.type == 'orientation' for p in pars):
+        return True
+    elif kind == "1d" and any(p.type != 'orientation' for p in pars):
+        return True
+    elif kind == "magnetic" and any(p.type == 'sld' for p in pars):
+        return True
+    elif kind == "nonmagnetic" and any(p.type != 'sld' for p in pars):
+        return True
+    return False
+
+def load_model(model_name, dtype=None, platform='ocl'):
+    # type: (str, str, str) -> KernelModel
     """
     Load model info and build model.
+
+    *model_name* is the name of the model as used by :func:`load_model_info`.
+    Additional keyword arguments are passed directly to :func:`build_model`.
     """
-    return build_model(load_model_info(model_name), **kw)
+    return build_model(load_model_info(model_name),
+                       dtype=dtype, platform=platform)
 
 
 def load_model_info(model_name):
+    # type: (str) -> modelinfo.ModelInfo
     """
     Load a model definition given the model name.
 
@@ -104,18 +122,17 @@ def load_model_info(model_name):
 
     parts = model_name.split('*')
     if len(parts) > 1:
-        from . import product
-        # Note: currently have circular reference
         if len(parts) > 2:
             raise ValueError("use P*S to apply structure factor S to model P")
         P_info, Q_info = [load_model_info(p) for p in parts]
         return product.make_product_info(P_info, Q_info)
 
     kernel_module = generate.load_kernel_module(model_name)
-    return generate.make_model_info(kernel_module)
+    return modelinfo.make_model_info(kernel_module)
 
 
 def build_model(model_info, dtype=None, platform="ocl"):
+    # type: (modelinfo.ModelInfo, str, str) -> KernelModel
     """
     Prepare the model for the default execution platform.
 
@@ -126,49 +143,41 @@ def build_model(model_info, dtype=None, platform="ocl"):
     :func:`load_model_info`.
 
     *dtype* indicates whether the model should use single or double precision
-    for the calculation. Any valid numpy single or double precision identifier
-    is valid, such as 'single', 'f', 'f32', or np.float32 for single, or
-    'double', 'd', 'f64'  and np.float64 for double.  If *None*, then use
-    'single' unless the model defines single=False.
+    for the calculation.  Choices are 'single', 'double', 'quad', 'half',
+    or 'fast'.  If *dtype* ends with '!', then force the use of the DLL rather
+    than OpenCL for the calculation.
 
     *platform* should be "dll" to force the dll to be used for C models,
     otherwise it uses the default "ocl".
     """
-    composition = model_info.get('composition', None)
+    composition = model_info.composition
     if composition is not None:
         composition_type, parts = composition
         models = [build_model(p, dtype=dtype, platform=platform) for p in parts]
         if composition_type == 'mixture':
             return mixture.MixtureModel(model_info, models)
         elif composition_type == 'product':
-            from . import product
             P, S = models
             return product.ProductModel(model_info, P, S)
         else:
             raise ValueError('unknown mixture type %s'%composition_type)
 
-    ## for debugging:
-    ##  1. uncomment open().write so that the source will be saved next time
-    ##  2. run "python -m sasmodels.direct_model $MODELNAME" to save the source
-    ##  3. recomment the open.write() and uncomment open().read()
-    ##  4. rerun "python -m sasmodels.direct_model $MODELNAME"
-    ##  5. uncomment open().read() so that source will be regenerated from model
-    # open(model_info['name']+'.c','w').write(source)
-    # source = open(model_info['name']+'.cl','r').read()
-    if callable(model_info.get('Iq', None)):
+    # If it is a python model, return it immediately
+    if callable(model_info.Iq):
         return kernelpy.PyModel(model_info)
+
+    numpy_dtype, fast, platform = parse_dtype(model_info, dtype, platform)
+
     source = generate.make_source(model_info)
-    default_dtype = 'single' if model_info['single'] else 'double'
-    ocl_dtype = default_dtype if dtype is None else dtype
-    dll_dtype = 'double' if dtype is None else dtype
-    if (platform == "dll"
-            or not HAVE_OPENCL
-            or not kernelcl.environment().has_type(ocl_dtype)):
-        return kerneldll.load_dll(source, model_info, dll_dtype)
+    if platform == "dll":
+        #print("building dll", numpy_dtype)
+        return kerneldll.load_dll(source['dll'], model_info, numpy_dtype)
     else:
-        return kernelcl.GpuModel(source, model_info, ocl_dtype)
+        #print("building ocl", numpy_dtype)
+        return kernelcl.GpuModel(source, model_info, numpy_dtype, fast=fast)
 
 def precompile_dlls(path, dtype="double"):
+    # type: (str, str) -> List[str]
     """
     Precompile the dlls for all builtin models, returning a list of dll paths.
 
@@ -178,130 +187,73 @@ def precompile_dlls(path, dtype="double"):
     This can be used when build the windows distribution of sasmodels
     which may be missing the OpenCL driver and the dll compiler.
     """
+    numpy_dtype = np.dtype(dtype)
     if not os.path.exists(path):
         os.makedirs(path)
     compiled_dlls = []
     for model_name in list_models():
         model_info = load_model_info(model_name)
-        source = generate.make_source(model_info)
-        if source:
+        if not callable(model_info.Iq):
+            source = generate.make_source(model_info)['dll']
             old_path = kerneldll.DLL_PATH
             try:
                 kerneldll.DLL_PATH = path
-                dll = kerneldll.make_dll(source, model_info, dtype=dtype)
+                dll = kerneldll.make_dll(source, model_info, dtype=numpy_dtype)
             finally:
                 kerneldll.DLL_PATH = old_path
             compiled_dlls.append(dll)
     return compiled_dlls
 
-def get_weights(model_info, pars, name):
+def parse_dtype(model_info, dtype=None, platform=None):
+    # type: (ModelInfo, str, str) -> (np.dtype, bool, str)
     """
-    Generate the distribution for parameter *name* given the parameter values
-    in *pars*.
+    Interpret dtype string, returning np.dtype and fast flag.
 
-    Uses "name", "name_pd", "name_pd_type", "name_pd_n", "name_pd_sigma"
-    from the *pars* dictionary for parameter value and parameter dispersion.
+    Possible types include 'half', 'single', 'double' and 'quad'.  If the
+    type is 'fast', then this is equivalent to dtype 'single' with the
+    fast flag set to True.
     """
-    relative = name in model_info['partype']['pd-rel']
-    limits = model_info['limits'][name]
-    disperser = pars.get(name+'_pd_type', 'gaussian')
-    value = pars.get(name, model_info['defaults'][name])
-    npts = pars.get(name+'_pd_n', 0)
-    width = pars.get(name+'_pd', 0.0)
-    nsigma = pars.get(name+'_pd_nsigma', 3.0)
-    value, weight = weights.get_weights(
-        disperser, npts, width, nsigma, value, limits, relative)
-    return value, weight / np.sum(weight)
+    # Assign default platform, overriding ocl with dll if OpenCL is unavailable
+    if platform is None:
+        platform = "ocl"
+    if platform == "ocl" and not HAVE_OPENCL:
+        platform = "dll"
 
-def dispersion_mesh(pars):
-    """
-    Create a mesh grid of dispersion parameters and weights.
+    # Check if type indicates dll regardless of which platform is given
+    if dtype is not None and dtype.endswith('!'):
+        platform = "dll"
+        dtype = dtype[:-1]
 
-    Returns [p1,p2,...],w where pj is a vector of values for parameter j
-    and w is a vector containing the products for weights for each
-    parameter set in the vector.
-    """
-    value, weight = zip(*pars)
-    value = [v.flatten() for v in meshgrid(*value)]
-    weight = np.vstack([v.flatten() for v in meshgrid(*weight)])
-    weight = np.prod(weight, axis=0)
-    return value, weight
+    # Convert special type names "half", "fast", and "quad"
+    fast = (dtype == "fast")
+    if fast:
+        dtype = "single"
+    elif dtype == "quad":
+        dtype = "longdouble"
+    elif dtype == "half":
+        dtype = "f16"
 
-def call_kernel(kernel, pars, cutoff=0, mono=False):
-    """
-    Call *kernel* returned from *model.make_kernel* with parameters *pars*.
-
-    *cutoff* is the limiting value for the product of dispersion weights used
-    to perform the multidimensional dispersion calculation more quickly at a
-    slight cost to accuracy. The default value of *cutoff=0* integrates over
-    the entire dispersion cube.  Using *cutoff=1e-5* can be 50% faster, but
-    with an error of about 1%, which is usually less than the measurement
-    uncertainty.
-
-    *mono* is True if polydispersity should be set to none on all parameters.
-    """
-    fixed_pars = [pars.get(name, kernel.info['defaults'][name])
-                  for name in kernel.fixed_pars]
-    if mono:
-        pd_pars = [( np.array([pars[name]]), np.array([1.0]) )
-                   for name in kernel.pd_pars]
+    # Convert dtype string to numpy dtype.
+    if dtype is None:
+        numpy_dtype = (generate.F32 if platform == "ocl" and model_info.single
+                       else generate.F64)
     else:
-        pd_pars = [get_weights(kernel.info, pars, name) for name in kernel.pd_pars]
-    return kernel(fixed_pars, pd_pars, cutoff=cutoff)
+        numpy_dtype = np.dtype(dtype)
 
-def call_ER_VR(model_info, vol_pars):
-    """
-    Return effect radius and volume ratio for the model.
+    # Make sure that the type is supported by opencl, otherwise use dll
+    if platform == "ocl":
+        env = kernelcl.environment()
+        if not env.has_type(numpy_dtype):
+            platform = "dll"
+            if dtype is None:
+                numpy_dtype = generate.F64
 
-    *info* is either *kernel.info* for *kernel=make_kernel(model,q)*
-    or *model.info*.
+    return numpy_dtype, fast, platform
 
-    *pars* are the parameters as expected by :func:`call_kernel`.
-    """
-    ER = model_info.get('ER', None)
-    VR = model_info.get('VR', None)
-    value, weight = dispersion_mesh(vol_pars)
+def list_models_main():
+    import sys
+    kind = sys.argv[1] if len(sys.argv) > 1 else "all"
+    print("\n".join(list_models(kind)))
 
-    individual_radii = ER(*value) if ER else 1.0
-    whole, part = VR(*value) if VR else (1.0, 1.0)
-
-    effect_radius = np.sum(weight*individual_radii) / np.sum(weight)
-    volume_ratio = np.sum(weight*part)/np.sum(weight*whole)
-    return effect_radius, volume_ratio
-
-
-def call_ER(model_info, values):
-    """
-    Call the model ER function using *values*. *model_info* is either
-    *model.info* if you have a loaded model, or *kernel.info* if you
-    have a model kernel prepared for evaluation.
-    """
-    ER = model_info.get('ER', None)
-    if ER is None:
-        return 1.0
-    else:
-        vol_pars = [get_weights(model_info, values, name)
-                    for name in model_info['partype']['volume']]
-        value, weight = dispersion_mesh(vol_pars)
-        individual_radii = ER(*value)
-        #print(values[0].shape, weights.shape, fv.shape)
-        return np.sum(weight*individual_radii) / np.sum(weight)
-
-def call_VR(model_info, values):
-    """
-    Call the model VR function using *pars*.
-    *info* is either *model.info* if you have a loaded model, or *kernel.info*
-    if you have a model kernel prepared for evaluation.
-    """
-    VR = model_info.get('VR', None)
-    if VR is None:
-        return 1.0
-    else:
-        vol_pars = [get_weights(model_info, values, name)
-                    for name in model_info['partype']['volume']]
-        value, weight = dispersion_mesh(vol_pars)
-        whole, part = VR(*value)
-        return np.sum(weight*part)/np.sum(weight*whole)
-
-# TODO: remove call_ER, call_VR
-
+if __name__ == "__main__":
+    list_models_main()

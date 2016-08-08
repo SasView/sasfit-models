@@ -1,0 +1,4 @@
+OCL32 t=0.34 ms, intensity=0
+OCL32 t=0.33 ms, intensity=0
+|OCL32-OCL32|          max:0.000e+00  median:0.000e+00  98%:0.000e+00  rms:0.000e+00  zero-offset:+0.000e+00
+|(OCL32-OCL32)/OCL32|  max:0.000e+00  median:0.000e+00  98%:0.000e+00  rms:0.000e+00  zero-offset:+0.000e+00

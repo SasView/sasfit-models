@@ -22,12 +22,93 @@ on the individual parameters and send the model to the Bumps optimizers.
 """
 from __future__ import print_function
 
-import numpy as np
+import numpy as np  # type: ignore
 
-from .core import call_kernel, call_ER_VR
-from . import sesans
+# TODO: fix sesans module
+from . import sesans  # type: ignore
+from . import weights
 from . import resolution
 from . import resolution2d
+from .details import build_details
+
+try:
+    from typing import Optional, Dict, Tuple
+except ImportError:
+    pass
+else:
+    from .data import Data
+    from .kernel import Kernel, KernelModel
+    from .modelinfo import Parameter, ParameterSet
+
+def call_kernel(calculator, pars, cutoff=0., mono=False):
+    # type: (Kernel, ParameterSet, float, bool) -> np.ndarray
+    """
+    Call *kernel* returned from *model.make_kernel* with parameters *pars*.
+
+    *cutoff* is the limiting value for the product of dispersion weights used
+    to perform the multidimensional dispersion calculation more quickly at a
+    slight cost to accuracy. The default value of *cutoff=0* integrates over
+    the entire dispersion cube.  Using *cutoff=1e-5* can be 50% faster, but
+    with an error of about 1%, which is usually less than the measurement
+    uncertainty.
+
+    *mono* is True if polydispersity should be set to none on all parameters.
+    """
+    parameters = calculator.info.parameters
+    if mono:
+        active = lambda name: False
+    elif calculator.dim == '1d':
+        active = lambda name: name in parameters.pd_1d
+    elif calculator.dim == '2d':
+        active = lambda name: name in parameters.pd_2d
+    else:
+        active = lambda name: True
+
+    #print("pars",[p.id for p in parameters.call_parameters])
+    vw_pairs = [(get_weights(p, pars) if active(p.name)
+                 else ([pars.get(p.name, p.default)], [1.0]))
+                for p in parameters.call_parameters]
+
+    call_details, values, is_magnetic = build_details(calculator, vw_pairs)
+    #print("values:", values)
+    return calculator(call_details, values, cutoff, is_magnetic)
+
+
+def get_weights(parameter, values):
+    # type: (Parameter, Dict[str, float]) -> Tuple[np.ndarray, np.ndarray]
+    """
+    Generate the distribution for parameter *name* given the parameter values
+    in *pars*.
+
+    Uses "name", "name_pd", "name_pd_type", "name_pd_n", "name_pd_sigma"
+    from the *pars* dictionary for parameter value and parameter dispersion.
+    """
+    value = float(values.get(parameter.name, parameter.default))
+    relative = parameter.relative_pd
+    limits = parameter.limits
+    disperser = values.get(parameter.name+'_pd_type', 'gaussian')
+    npts = values.get(parameter.name+'_pd_n', 0)
+    width = values.get(parameter.name+'_pd', 0.0)
+    nsigma = values.get(parameter.name+'_pd_nsigma', 3.0)
+    if npts == 0 or width == 0:
+        return [value], [1.0]
+    value, weight = weights.get_weights(
+        disperser, npts, width, nsigma, value, limits, relative)
+    return value, weight / np.sum(weight)
+
+
+def call_profile(model_info, **pars):
+    args = {}
+    for p in model_info.parameters.kernel_parameters:
+        if p.length > 1:
+            value = np.array([pars.get(p.id+str(j), p.default)
+                              for j in range(1, p.length+1)])
+        else:
+            value = pars.get(p.id, p.default)
+        args[p.id] = value
+    x, y = model_info.profile(**args)
+    return x, y, model_info.profile_axes
+
 
 class DataMixin(object):
     """
@@ -51,6 +132,7 @@ class DataMixin(object):
     dataset with the results from :meth:`_calc_theory`.
     """
     def _interpret_data(self, data, model):
+        # type: (Data, KernelModel) -> None
         # pylint: disable=attribute-defined-outside-init
 
         self._data = data
@@ -66,8 +148,6 @@ class DataMixin(object):
         else:
             self.data_type = 'Iq'
 
-        partype = model.info['partype']
-
         if self.data_type == 'sesans':
             q = sesans.make_q(data.sample.zacceptance, data.Rmax)
             index = slice(None, None)
@@ -80,8 +160,8 @@ class DataMixin(object):
             q_vectors = [q]            
             q_mono = sesans.make_all_q(data)
         elif self.data_type == 'Iqxy':
-            if not partype['orientation'] and not partype['magnetic']:
-                raise ValueError("not 2D without orientation or magnetic parameters")
+            #if not model.info.parameters.has_2d:
+            #    raise ValueError("not 2D without orientation or magnetic parameters")
             q = np.sqrt(data.qx_data**2 + data.qy_data**2)
             qmin = getattr(data, 'qmin', 1e-16)
             qmax = getattr(data, 'qmax', np.inf)
@@ -152,6 +232,7 @@ class DataMixin(object):
         self.resolution = res
 
     def _set_data(self, Iq, noise=None):
+        # type: (np.ndarray, Optional[float]) -> None
         # pylint: disable=attribute-defined-outside-init
         if noise is not None:
             self.dIq = Iq*noise*0.01
@@ -169,8 +250,9 @@ class DataMixin(object):
             raise ValueError("Unknown model")
 
     def _calc_theory(self, pars, cutoff=0.0):
+        # type: (ParameterSet, float) -> np.ndarray
         if self._kernel is None:
-            self._kernel = self._model.make_kernel(self._kernel_inputs)  # pylint: disable=attribute-dedata_type
+            self._kernel = self._model.make_kernel(self._kernel_inputs)
             self._kernel_mono = (self._model.make_kernel(self._kernel_mono_inputs)
                                  if self._kernel_mono_inputs else None)
 
@@ -204,28 +286,33 @@ class DirectModel(DataMixin):
     *cutoff* is the polydispersity weight cutoff.
     """
     def __init__(self, data, model, cutoff=1e-5):
+        # type: (Data, KernelModel, float) -> None
         self.model = model
         self.cutoff = cutoff
         # Note: _interpret_data defines the model attributes
         self._interpret_data(data, model)
 
     def __call__(self, **pars):
+        # type: (**float) -> np.ndarray
         return self._calc_theory(pars, cutoff=self.cutoff)
 
-    def ER_VR(self, **pars):
-        """
-        Compute the equivalent radius and volume ratio for the model.
-        """
-        return call_ER_VR(self.model.info, pars)
-
     def simulate_data(self, noise=None, **pars):
+        # type: (Optional[float], **float) -> None
         """
         Generate simulated data for the model.
         """
         Iq = self.__call__(**pars)
         self._set_data(Iq, noise=noise)
 
+    def profile(self, **pars):
+        # type: (**float) -> None
+        """
+        Generate a plottable profile.
+        """
+        return call_profile(self.model.info, **pars)
+
 def main():
+    # type: () -> None
     """
     Program to evaluate a particular model at a set of q values.
     """
@@ -241,7 +328,7 @@ def main():
     if call != "ER_VR":
         try:
             values = [float(v) for v in call.split(',')]
-        except:
+        except Exception:
             values = []
         if len(values) == 1:
             q, = values

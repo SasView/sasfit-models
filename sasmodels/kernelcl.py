@@ -47,22 +47,38 @@ drivers produce compiler output even when there is no error.  You
 can see the output by setting PYOPENCL_COMPILER_OUTPUT=1.  It should be
 harmless, albeit annoying.
 """
+from __future__ import print_function
+
 import os
 import warnings
 import logging
 
-import numpy as np
+import numpy as np  # type: ignore
 
 try:
-    import pyopencl as cl
+    #raise NotImplementedError("OpenCL not yet implemented for new kernel template")
+    import pyopencl as cl  # type: ignore
     # Ask OpenCL for the default context so that we know that one exists
     cl.create_some_context(interactive=False)
 except Exception as exc:
     warnings.warn("OpenCL startup failed with ***"+str(exc)+"***; using C compiler instead")
     raise RuntimeError("OpenCL not available")
 
+from pyopencl import mem_flags as mf
+from pyopencl.characterize import get_fast_inaccurate_build_options
+
+from . import generate
+from .kernel import KernelModel, Kernel
+
+try:
+    from typing import Tuple, Callable, Any
+    from .modelinfo import ModelInfo
+    from .details import CallDetails
+except ImportError:
+    pass
+
 # CRUFT: pyopencl < 2017.1  (as of June 2016 needs quotes around include path)
-def _quote_path(v):
+def quote_path(v):
     """
     Quote the path if it is not already quoted.
 
@@ -72,13 +88,13 @@ def _quote_path(v):
     """
     return '"'+v+'"' if v and ' ' in v and not v[0] in "\"'-" else v
 
-if hasattr(cl, '_DEFAULT_INCLUDE_OPTIONS'):
-    cl._DEFAULT_INCLUDE_OPTIONS = [_quote_path(v) for v in cl._DEFAULT_INCLUDE_OPTIONS]
+def fix_pyopencl_include():
+    import pyopencl as cl
+    if hasattr(cl, '_DEFAULT_INCLUDE_OPTIONS'):
+        cl._DEFAULT_INCLUDE_OPTIONS = [quote_path(v) for v in cl._DEFAULT_INCLUDE_OPTIONS]
 
-from pyopencl import mem_flags as mf
-from pyopencl.characterize import get_fast_inaccurate_build_options
+fix_pyopencl_include()
 
-from . import generate
 
 # The max loops number is limited by the amount of local memory available
 # on the device.  You don't want to make this value too big because it will
@@ -89,8 +105,24 @@ from . import generate
 MAX_LOOPS = 2048
 
 
+# Pragmas for enable OpenCL features.  Be sure to protect them so that they
+# still compile even if OpenCL is not present.
+_F16_PRAGMA = """\
+#if defined(__OPENCL_VERSION__) // && !defined(cl_khr_fp16)
+#  pragma OPENCL EXTENSION cl_khr_fp16: enable
+#endif
+"""
+
+_F64_PRAGMA = """\
+#if defined(__OPENCL_VERSION__) // && !defined(cl_khr_fp64)
+#  pragma OPENCL EXTENSION cl_khr_fp64: enable
+#endif
+"""
+
+
 ENV = None
 def environment():
+    # type: () -> "GpuEnvironment"
     """
     Returns a singleton :class:`GpuEnvironment`.
 
@@ -102,6 +134,7 @@ def environment():
     return ENV
 
 def has_type(device, dtype):
+    # type: (cl.Device, np.dtype) -> bool
     """
     Return true if device supports the requested precision.
     """
@@ -115,6 +148,7 @@ def has_type(device, dtype):
         return False
 
 def get_warp(kernel, queue):
+    # type: (cl.Kernel, cl.CommandQueue) -> int
     """
     Return the size of an execution batch for *kernel* running on *queue*.
     """
@@ -123,6 +157,7 @@ def get_warp(kernel, queue):
         queue.device)
 
 def _stretch_input(vector, dtype, extra=1e-3, boundary=32):
+    # type: (np.ndarray, np.dtype, float, int) -> np.ndarray
     """
     Stretch an input vector to the correct boundary.
 
@@ -145,6 +180,7 @@ def _stretch_input(vector, dtype, extra=1e-3, boundary=32):
 
 
 def compile_model(context, source, dtype, fast=False):
+    # type: (cl.Context, str, np.dtype, bool) -> cl.Program
     """
     Build a model to run on the gpu.
 
@@ -156,12 +192,19 @@ def compile_model(context, source, dtype, fast=False):
     if not all(has_type(d, dtype) for d in context.devices):
         raise RuntimeError("%s not supported for devices"%dtype)
 
-    source = generate.convert_type(source, dtype)
+    source_list = [generate.convert_type(source, dtype)]
+
+    if dtype == generate.F16:
+        source_list.insert(0, _F16_PRAGMA)
+    elif dtype == generate.F64:
+        source_list.insert(0, _F64_PRAGMA)
+
     # Note: USE_SINCOS makes the intel cpu slower under opencl
     if context.devices[0].type == cl.device_type.GPU:
-        source = "#define USE_SINCOS\n" + source
+        source_list.insert(0, "#define USE_SINCOS\n")
     options = (get_fast_inaccurate_build_options(context.devices[0])
                if fast else [])
+    source = "\n".join(source_list)
     program = cl.Program(context, source).build(options=options)
     #print("done with "+program)
     return program
@@ -174,6 +217,7 @@ class GpuEnvironment(object):
     GPU context, with possibly many devices, and one queue per device.
     """
     def __init__(self):
+        # type: () -> None
         # find gpu context
         #self.context = cl.create_some_context()
 
@@ -192,15 +236,16 @@ class GpuEnvironment(object):
         self.compiled = {}
 
     def has_type(self, dtype):
+        # type: (np.dtype) -> bool
         """
         Return True if all devices support a given type.
         """
-        dtype = generate.F32 if dtype == 'fast' else np.dtype(dtype)
         return any(has_type(d, dtype)
                    for context in self.context
                    for d in context.devices)
 
     def get_queue(self, dtype):
+        # type: (np.dtype) -> cl.CommandQueue
         """
         Return a command queue for the kernels of type dtype.
         """
@@ -209,14 +254,16 @@ class GpuEnvironment(object):
                 return queue
 
     def get_context(self, dtype):
+        # type: (np.dtype) -> cl.Context
         """
         Return a OpenCL context for the kernels of type dtype.
         """
-        for context, queue in zip(self.context, self.queues):
+        for context in self.context:
             if all(has_type(d, dtype) for d in context.devices):
                 return context
 
     def _create_some_context(self):
+        # type: () -> cl.Context
         """
         Protected call to cl.create_some_context without interactivity.  Use
         this if PYOPENCL_CTX is set in the environment.  Sets the *context*
@@ -230,19 +277,22 @@ class GpuEnvironment(object):
             warnings.warn("the environment variable 'PYOPENCL_CTX' might not be set correctly")
 
     def compile_program(self, name, source, dtype, fast=False):
+        # type: (str, str, np.dtype, bool) -> cl.Program
         """
         Compile the program for the device in the given context.
         """
         key = "%s-%s%s"%(name, dtype, ("-fast" if fast else ""))
         if key not in self.compiled:
             context = self.get_context(dtype)
-            logging.info("building %s for OpenCL %s"
-                         % (key, context.devices[0].name.strip()))
-            program = compile_model(context, source, np.dtype(dtype), fast)
+            logging.info("building %s for OpenCL %s", key,
+                         context.devices[0].name.strip())
+            program = compile_model(self.get_context(dtype),
+                                    str(source), dtype, fast)
             self.compiled[key] = program
         return self.compiled[key]
 
     def release_program(self, name):
+        # type: (str) -> None
         """
         Free memory associated with the program on the device.
         """
@@ -251,6 +301,7 @@ class GpuEnvironment(object):
             del self.compiled[name]
 
 def _get_default_context():
+    # type: () -> List[cl.Context]
     """
     Get an OpenCL context, preferring GPU over CPU, and preferring Intel
     drivers over AMD drivers.
@@ -269,14 +320,17 @@ def _get_default_context():
     gpu, cpu = None, None
     for platform in cl.get_platforms():
         # AMD provides a much weaker CPU driver than Intel/Apple, so avoid it.
-        # If someone has bothered to install the AMD/NVIDIA drivers, prefer them over the integrated
-        # graphics driver that may have been supplied with the CPU chipset.
-        preferred_cpu = platform.vendor.startswith('Intel') or platform.vendor.startswith('Apple')
-        preferred_gpu = platform.vendor.startswith('Advanced') or platform.vendor.startswith('NVIDIA')
+        # If someone has bothered to install the AMD/NVIDIA drivers, prefer
+        # them over the integrated graphics driver that may have been supplied
+        # with the CPU chipset.
+        preferred_cpu = (platform.vendor.startswith('Intel')
+                         or platform.vendor.startswith('Apple'))
+        preferred_gpu = (platform.vendor.startswith('Advanced')
+                         or platform.vendor.startswith('NVIDIA'))
         for device in platform.get_devices():
             if device.type == cl.device_type.GPU:
-                # If the existing type is not GPU then it will be CUSTOM or ACCELERATOR,
-                # so don't override it.
+                # If the existing type is not GPU then it will be CUSTOM
+                # or ACCELERATOR so don't override it.
                 if gpu is None or (preferred_gpu and gpu.type == cl.device_type.GPU):
                     gpu = device
             elif device.type == cl.device_type.CPU:
@@ -285,14 +339,16 @@ def _get_default_context():
             else:
                 # System has cl.device_type.ACCELERATOR or cl.device_type.CUSTOM
                 # Intel Phi for example registers as an accelerator
-                # Since the user installed a custom device on their system and went through the
-                # pain of sorting out OpenCL drivers for it, lets assume they really do want to
-                # use it as their primary compute device.
+                # Since the user installed a custom device on their system
+                # and went through the pain of sorting out OpenCL drivers for
+                # it, lets assume they really do want to use it as their
+                # primary compute device.
                 gpu = device
 
-    # order the devices by gpu then by cpu; when searching for an available device by data type they
-    # will be checked in this order, which means that if the gpu supports double then the cpu will never
-    # be used (though we may make it possible to explicitly request the cpu at some point).
+    # order the devices by gpu then by cpu; when searching for an available
+    # device by data type they will be checked in this order, which means
+    # that if the gpu supports double then the cpu will never be used (though
+    # we may make it possible to explicitly request the cpu at some point).
     devices = []
     if gpu is not None:
         devices.append(gpu)
@@ -301,7 +357,7 @@ def _get_default_context():
     return [cl.Context([d]) for d in devices]
 
 
-class GpuModel(object):
+class GpuModel(KernelModel):
     """
     GPU wrapper for a single model.
 
@@ -316,39 +372,55 @@ class GpuModel(object):
     Fast precision ('fast') is a loose version of single precision, indicating
     that the compiler is allowed to take shortcuts.
     """
-    def __init__(self, source, model_info, dtype=generate.F32):
+    def __init__(self, source, model_info, dtype=generate.F32, fast=False):
+        # type: (Dict[str,str], ModelInfo, np.dtype, bool) -> None
         self.info = model_info
         self.source = source
-        self.dtype = generate.F32 if dtype == 'fast' else np.dtype(dtype)
-        self.fast = (dtype == 'fast')
+        self.dtype = dtype
+        self.fast = fast
         self.program = None # delay program creation
+        self._kernels = None
 
     def __getstate__(self):
+        # type: () -> Tuple[ModelInfo, str, np.dtype, bool]
         return self.info, self.source, self.dtype, self.fast
 
     def __setstate__(self, state):
+        # type: (Tuple[ModelInfo, str, np.dtype, bool]) -> None
         self.info, self.source, self.dtype, self.fast = state
         self.program = None
 
     def make_kernel(self, q_vectors):
+        # type: (List[np.ndarray]) -> "GpuKernel"
         if self.program is None:
-            compiler = environment().compile_program
-            self.program = compiler(self.info['name'], self.source, self.dtype,
-                                    self.fast)
+            compile_program = environment().compile_program
+            self.program = compile_program(
+                self.info.name,
+                self.source['opencl'],
+                self.dtype,
+                self.fast)
+            variants = ['Iq', 'Iqxy', 'Imagnetic']
+            names = [generate.kernel_name(self.info, k) for k in variants]
+            kernels = [getattr(self.program, k) for k in names]
+            self._kernels = dict((k, v) for k, v in zip(variants, kernels))
         is_2d = len(q_vectors) == 2
-        kernel_name = generate.kernel_name(self.info, is_2d)
-        kernel = getattr(self.program, kernel_name)
-        return GpuKernel(kernel, self.info, q_vectors, self.dtype)
+        if is_2d:
+            kernel = [self._kernels['Iqxy'], self._kernels['Imagnetic']]
+        else:
+            kernel = [self._kernels['Iq']]*2
+        return GpuKernel(kernel, self.dtype, self.info, q_vectors)
 
     def release(self):
+        # type: () -> None
         """
         Free the resources associated with the model.
         """
         if self.program is not None:
-            environment().release_program(self.info['name'])
+            environment().release_program(self.info.name)
             self.program = None
 
     def __del__(self):
+        # type: () -> None
         self.release()
 
 # TODO: check that we don't need a destructor for buffers which go out of scope
@@ -372,6 +444,7 @@ class GpuInput(object):
     buffer will be released when the data object is freed.
     """
     def __init__(self, q_vectors, dtype=generate.F32):
+        # type: (List[np.ndarray], np.dtype) -> None
         # TODO: do we ever need double precision q?
         env = environment()
         self.nq = q_vectors[0].size
@@ -381,27 +454,39 @@ class GpuInput(object):
         # not doing it now since warp depends on kernel, which is not known
         # at this point, so instead using 32, which is good on the set of
         # architectures tested so far.
-        self.q_vectors = [_stretch_input(q, self.dtype, 32) for q in q_vectors]
+        if self.is_2d:
+            # Note: 17 rather than 15 because results is 2 elements
+            # longer than input.
+            width = ((self.nq+17)//16)*16
+            self.q = np.empty((width, 2), dtype=dtype)
+            self.q[:self.nq, 0] = q_vectors[0]
+            self.q[:self.nq, 1] = q_vectors[1]
+        else:
+            # Note: 33 rather than 31 because results is 2 elements
+            # longer than input.
+            width = ((self.nq+33)//32)*32
+            self.q = np.empty(width, dtype=dtype)
+            self.q[:self.nq] = q_vectors[0]
+        self.global_size = [self.q.shape[0]]
         context = env.get_context(self.dtype)
-        self.global_size = [self.q_vectors[0].size]
         #print("creating inputs of size", self.global_size)
-        self.q_buffers = [
-            cl.Buffer(context, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=q)
-            for q in self.q_vectors
-        ]
+        self.q_b = cl.Buffer(context, mf.READ_ONLY | mf.COPY_HOST_PTR,
+                             hostbuf=self.q)
 
     def release(self):
+        # type: () -> None
         """
         Free the memory.
         """
-        for b in self.q_buffers:
-            b.release()
-        self.q_buffers = []
+        if self.q_b is not None:
+            self.q_b.release()
+            self.q_b = None
 
     def __del__(self):
+        # type: () -> None
         self.release()
 
-class GpuKernel(object):
+class GpuKernel(Kernel):
     """
     Callable SAS kernel.
 
@@ -421,65 +506,71 @@ class GpuKernel(object):
 
     Call :meth:`release` when done with the kernel instance.
     """
-    def __init__(self, kernel, model_info, q_vectors, dtype):
+    def __init__(self, kernel, dtype, model_info, q_vectors):
+        # type: (cl.Kernel, np.dtype, ModelInfo, List[np.ndarray]) -> None
         q_input = GpuInput(q_vectors, dtype)
         self.kernel = kernel
         self.info = model_info
-        self.res = np.empty(q_input.nq, q_input.dtype)
-        dim = '2d' if q_input.is_2d else '1d'
-        self.fixed_pars = model_info['partype']['fixed-' + dim]
-        self.pd_pars = model_info['partype']['pd-' + dim]
+        self.dtype = dtype
+        self.dim = '2d' if q_input.is_2d else '1d'
+        # plus three for the normalization values
+        self.result = np.empty(q_input.nq+3, dtype)
 
         # Inputs and outputs for each kernel call
         # Note: res may be shorter than res_b if global_size != nq
         env = environment()
         self.queue = env.get_queue(dtype)
-        self.loops_b = cl.Buffer(self.queue.context, mf.READ_WRITE,
-                                 2 * MAX_LOOPS * q_input.dtype.itemsize)
-        self.res_b = cl.Buffer(self.queue.context, mf.READ_WRITE,
-                               q_input.global_size[0] * q_input.dtype.itemsize)
-        self.q_input = q_input
 
-        self._need_release = [self.loops_b, self.res_b, self.q_input]
+        self.result_b = cl.Buffer(self.queue.context, mf.READ_WRITE,
+                                  q_input.global_size[0] * dtype.itemsize)
+        self.q_input = q_input # allocated by GpuInput above
 
-    def __call__(self, fixed_pars, pd_pars, cutoff):
-        real = (np.float32 if self.q_input.dtype == generate.F32
-                else np.float64 if self.q_input.dtype == generate.F64
-                else np.float16 if self.q_input.dtype == generate.F16
-                else np.float32)  # will never get here, so use np.float32
+        self._need_release = [self.result_b, self.q_input]
+        self.real = (np.float32 if dtype == generate.F32
+                     else np.float64 if dtype == generate.F64
+                     else np.float16 if dtype == generate.F16
+                     else np.float32)  # will never get here, so use np.float32
 
-        #print "pars", fixed_pars, pd_pars
-        res_bi = self.res_b
-        nq = np.uint32(self.q_input.nq)
-        if pd_pars:
-            cutoff = real(cutoff)
-            loops_N = [np.uint32(len(p[0])) for p in pd_pars]
-            loops = np.hstack(pd_pars) \
-                if pd_pars else np.empty(0, dtype=self.q_input.dtype)
-            loops = np.ascontiguousarray(loops.T, self.q_input.dtype).flatten()
-            #print("loops",Nloops, loops)
+    def __call__(self, call_details, values, cutoff, magnetic):
+        # type: (CallDetails, np.ndarray, np.ndarray, float, bool) -> np.ndarray
+        context = self.queue.context
+        # Arrange data transfer to card
+        details_b = cl.Buffer(context, mf.READ_ONLY | mf.COPY_HOST_PTR,
+                              hostbuf=call_details.buffer)
+        values_b = cl.Buffer(context, mf.READ_ONLY | mf.COPY_HOST_PTR,
+                             hostbuf=values)
 
-            #import sys; print("opencl eval",pars)
-            #print("opencl eval",pars)
-            if len(loops) > 2 * MAX_LOOPS:
-                raise ValueError("too many polydispersity points")
+        kernel = self.kernel[1 if magnetic else 0]
+        args = [
+            np.uint32(self.q_input.nq), None, None,
+            details_b, values_b, self.q_input.q_b, self.result_b,
+            self.real(cutoff),
+        ]
+        #print("Calling OpenCL")
+        #print("values",values)
+        # Call kernel and retrieve results
+        last_call = None
+        step = 100
+        for start in range(0, call_details.pd_prod, step):
+            stop = min(start+step, call_details.pd_prod)
+            #print("queuing",start,stop)
+            args[1:3] = [np.int32(start), np.int32(stop)]
+            last_call = [kernel(self.queue, self.q_input.global_size,
+                                None, *args, wait_for=last_call)]
+        cl.enqueue_copy(self.queue, self.result, self.result_b)
 
-            loops_bi = self.loops_b
-            cl.enqueue_copy(self.queue, loops_bi, loops)
-            loops_l = cl.LocalMemory(len(loops.data))
-            #ctx = environment().context
-            #loops_bi = cl.Buffer(ctx, mf.READ_ONLY|mf.COPY_HOST_PTR, hostbuf=loops)
-            dispersed = [loops_bi, loops_l, cutoff] + loops_N
-        else:
-            dispersed = []
-        fixed = [real(p) for p in fixed_pars]
-        args = self.q_input.q_buffers + [res_bi, nq] + dispersed + fixed
-        self.kernel(self.queue, self.q_input.global_size, None, *args)
-        cl.enqueue_copy(self.queue, self.res, res_bi)
+        # Free buffers
+        for v in (details_b, values_b):
+            if v is not None: v.release()
 
-        return self.res
+        scale = values[0]/self.result[self.q_input.nq]
+        background = values[1]
+        #print("scale",scale,background)
+        return scale*self.result[:self.q_input.nq] + background
+        # return self.result[:self.q_input.nq]
 
     def release(self):
+        # type: () -> None
         """
         Release resources associated with the kernel.
         """
@@ -488,4 +579,5 @@ class GpuKernel(object):
         self._need_release = []
 
     def __del__(self):
+        # type: () -> None
         self.release()

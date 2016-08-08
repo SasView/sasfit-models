@@ -61,8 +61,8 @@ category = "shape:lamellae"
 
 #             ["name", "units", default, [lower, upper], "type","description"],
 parameters = [ ["thickness", "Ang", 50, [0, inf], "volume","total layer thickness" ],
-               ["sld", "1e-6/Ang^2", 1, [-inf, inf], "","Layer scattering length density" ],
-               ["sld_solvent", "1e-6/Ang^2", 6, [-inf, inf], "","Solvent scattering length density" ],
+               ["sld", "1e-6/Ang^2", 1, [-inf, inf], "sld","Layer scattering length density" ],
+               ["sld_solvent", "1e-6/Ang^2", 6, [-inf, inf], "sld","Solvent scattering length density" ],
              ]
 
 # No volume normalization despite having a volume parameter
@@ -80,10 +80,6 @@ Iq = """
     // Use small angle fix 1-cos(theta) = 2 sin^2(theta/2)
     const double sinq2 = sin(0.5*q*thickness);
     return 4.0e-4*M_PI*sub*sub/qsq * 2.0*sinq2*sinq2 / (thickness*qsq);
-    """
-
-Iqxy = """
-    return Iq(sqrt(qx*qx+qy*qy), IQ_PARAMETERS);
     """
 
 # ER defaults to 0.0

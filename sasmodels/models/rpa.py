@@ -68,7 +68,7 @@ Case 8: A-B/C-D mixture of two diblock copolymers A-B and C-D
 Case 9: A-B-C-D four-block copolymer
 See details in the model function help
 """
-category = ""
+category = "shape-independent"
 
 CASES = [
     "C+D binary mixture",
@@ -85,49 +85,31 @@ CASES = [
 
 #   ["name", "units", default, [lower, upper], "type","description"],
 parameters = [
-    ["case_num", CASES, 0, [0, 10], "", "Component organization"],
+    ["case_num", "", 1, [CASES], "", "Component organization"],
 
-    ["Na", "", 1000.0, [1, inf], "", "Degree of polymerization"],
-    ["Phia", "", 0.25, [0, 1], "", "volume fraction"],
-    ["va", "mL/mol", 100.0, [0, inf], "", "specific volume"],
-    ["La", "fm", 10.0, [-inf, inf], "", "scattering length"],
-    ["ba", "Ang", 5.0, [0, inf], "", "segment length"],
+    ["N[4]", "", 1000.0, [1, inf], "", "Degree of polymerization"],
+    ["Phi[4]", "", 0.25, [0, 1], "", "volume fraction"],
+    ["v[4]", "mL/mol", 100.0, [0, inf], "", "specific volume"],
+    ["L[4]", "fm", 10.0, [-inf, inf], "", "scattering length"],
+    ["b[4]", "Ang", 5.0, [0, inf], "", "segment length"],
 
-    ["Nb", "", 1000.0, [1, inf], "", "Degree of polymerization"],
-    ["Phib", "", 0.25, [0, 1], "", "volume fraction"],
-    ["vb", "mL/mol", 100.0, [0, inf], "", "specific volume"],
-    ["Lb", "fm", 10.0, [-inf, inf], "", "scattering length"],
-    ["bb", "Ang", 5.0, [0, inf], "", "segment length"],
-
-    ["Nc", "", 1000.0, [1, inf], "", "Degree of polymerization"],
-    ["Phic", "", 0.25, [0, 1], "", "volume fraction"],
-    ["vc", "mL/mol", 100.0, [0, inf], "", "specific volume"],
-    ["Lc", "fm", 10.0, [-inf, inf], "", "scattering length"],
-    ["bc", "Ang", 5.0, [0, inf], "", "segment length"],
-
-    ["Nd", "", 1000.0, [1, inf], "", "Degree of polymerization"],
-    ["Phid", "", 0.25, [0, 1], "", "volume fraction"],
-    ["vd", "mL/mol", 100.0, [0, inf], "", "specific volume"],
-    ["Ld", "fm", 10.0, [-inf, inf], "", "scattering length"],
-    ["bd", "Ang", 5.0, [0, inf], "", "segment length"],
-
-    ["Kab", "", -0.0004, [-inf, inf], "", "Interaction parameter"],
-    ["Kac", "", -0.0004, [-inf, inf], "", "Interaction parameter"],
-    ["Kad", "", -0.0004, [-inf, inf], "", "Interaction parameter"],
-    ["Kbc", "", -0.0004, [-inf, inf], "", "Interaction parameter"],
-    ["Kbd", "", -0.0004, [-inf, inf], "", "Interaction parameter"],
-    ["Kcd", "", -0.0004, [-inf, inf], "", "Interaction parameter"],
+    ["K12", "", -0.0004, [-inf, inf], "", "A:B interaction parameter"],
+    ["K13", "", -0.0004, [-inf, inf], "", "A:C interaction parameter"],
+    ["K14", "", -0.0004, [-inf, inf], "", "A:D interaction parameter"],
+    ["K23", "", -0.0004, [-inf, inf], "", "B:C interaction parameter"],
+    ["K24", "", -0.0004, [-inf, inf], "", "B:D interaction parameter"],
+    ["K34", "", -0.0004, [-inf, inf], "", "C:D interaction parameter"],
 ]
 
-category = "shape-independent"
 
 source = ["rpa.c"]
+single = False
 
+control = "case_num"
 HIDE_NONE = set()
-HIDE_A = set("Na Phia va La Kab Kac Kad".split())
-HIDE_AB = set("Nb Phib vb Lb Kbc Kbd".split()).union(HIDE_A)
-def hidden(pars):
-    case_num = pars.get("case_num", parameters[0][2])
+HIDE_A = set("N1 Phi1 v1 L1 b1 K12 K13 K14".split())
+HIDE_AB = set("N2 Phi2 v2 L2 b2 K23 K24".split()).union(HIDE_A)
+def hidden(case_num):
     if case_num < 2:
         return HIDE_AB
     elif case_num < 5:

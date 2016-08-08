@@ -82,6 +82,12 @@
  *    IEEE      0,26.6417   30000       5.7e-14     1.5e-14
  */
 
+#ifdef NEED_ERF
+
+#if FLOAT_SIZE>4  // DOUBLE_PRECISION
+
+double cephes_erf(double x);
+double cephes_erfc(double a);
 
 constant double PD[] = {
     2.46196981473530512524E-10,
@@ -143,69 +149,20 @@ constant double UD[] = {
     4.92673942608635921086E4
 };
 
-/* erfc(x) = exp(-x^2) P(1/x), 1 < x < 2 */
-constant double PF[] = {
-    2.326819970068386E-002,
-    -1.387039388740657E-001,
-    3.687424674597105E-001,
-    -5.824733027278666E-001,
-    6.210004621745983E-001,
-    -4.944515323274145E-001,
-    3.404879937665872E-001,
-    -2.741127028184656E-001,
-    5.638259427386472E-001
-};
-
-/* erfc(x) = exp(-x^2) 1/x P(1/x^2), 2 < x < 14 */
-constant double RF[] = {
-    -1.047766399936249E+001,
-    1.297719955372516E+001,
-    -7.495518717768503E+000,
-    2.921019019210786E+000,
-    -1.015265279202700E+000,
-    4.218463358204948E-001,
-    -2.820767439740514E-001,
-    5.641895067754075E-001
-};
-
-/* erf(x) = x P(x^2), 0 < x < 1 */
- constant double TF[] = {
-    7.853861353153693E-005,
-    -8.010193625184903E-004,
-    5.188327685732524E-003,
-    -2.685381193529856E-002,
-    1.128358514861418E-001,
-    -3.761262582423300E-001,
-    1.128379165726710E+000
-};
-
-double sas_erf(double x);
-double sas_erfc(double a);
-
-double sas_erfc(double a)
+double cephes_erfc(double a)
 {
     double MAXLOG = 88.72283905206835;
     double p, q, x, y, z;
 
 
-    /*if (a < 0.0)
-        x = -a;
-    else
-        x = a;*/
-
     x = fabs(a);
 
-
     if (x < 1.0) {
-        //The line bellow is a troublemaker for GPU, so sas_erf function
-        //is explicit here for the case < 1.0
-        //return (1.0 - sas_erf(a));
+        // The line below causes problems on the GPU, so inline
+        // the erf function instead and z < 1.0.
+        //return (1.0 - cephes_erf(a));
         z = x * x;
-        #if FLOAT_SIZE>4
-            y = x * polevl(z, TD, 4) / p1evl(z, UD, 5);
-        #else
-            y = x * polevl( z, TF, 6 );
-        #endif
+        y = x * polevl(z, TD, 4) / p1evl(z, UD, 5);
 
         return y;
     }
@@ -222,27 +179,15 @@ double sas_erfc(double a)
     z = exp(z);
 
 
-    #if FLOAT_SIZE > 4
-        if (x < 8.0) {
-            p = polevl(x, PD, 8);
-            q = p1evl(x, QD, 8);
-        }
-        else {
-            p = polevl(x, RD, 5);
-            q = p1evl(x, SD, 6);
-        }
-        y = (z * p) / q;
-    #else
-        q=1.0/x;
-        y=q*q;
-        if( x < 2.0 ) {
-	        p = polevl( y, PF, 8 );
-	    }
-        else {
-	        p = polevl( y, RF, 7 );
-	    }
-        y = z * q * p;
-    #endif
+    if (x < 8.0) {
+        p = polevl(x, PD, 8);
+        q = p1evl(x, QD, 8);
+    }
+    else {
+        p = polevl(x, RD, 5);
+        q = p1evl(x, SD, 6);
+    }
+    y = (z * p) / q;
 
     if (a < 0)
         y = 2.0 - y;
@@ -257,21 +202,153 @@ double sas_erfc(double a)
 }
 
 
-double sas_erf(double x)
+double cephes_erf(double x)
 {
     double y, z;
 
     if (fabs(x) > 1.0)
-        return (1.0 - sas_erfc(x));
+        return (1.0 - cephes_erfc(x));
 
     z = x * x;
-    #if FLOAT_SIZE>4
-        y = x * polevl(z, TD, 4) / p1evl(z, UD, 5);
-    #else
-        y = x * polevl( z, TF, 6 );
-    #endif
+    y = x * polevl(z, TD, 4) / p1evl(z, UD, 5);
 
     return y;
 }
 
+#else // SINGLE PRECISION
 
+float cephes_erff(float x);
+float cephes_erfcf(float a);
+
+/* erfc(x) = exp(-x^2) P(1/x), 1 < x < 2 */
+constant float PF[] = {
+    2.326819970068386E-002,
+    -1.387039388740657E-001,
+    3.687424674597105E-001,
+    -5.824733027278666E-001,
+    6.210004621745983E-001,
+    -4.944515323274145E-001,
+    3.404879937665872E-001,
+    -2.741127028184656E-001,
+    5.638259427386472E-001
+};
+
+/* erfc(x) = exp(-x^2) 1/x P(1/x^2), 2 < x < 14 */
+constant float RF[] = {
+    -1.047766399936249E+001,
+    1.297719955372516E+001,
+    -7.495518717768503E+000,
+    2.921019019210786E+000,
+    -1.015265279202700E+000,
+    4.218463358204948E-001,
+    -2.820767439740514E-001,
+    5.641895067754075E-001
+};
+
+/* erf(x) = x P(x^2), 0 < x < 1 */
+ constant float TF[] = {
+    7.853861353153693E-005,
+    -8.010193625184903E-004,
+    5.188327685732524E-003,
+    -2.685381193529856E-002,
+    1.128358514861418E-001,
+    -3.761262582423300E-001,
+    1.128379165726710E+000
+};
+
+
+float cephes_erfcf(float a)
+{
+    float MAXLOG = 88.72283905206835;
+    float p, q, x, y, z;
+
+
+    /*if (a < 0.0)
+        x = -a;
+    else
+        x = a;*/
+    // TODO: tinycc does not support fabsf
+    x = fabs(a);
+
+
+    if (x < 1.0) {
+        //The line below is a troublemaker for GPU, so sas_erf function
+        //is explicit here for the case < 1.0
+        //return (1.0 - sas_erf(a));
+        z = x * x;
+        y = x * polevl( z, TF, 6 );
+
+        return y;
+    }
+
+    z = -a * a;
+
+    if (z < -MAXLOG) {
+        if (a < 0)
+            return (2.0);
+        else
+            return (0.0);
+    }
+    z = expf(z);
+
+
+    q=1.0/x;
+    y=q*q;
+    if( x < 2.0 ) {
+        p = polevl( y, PF, 8 );
+    } else {
+        p = polevl( y, RF, 7 );
+    }
+    y = z * q * p;
+
+    if (a < 0)
+        y = 2.0 - y;
+
+    if (y == 0.0) {
+        if (a < 0)
+            return (2.0);
+        else
+            return (0.0);
+    }
+    return y;
+}
+
+
+float cephes_erff(float x)
+{
+    float y, z;
+
+    // TODO: tinycc does not support fabsf
+    if (fabs(x) > 1.0)
+        return (1.0 - cephes_erfcf(x));
+
+    z = x * x;
+    y = x * polevl( z, TF, 6 );
+
+    return y;
+}
+
+#endif // SINGLE_PRECISION
+
+#if FLOAT_SIZE>4
+//static double sas_erf(double x) { return erf(x); }
+//static double sas_erfc(double x) { return erfc(x); }
+#define sas_erf cephes_erf
+#define sas_erfc cephes_erfc
+#else
+#define sas_erf cephes_erff
+#define sas_erfc cephes_erfcf
+#endif
+
+#else // !NEED_ERF
+
+#if FLOAT_SIZE>4
+//static double sas_erf(double x) { return erf(x); }
+//static double sas_erfc(double x) { return erfc(x); }
+#define sas_erf erf
+#define sas_erfc erfc
+#else
+#define sas_erf erff
+#define sas_erfc erfcf
+#endif
+#endif // !NEED_ERF

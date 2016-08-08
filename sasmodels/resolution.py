@@ -5,9 +5,9 @@ This defines classes for 1D and 2D resolution calculations.
 """
 from __future__ import division
 
-from scipy.special import erf
-from numpy import sqrt, log, log10
-import numpy as np
+from scipy.special import erf  # type: ignore
+from numpy import sqrt, log, log10, exp, pi  # type: ignore
+import numpy as np  # type: ignore
 
 __all__ = ["Resolution", "Perfect1D", "Pinhole1D", "Slit1D",
            "apply_resolution_matrix", "pinhole_resolution", "slit_resolution",
@@ -34,8 +34,8 @@ class Resolution(object):
     *apply* is the method to call with I(q_calc) to compute the resolution
     smeared theory I(q).
     """
-    q = None
-    q_calc = None
+    q = None  # type: np.ndarray
+    q_calc = None  # type: np.ndarray
     def apply(self, theory):
         """
         Smear *theory* by the resolution function, returning *Iq*.
@@ -475,9 +475,9 @@ def eval_form(q, form, pars):
 
     *pars* are the parameter values to use when evaluating.
     """
-    from sasmodels import core
+    from sasmodels import direct_model
     kernel = form.make_kernel([q])
-    theory = core.call_kernel(kernel, pars)
+    theory = direct_model.call_kernel(kernel, pars)
     kernel.release()
     return theory
 
@@ -488,7 +488,6 @@ def gaussian(q, q0, dq):
 
     *q0* is the center, *dq* is the width and *q* are the points to evaluate.
     """
-    from numpy import exp, pi
     return exp(-0.5*((q-q0)/dq)**2)/(sqrt(2*pi)*dq)
 
 
@@ -499,13 +498,14 @@ def romberg_slit_1d(q, width, height, form, pars):
     This is an adaptive integration technique.  It is called with settings
     that make it slow to evaluate but give it good accuracy.
     """
-    from scipy.integrate import romberg
+    from scipy.integrate import romberg  # type: ignore
 
-    if any(k not in form.info['defaults'] for k in pars.keys()):
-        keys = set(form.info['defaults'].keys())
-        extra = set(pars.keys()) - keys
-        raise ValueError("bad parameters: [%s] not in [%s]"%
-                         (", ".join(sorted(extra)), ", ".join(sorted(keys))))
+    par_set = set([p.name for p in form.info.parameters.call_parameters])
+    if any(k not in par_set for k in pars.keys()):
+        extra = set(pars.keys()) - par_set
+        raise ValueError("bad parameters: [%s] not in [%s]"
+                         % (", ".join(sorted(extra)),
+                            ", ".join(sorted(pars.keys()))))
 
     if np.isscalar(width):
         width = [width]*len(q)
@@ -553,13 +553,14 @@ def romberg_pinhole_1d(q, q_width, form, pars, nsigma=5):
     This is an adaptive integration technique.  It is called with settings
     that make it slow to evaluate but give it good accuracy.
     """
-    from scipy.integrate import romberg
+    from scipy.integrate import romberg  # type: ignore
 
-    if any(k not in form.info['defaults'] for k in pars.keys()):
-        keys = set(form.info['defaults'].keys())
-        extra = set(pars.keys()) - keys
-        raise ValueError("bad parameters: [%s] not in [%s]"%
-                         (", ".join(sorted(extra)), ", ".join(sorted(keys))))
+    par_set = set([p.name for p in form.info.parameters.call_parameters])
+    if any(k not in par_set for k in pars.keys()):
+        extra = set(pars.keys()) - par_set
+        raise ValueError("bad parameters: [%s] not in [%s]"
+                         % (", ".join(sorted(extra)),
+                            ", ".join(sorted(pars.keys()))))
 
     _fn = lambda q, q0, dq: eval_form(q, form, pars)*gaussian(q, q0, dq)
     r = [romberg(_fn, max(qi-nsigma*dqi, 1e-10*q[0]), qi+nsigma*dqi,
@@ -691,9 +692,9 @@ class IgorComparisonTest(unittest.TestCase):
         self.model = core.load_model("sphere", dtype='double')
 
     def _eval_sphere(self, pars, resolution):
-        from sasmodels import core
+        from sasmodels import direct_model
         kernel = self.model.make_kernel([resolution.q_calc])
-        theory = core.call_kernel(kernel, pars)
+        theory = direct_model.call_kernel(kernel, pars)
         result = resolution.apply(theory)
         kernel.release()
         return result
@@ -749,11 +750,12 @@ class IgorComparisonTest(unittest.TestCase):
         #                     2*np.pi/radius/200)
         #tol = 0.001
         ## The default 3 sigma and no extra points gets 1%
-        q_calc, tol = None, 0.01
+        q_calc = None  # type: np.ndarray
+        tol = 0.01
         resolution = Pinhole1D(q, q_width, q_calc=q_calc)
         output = self._eval_sphere(pars, resolution)
         if 0: # debug plot
-            import matplotlib.pyplot as plt
+            import matplotlib.pyplot as plt  # type: ignore
             resolution = Perfect1D(q)
             source = self._eval_sphere(pars, resolution)
             plt.loglog(q, source, '.')
@@ -1025,7 +1027,7 @@ def main():
     Returns 0 if success or 1 if any tests fail.
     """
     import sys
-    import xmlrunner
+    import xmlrunner  # type: ignore
 
     suite = unittest.TestSuite()
     suite.addTest(unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__]))
@@ -1042,6 +1044,7 @@ def main():
 def _eval_demo_1d(resolution, title):
     import sys
     from sasmodels import core
+    from sasmodels import direct_model
     name = sys.argv[1] if len(sys.argv) > 1 else 'cylinder'
 
     if name == 'cylinder':
@@ -1062,7 +1065,7 @@ def _eval_demo_1d(resolution, title):
     model = core.build_model(model_info)
 
     kernel = model.make_kernel([resolution.q_calc])
-    theory = core.call_kernel(kernel, pars)
+    theory = direct_model.call_kernel(kernel, pars)
     Iq = resolution.apply(theory)
 
     if isinstance(resolution, Slit1D):
@@ -1072,7 +1075,7 @@ def _eval_demo_1d(resolution, title):
         dq = resolution.q_width
         Iq_romb = romberg_pinhole_1d(resolution.q, dq, model, pars)
 
-    import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt  # type: ignore
     plt.loglog(resolution.q_calc, theory, label='unsmeared')
     plt.loglog(resolution.q, Iq, label='smeared', hold=True)
     plt.loglog(resolution.q, Iq_romb, label='romberg smeared', hold=True)
@@ -1107,7 +1110,7 @@ def demo():
     """
     Run the resolution demos.
     """
-    import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt  # type: ignore
     plt.subplot(121)
     demo_pinhole_1d()
     #plt.yscale('linear')

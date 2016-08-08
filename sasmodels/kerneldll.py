@@ -50,58 +50,80 @@ import os
 from os.path import join as joinpath, split as splitpath, splitext
 import subprocess
 import tempfile
-import ctypes as ct
-from ctypes import c_void_p, c_int, c_longdouble, c_double, c_float
+import ctypes as ct  # type: ignore
+from ctypes import c_void_p, c_int32, c_longdouble, c_double, c_float  # type: ignore
 import logging
 
-import numpy as np
+import numpy as np  # type: ignore
+
+try:
+    import tinycc
+except ImportError:
+    tinycc = None
 
 from . import generate
-from .kernelpy import PyInput, PyModel
+from .kernel import KernelModel, Kernel
+from .kernelpy import PyInput
 from .exception import annotate_exception
+from .generate import F16, F32, F64
 
-if os.name == 'nt':
-    ARCH = "" if sys.maxint > 2**32 else "x86"  # maxint=2**31-1 on 32 bit
-    # Windows compiler; check if TinyCC is available
-    try:
-        import tinycc
-    except ImportError:
-        tinycc = None
-    # call vcvarsall.bat before compiling to set path, headers, libs, etc.
+try:
+    from typing import Tuple, Callable, Any
+    from .modelinfo import ModelInfo
+    from .details import CallDetails
+except ImportError:
+    pass
+
+if "SAS_COMPILER" in os.environ:
+    compiler = os.environ["SAS_COMPILER"]
+elif os.name == 'nt':
+    # If vcvarsall.bat has been called, then VCINSTALLDIR is in the environment
+    # and we can use the MSVC compiler.  Otherwise, if tinycc is available
+    # the use it.  Otherwise, hope that mingw is available.
     if "VCINSTALLDIR" in os.environ:
-        # MSVC compiler is available, so use it.  OpenMP requires a copy of
-        # vcomp90.dll on the path.  One may be found here:
-        #       C:/Windows/winsxs/x86_microsoft.vc90.openmp*/vcomp90.dll
-        # Copy this to the python directory and uncomment the OpenMP COMPILE
-        # TODO: remove intermediate OBJ file created in the directory
-        # TODO: maybe don't use randomized name for the c file
-        # TODO: maybe ask distutils to find MSVC
-        CC = "cl /nologo /Ox /MD /W3 /GS- /DNDEBUG".split()
-        if "SAS_OPENMP" in os.environ:
-            CC.append("/openmp")
-        LN = "/link /DLL /INCREMENTAL:NO /MANIFEST".split()
-        def compile_command(source, output):
-            return CC + ["/Tp%s"%source] + LN + ["/OUT:%s"%output]
+        compiler = "msvc"
     elif tinycc:
-        # TinyCC compiler.
-        CC = [tinycc.TCC] + "-shared -rdynamic -Wall".split()
-        def compile_command(source, output):
-            return CC + [source, "-o", output]
+        compiler = "tinycc"
     else:
-        # MinGW compiler.
-        CC = "gcc -shared -std=c99 -O2 -Wall".split()
-        if "SAS_OPENMP" in os.environ:
-            CC.append("-fopenmp")
-        def compile_command(source, output):
-            return CC + [source, "-o", output, "-lm"]
+        compiler = "mingw"
 else:
-    ARCH = ""
+    compiler = "unix"
+
+ARCH = "" if sys.maxint > 2**32 else "x86"  # maxint=2**31-1 on 32 bit
+if compiler == "unix":
     # Generic unix compile
     # On mac users will need the X code command line tools installed
     #COMPILE = "gcc-mp-4.7 -shared -fPIC -std=c99 -fopenmp -O2 -Wall %s -o %s -lm -lgomp"
     CC = "cc -shared -fPIC -std=c99 -O2 -Wall".split()
     # add openmp support if not running on a mac
     if sys.platform != "darwin":
+        CC.append("-fopenmp")
+    def compile_command(source, output):
+        return CC + [source, "-o", output, "-lm"]
+elif compiler == "msvc":
+    # Call vcvarsall.bat before compiling to set path, headers, libs, etc.
+    # MSVC compiler is available, so use it.  OpenMP requires a copy of
+    # vcomp90.dll on the path.  One may be found here:
+    #       C:/Windows/winsxs/x86_microsoft.vc90.openmp*/vcomp90.dll
+    # Copy this to the python directory and uncomment the OpenMP COMPILE
+    # TODO: remove intermediate OBJ file created in the directory
+    # TODO: maybe don't use randomized name for the c file
+    # TODO: maybe ask distutils to find MSVC
+    CC = "cl /nologo /Ox /MD /W3 /GS- /DNDEBUG".split()
+    if "SAS_OPENMP" in os.environ:
+        CC.append("/openmp")
+    LN = "/link /DLL /INCREMENTAL:NO /MANIFEST".split()
+    def compile_command(source, output):
+        return CC + ["/Tp%s"%source] + LN + ["/OUT:%s"%output]
+elif compiler == "tinycc":
+    # TinyCC compiler.
+    CC = [tinycc.TCC] + "-shared -rdynamic -Wall".split()
+    def compile_command(source, output):
+        return CC + [source, "-o", output]
+elif compiler == "mingw":
+    # MinGW compiler.
+    CC = "gcc -shared -std=c99 -O2 -Wall".split()
+    if "SAS_OPENMP" in os.environ:
         CC.append("-fopenmp")
     def compile_command(source, output):
         return CC + [source, "-o", output, "-lm"]
@@ -131,17 +153,14 @@ def compile(source, output):
     if not os.path.exists(output):
         raise RuntimeError("compile failed.  File is in %r"%source)
 
-def dll_path(model_info, dtype="double"):
+def dll_name(model_info, dtype):
+    # type: (ModelInfo, np.dtype) ->  str
     """
-    Path to the compiled model defined by *model_info*.
+    Name of the dll containing the model.  This is the base file name without
+    any path or extension, with a form such as 'sas_sphere32'.
     """
-    basename = splitext(splitpath(model_info['filename'])[1])[0]
-    if np.dtype(dtype) == generate.F32:
-        basename += "32"
-    elif np.dtype(dtype) == generate.F64:
-        basename += "64"
-    else:
-        basename += "128"
+    bits = 8*dtype.itemsize
+    basename = "sas%d_%s"%(bits, model_info.id)
     basename += ARCH + ".so"
 
     # Hack to find precompiled dlls
@@ -151,41 +170,40 @@ def dll_path(model_info, dtype="double"):
 
     return joinpath(DLL_PATH, basename)
 
-def make_dll(source, model_info, dtype="double"):
-    """
-    Load the compiled model defined by *kernel_module*.
 
-    Recompile if any files are newer than the model file.
+def dll_path(model_info, dtype):
+    # type: (ModelInfo, np.dtype) -> str
+    """
+    Complete path to the dll for the model.  Note that the dll may not
+    exist yet if it hasn't been compiled.
+    """
+    return os.path.join(DLL_PATH, dll_name(model_info, dtype))
+
+
+def make_dll(source, model_info, dtype=F64):
+    # type: (str, ModelInfo, np.dtype) -> str
+    """
+    Returns the path to the compiled model defined by *kernel_module*.
+
+    If the model has not been compiled, or if the source file(s) are newer
+    than the dll, then *make_dll* will compile the model before returning.
+    This routine does not load the resulting dll.
 
     *dtype* is a numpy floating point precision specifier indicating whether
-    the model should be single or double precision.  The default is double
-    precision.
+    the model should be single, double or long double precision.  The default
+    is double precision, *np.dtype('d')*.
 
-    The DLL is not loaded until the kernel is called so models can
-    be defined without using too many resources.
+    Set *sasmodels.ALLOW_SINGLE_PRECISION_DLLS* to False if single precision
+    models are not allowed as DLLs.
 
     Set *sasmodels.kerneldll.DLL_PATH* to the compiled dll output path.
     The default is the system temporary directory.
-
-    Set *sasmodels.ALLOW_SINGLE_PRECISION_DLLS* to True if single precision
-    models are allowed as DLLs.
     """
-    if callable(model_info.get('Iq', None)):
-        return PyModel(model_info)
-    
-    dtype = np.dtype(dtype)
-    if dtype == generate.F16:
+    if dtype == F16:
         raise ValueError("16 bit floats not supported")
-    if dtype == generate.F32 and not ALLOW_SINGLE_PRECISION_DLLS:
-        dtype = generate.F64  # Force 64-bit dll
-
-    # File name for generated C code
-    if dtype == generate.F32: # 32-bit dll
-        tempfile_prefix = 'sas_' + model_info['name'] + '32_'
-    elif dtype == generate.F64:
-        tempfile_prefix = 'sas_' + model_info['name'] + '64_'
-    else:
-        tempfile_prefix = 'sas_' + model_info['name'] + '128_'
+    if dtype == F32 and not ALLOW_SINGLE_PRECISION_DLLS:
+        dtype = F64  # Force 64-bit dll
+    # Note: dtype may be F128 for long double precision
 
     dll = dll_path(model_info, dtype)
 
@@ -197,12 +215,12 @@ def make_dll(source, model_info, dtype="double"):
         need_recompile = False
     else:
         dll_time = os.path.getmtime(dll)
-        source_files = generate.model_sources(model_info) + [model_info['filename']]
-        newest_source = max(os.path.getmtime(f) for f in source_files)
+        newest_source = generate.timestamp(model_info)
         need_recompile = dll_time < newest_source
     if need_recompile:
+        basename = os.path.splitext(os.path.basename(dll))[0] + "_"
+        fd, filename = tempfile.mkstemp(suffix=".c", prefix=basename)
         source = generate.convert_type(source, dtype)
-        fd, filename = tempfile.mkstemp(suffix=".c", prefix=tempfile_prefix)
         with os.fdopen(fd, "w") as file:
             file.write(source)
         compile(source=filename, output=dll)
@@ -214,7 +232,8 @@ def make_dll(source, model_info, dtype="double"):
     return dll
 
 
-def load_dll(source, model_info, dtype="double"):
+def load_dll(source, model_info, dtype=F64):
+    # type: (str, ModelInfo, np.dtype) -> "DllModel"
     """
     Create and load a dll corresponding to the source, info pair returned
     from :func:`sasmodels.generate.make` compiled for the target precision.
@@ -226,10 +245,7 @@ def load_dll(source, model_info, dtype="double"):
     return DllModel(filename, model_info, dtype=dtype)
 
 
-IQ_ARGS = [c_void_p, c_void_p, c_int]
-IQXY_ARGS = [c_void_p, c_void_p, c_void_p, c_int]
-
-class DllModel(object):
+class DllModel(KernelModel):
     """
     ctypes wrapper for a single model.
 
@@ -245,20 +261,17 @@ class DllModel(object):
     """
     
     def __init__(self, dllpath, model_info, dtype=generate.F32):
+        # type: (str, ModelInfo, np.dtype) -> None
         self.info = model_info
         self.dllpath = dllpath
-        self.dll = None
+        self._dll = None  # type: ct.CDLL
         self.dtype = np.dtype(dtype)
 
     def _load_dll(self):
-        Nfixed1d = len(self.info['partype']['fixed-1d'])
-        Nfixed2d = len(self.info['partype']['fixed-2d'])
-        Npd1d = len(self.info['partype']['pd-1d'])
-        Npd2d = len(self.info['partype']['pd-2d'])
-
+        # type: () -> None
         #print("dll", self.dllpath)
         try:
-            self.dll = ct.CDLL(self.dllpath)
+            self._dll = ct.CDLL(self.dllpath)
         except:
             annotate_exception("while loading "+self.dllpath)
             raise
@@ -266,30 +279,36 @@ class DllModel(object):
         fp = (c_float if self.dtype == generate.F32
               else c_double if self.dtype == generate.F64
               else c_longdouble)
-        pd_args_1d = [c_void_p, fp] + [c_int]*Npd1d if Npd1d else []
-        pd_args_2d = [c_void_p, fp] + [c_int]*Npd2d if Npd2d else []
-        self.Iq = self.dll[generate.kernel_name(self.info, False)]
-        self.Iq.argtypes = IQ_ARGS + pd_args_1d + [fp]*Nfixed1d
 
-        self.Iqxy = self.dll[generate.kernel_name(self.info, True)]
-        self.Iqxy.argtypes = IQXY_ARGS + pd_args_2d + [fp]*Nfixed2d
-        
-        self.release()
+        # int, int, int, int*, double*, double*, double*, double*, double
+        argtypes = [c_int32]*3 + [c_void_p]*4 + [fp]
+        names = [generate.kernel_name(self.info, variant)
+                 for variant in ("Iq", "Iqxy", "Imagnetic")]
+        self._kernels = [self._dll[name] for name in names]
+        for k in self._kernels:
+            k.argtypes = argtypes
 
     def __getstate__(self):
+        # type: () -> Tuple[ModelInfo, str]
         return self.info, self.dllpath
 
     def __setstate__(self, state):
+        # type: (Tuple[ModelInfo, str]) -> None
         self.info, self.dllpath = state
-        self.dll = None
+        self._dll = None
 
     def make_kernel(self, q_vectors):
+        # type: (List[np.ndarray]) -> DllKernel
         q_input = PyInput(q_vectors, self.dtype)
-        if self.dll is None: self._load_dll()
-        kernel = self.Iqxy if q_input.is_2d else self.Iq
+        # Note: pickle not supported for DllKernel
+        if self._dll is None:
+            self._load_dll()
+        is_2d = len(q_vectors) == 2
+        kernel = self._kernels[1:3] if is_2d else [self._kernels[0]]*2
         return DllKernel(kernel, self.info, q_input)
 
     def release(self):
+        # type: () -> None
         """
         Release any resources associated with the model.
         """
@@ -298,14 +317,14 @@ class DllModel(object):
             dll = ct.CDLL(self.dllpath)
             libHandle = dll._handle
             #libHandle = ct.c_void_p(dll._handle)
-            del dll, self.dll
-            self.dll = None
+            del dll, self._dll
+            self._dll = None
             ct.windll.kernel32.FreeLibrary(libHandle)
         else:    
             pass 
 
 
-class DllKernel(object):
+class DllKernel(Kernel):
     """
     Callable SAS kernel.
 
@@ -325,41 +344,48 @@ class DllKernel(object):
     Call :meth:`release` when done with the kernel instance.
     """
     def __init__(self, kernel, model_info, q_input):
+        # type: (Callable[[], np.ndarray], ModelInfo, PyInput) -> None
+        self.kernel = kernel
         self.info = model_info
         self.q_input = q_input
-        self.kernel = kernel
-        self.res = np.empty(q_input.nq, q_input.dtype)
-        dim = '2d' if q_input.is_2d else '1d'
-        self.fixed_pars = model_info['partype']['fixed-' + dim]
-        self.pd_pars = model_info['partype']['pd-' + dim]
+        self.dtype = q_input.dtype
+        self.dim = '2d' if q_input.is_2d else '1d'
+        self.result = np.empty(q_input.nq+1, q_input.dtype)
+        self.real = (np.float32 if self.q_input.dtype == generate.F32
+                     else np.float64 if self.q_input.dtype == generate.F64
+                     else np.float128)
 
-        # In dll kernel, but not in opencl kernel
-        self.p_res = self.res.ctypes.data
+    def __call__(self, call_details, values, cutoff, magnetic):
+        # type: (CallDetails, np.ndarray, np.ndarray, float, bool) -> np.ndarray
 
-    def __call__(self, fixed_pars, pd_pars, cutoff):
-        real = (np.float32 if self.q_input.dtype == generate.F32
-                else np.float64 if self.q_input.dtype == generate.F64
-                else np.float128)
+        kernel = self.kernel[1 if magnetic else 0]
+        args = [
+            self.q_input.nq, # nq
+            None, # pd_start
+            None, # pd_stop pd_stride[MAX_PD]
+            call_details.buffer.ctypes.data, # problem
+            values.ctypes.data,  #pars
+            self.q_input.q.ctypes.data, #q
+            self.result.ctypes.data,   # results
+            self.real(cutoff), # cutoff
+        ]
+        #print("kerneldll values", values)
+        step = 100
+        for start in range(0, call_details.pd_prod, step):
+            stop = min(start+step, call_details.pd_prod)
+            args[1:3] = [start, stop]
+            #print("calling DLL")
+            kernel(*args) # type: ignore
 
-        nq = c_int(self.q_input.nq)
-        if pd_pars:
-            cutoff = real(cutoff)
-            loops_N = [np.uint32(len(p[0])) for p in pd_pars]
-            loops = np.hstack(pd_pars)
-            loops = np.ascontiguousarray(loops.T, self.q_input.dtype).flatten()
-            p_loops = loops.ctypes.data
-            dispersed = [p_loops, cutoff] + loops_N
-        else:
-            dispersed = []
-        fixed = [real(p) for p in fixed_pars]
-        args = self.q_input.q_pointers + [self.p_res, nq] + dispersed + fixed
-        #print(pars)
-        self.kernel(*args)
-
-        return self.res
+        #print("returned",self.q_input.q, self.result)
+        scale = values[0]/self.result[self.q_input.nq]
+        background = values[1]
+        #print("scale",scale,background)
+        return scale*self.result[:self.q_input.nq] + background
 
     def release(self):
+        # type: () -> None
         """
         Release any resources associated with the kernel.
         """
-        pass
+        self.q_input.release()

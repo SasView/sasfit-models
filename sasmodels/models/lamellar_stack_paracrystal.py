@@ -118,9 +118,9 @@ parameters = [["thickness", "Ang", 33.0, [0, inf], "volume",
                "d-spacing of paracrystal stack"],
               ["spacing_polydisp", "Ang", 0.0, [0.0, inf], "",
                "d-spacing polydispersity"],
-              ["sld", "1e-6/Ang^2", 1.0, [-inf, inf], "",
+              ["sld", "1e-6/Ang^2", 1.0, [-inf, inf], "sld",
                "layer scattering length density"],
-              ["sld_solvent", "1e-6/Ang^2", 6.34, [-inf, inf], "",
+              ["sld_solvent", "1e-6/Ang^2", 6.34, [-inf, inf], "sld",
                "Solvent scattering length density"],
              ]
 
@@ -129,10 +129,6 @@ source = ["lamellar_stack_paracrystal_kernel.c"]
 
 form_volume = """
     return 1.0;
-    """
-
-Iqxy = """
-    return Iq(sqrt(qx*qx+qy*qy), IQ_PARAMETERS);
     """
 
 # ER defaults to 0.0

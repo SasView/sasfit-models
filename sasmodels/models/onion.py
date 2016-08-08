@@ -15,22 +15,26 @@ The 1D scattering intensity is calculated in the following way
 
 .. math::
 
-    P(q) &= [f]^2 / V_\text{particle}
+    P(q) = [f]^2 / V_\text{particle}
 
 where
 
 .. math::
+    :nowrap:
 
-    f    &= f_\text{core}
+    \begin{align*}
+    f &= f_\text{core}
             + \left(\sum_{\text{shell}=1}^N f_\text{shell}\right)
             + f_\text{solvent}
-
+    \end{align*}
 
 The shells are spherically symmetric with particle density $\rho(r)$ and
 constant SLD within the core and solvent, so
 
 .. math::
+    :nowrap:
 
+    \begin{align*}
     f_\text{core}
         &= 4\pi\int_0^{r_\text{core}} \rho_\text{core}
             \frac{\sin(qr)}{qr}\, r^2\,\mathrm{d}r
@@ -43,6 +47,7 @@ constant SLD within the core and solvent, so
         &= 4\pi\int_{r_N}^\infty
             \rho_\text{solvent}\frac{\sin(qr)}{qr}\,r^2\,\mathrm{d}r
         &= -3\rho_\text{solvent}V(r_N)\frac{j_1(q r_N)}{q r_N}
+    \end{align*}
 
 where the spherical bessel function $j_1$ is
 
@@ -68,14 +73,15 @@ $\rho_\text{in}$ and $\Delta t_\text{shell}$ stand for the
 SLD of the inner side of the $k^\text{th}$ shell and the
 thickness of the $k^\text{th}$ shell in the equation above, respectively.
 
-For $A \gt 0$,
+For $A > 0$,
 
 .. math::
 
     f_\text{shell} &= 4 \pi \int_{r_{\text{shell}-1}}^{r_\text{shell}}
         \left[ B\exp
             \left(A (r - r_{\text{shell}-1}) / \Delta t_\text{shell} \right) + C
-        \right] \frac{\sin(qr)}{qr}\,r^2\,\mathrm{d}r \\
+        \right] \frac{\sin(qr)}{qr}\,r^2\,\mathrm{d}r
+
     &= 3BV(r_\text{shell}) e^A h(\alpha_\text{out},\beta_\text{out})
         - 3BV(r_{\text{shell}-1}) h(\alpha_\text{in},\beta_\text{in})
         + 3CV(r_{\text{shell}}) \frac{j_1(\beta_\text{out})}{\beta_\text{out}}
@@ -92,7 +98,7 @@ for
     \alpha_\text{in} &= A\frac{r_{\text{shell}-1}}{\Delta t_\text{shell}}
          &\alpha_\text{out} &= A\frac{r_\text{shell}}{\Delta t_\text{shell}} \\
     \beta_\text{in} &= qr_{\text{shell}-1}
-        &\beta_\text{out} &= qr_\text{shell}
+        &\beta_\text{out} &= qr_\text{shell} \\
     \end{align*}
 
 where $h$ is
@@ -109,8 +115,9 @@ $\rho_\text{shell}(r) \approx A(r-r_{\text{shell}-1})/\Delta t_\text{shell})+B$,
 so this case is equivalent to
 
 .. math::
+    :nowrap:
 
-
+    \begin{align*}
     f_\text{shell}
     &=
       3 V(r_\text{shell}) \frac{\Delta\rho_\text{shell}}{\Delta t_\text{shell}}
@@ -131,6 +138,7 @@ so this case is equivalent to
     &{}
       +3\rho_\text{out}V(r_\text{shell}) \frac{j_1(qr_\text{out})}{qr_\text{out}}
       -3\rho_\text{in}V(r_{\text{shell}-1}) \frac{j_1(qr_\text{in})}{qr_\text{in}}
+    \end{align*}
 
 For $A = 0$, the exponential function has no dependence on the radius (so that
 $\rho_\text{out}$ is ignored this case) and becomes flat. We set the constant
@@ -292,79 +300,75 @@ category = "shape:sphere"
 # TODO: n is a volume parameter that is not polydisperse
 
 #             ["name", "units", default, [lower, upper], "type","description"],
-parameters = [["core_sld", "1e-6/Ang^2", 1.0, [-inf, inf], "",
+parameters = [["sld_core", "1e-6/Ang^2", 1.0, [-inf, inf], "sld",
                "Core scattering length density"],
-              ["core_radius", "Ang", 200., [0, inf], "volume",
+              ["radius_core", "Ang", 200., [0, inf], "volume",
                "Radius of the core"],
-              ["solvent_sld", "1e-6/Ang^2", 6.4, [-inf, inf], "",
+              ["sld_solvent", "1e-6/Ang^2", 6.4, [-inf, inf], "sld",
                "Solvent scattering length density"],
-              ["n", "", 1, [0, 10], "volume",
+              ["n_shells", "", 1, [0, 10], "volume",
                "number of shells"],
-              ["in_sld[n]", "1e-6/Ang^2", 1.7, [-inf, inf], "",
+              ["sld_in[n_shells]", "1e-6/Ang^2", 1.7, [-inf, inf], "sld",
                "scattering length density at the inner radius of shell k"],
-              ["out_sld[n]", "1e-6/Ang^2", 2.0, [-inf, inf], "",
+              ["sld_out[n_shells]", "1e-6/Ang^2", 2.0, [-inf, inf], "sld",
                "scattering length density at the outer radius of shell k"],
-              ["thickness[n]", "Ang", 40., [0, inf], "volume",
+              ["thickness[n_shells]", "Ang", 40., [0, inf], "volume",
                "Thickness of shell k"],
-              ["A[n]", "", 1.0, [-inf, inf], "",
+              ["A[n_shells]", "", 1.0, [-inf, inf], "",
                "Decay rate of shell k"],
               ]
 
-#source = ["lib/sph_j1c.c", "onion.c"]
+source = ["lib/sph_j1c.c", "onion.c"]
+single = False
 
-def Iq(q, *args, **kw):
-    return q
-
-def Iqxy(qx, *args, **kw):
-    return qx
-
-
-def shape(core_sld, core_radius, solvent_sld, n, in_sld, out_sld, thickness, A):
+profile_axes = ['Radius (A)', 'SLD (1e-6/A^2)']
+def profile(sld_core, radius_core, sld_solvent, n_shells,
+            sld_in, sld_out, thickness, A):
     """
-    SLD profile
+    Returns shape profile with x=radius, y=SLD.
     """
 
-    total_radius = 1.25*(sum(thickness[:n]) + core_radius + 1)
+    total_radius = 1.25*(sum(thickness[:n_shells]) + radius_core + 1)
     dr = total_radius/400  # 400 points for a smooth plot
 
     r = []
-    beta = []
+    rho = []
 
     # add in the core
     r.append(0)
-    beta.append(core_sld)
-    r.append(core_radius)
-    beta.append(core_sld)
+    rho.append(sld_core)
+    r.append(radius_core)
+    rho.append(sld_core)
 
     # add in the shells
-    for k in range(n):
+    for k in range(n_shells):
         # Left side of each shells
         r0 = r[-1]
         r.append(r0)
-        beta.append(in_sld[k])
+        rho.append(sld_in[k])
 
         if fabs(A[k]) < 1.0e-16:
             # flat shell
             r.append(r0 + thickness[k])
-            beta.append(out_sld[k])
+            rho.append(sld_out[k])
         else:
             # exponential shell
             # num_steps must be at least 1, so use floor()+1 rather than ceil
             # to protect against a thickness0.
             num_steps = np.floor(thickness[k]/dr) + 1
-            slope = (out_sld[k] - in_sld[k])/expm1(A[k])
-            const = (in_sld[k] - slope)
+            slope = (sld_out[k] - sld_in[k]) / expm1(A[k])
+            const = (sld_in[k] - slope)
             for rk in np.linspace(0, thickness[k], num_steps+1):
                 r.append(r0+rk)
-                beta.append(slope*exp(A[k]*rk/thickness[k]) + const)
+                rho.append(slope*exp(A[k]*rk/thickness[k]) + const)
 
     # add in the solvent
     r.append(r[-1])
-    beta.append(solvent_sld)
+    rho.append(sld_solvent)
     r.append(total_radius)
-    beta.append(solvent_sld)
+    rho.append(sld_solvent)
 
-    return np.asarray(r), np.asarray(beta)
+    return np.asarray(r), np.asarray(rho)
 
 def ER(core_radius, n, thickness):
     return np.sum(thickness[:n[0]], axis=0) + core_radius
@@ -373,15 +377,19 @@ def VR(core_radius, n, thickness):
     return 1.0, 1.0
 
 demo = {
-    "solvent_sld": 2.2,
-    "core_sld": 1.0,
+    "sld_solvent": 2.2,
+    "sld_core": 1.0,
     "core_radius": 100,
-    "n": 4,
-    "in_sld": [0.5, 1.5, 0.9, 2.0],
-    "out_sld": [nan, 0.9, 1.2, 1.6],
+    "n_shells": 4,
+    "sld_in": [0.5, 1.5, 0.9, 2.0],
+    "sld_out": [nan, 0.9, 1.2, 1.6],
     "thickness": [50, 75, 150, 75],
     "A": [0, -1, 1e-4, 1],
     # Could also specify them individually as
-    # "A[1]": 0, "A[2]": -1, "A[3]": 1e-4, "A[4]": 1,
+    # "A1": 0, "A2": -1, "A3": 1e-4, "A4": 1,
+    #"core_radius_pd_n": 10,
+    #"core_radius_pd": 0.4,
+    #"thickness4_pd_n": 10,
+    #"thickness4_pd": 0.4,
     }
 

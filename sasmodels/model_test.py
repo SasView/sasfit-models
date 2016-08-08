@@ -47,15 +47,63 @@ from __future__ import print_function
 import sys
 import unittest
 
-import numpy as np
+import numpy as np  # type: ignore
 
 from .core import list_models, load_model_info, build_model, HAVE_OPENCL
-from .core import call_kernel, call_ER, call_VR
+from .details import dispersion_mesh
+from .direct_model import call_kernel, get_weights
 from .exception import annotate_exception
+from .modelinfo import expand_pars
 
-#TODO: rename to tests so that tab completion works better for models directory
+try:
+    from typing import List, Iterator, Callable
+except ImportError:
+    pass
+else:
+    from .modelinfo import ParameterTable, ParameterSet, TestCondition, ModelInfo
+    from .kernel import KernelModel
+
+def call_ER(model_info, pars):
+    # type: (ModelInfo, ParameterSet) -> float
+    """
+    Call the model ER function using *values*.
+
+    *model_info* is either *model.info* if you have a loaded model,
+    or *kernel.info* if you have a model kernel prepared for evaluation.
+    """
+    if model_info.ER is None:
+        return 1.0
+    else:
+        value, weight = _vol_pars(model_info, pars)
+        individual_radii = model_info.ER(*value)
+        return np.sum(weight*individual_radii) / np.sum(weight)
+
+def call_VR(model_info, pars):
+    # type: (ModelInfo, ParameterSet) -> float
+    """
+    Call the model VR function using *pars*.
+
+    *model_info* is either *model.info* if you have a loaded model,
+    or *kernel.info* if you have a model kernel prepared for evaluation.
+    """
+    if model_info.VR is None:
+        return 1.0
+    else:
+        value, weight = _vol_pars(model_info, pars)
+        whole, part = model_info.VR(*value)
+        return np.sum(weight*part)/np.sum(weight*whole)
+
+def _vol_pars(model_info, pars):
+    # type: (ModelInfo, ParameterSet) -> Tuple[np.ndarray, np.ndarray]
+    vol_pars = [get_weights(p, pars)
+                for p in model_info.parameters.call_parameters
+                if p.type == 'volume']
+    value, weight = dispersion_mesh(model_info, vol_pars)
+    return value, weight
+
 
 def make_suite(loaders, models):
+    # type: (List[str], List[str]) -> unittest.TestSuite
     """
     Construct the pyunit test suite.
 
@@ -65,8 +113,7 @@ def make_suite(loaders, models):
 
     *models* is the list of models to test, or *["all"]* to test all models.
     """
-
-    ModelTestCase = _hide_model_case_from_nosetests()
+    ModelTestCase = _hide_model_case_from_nose()
     suite = unittest.TestSuite()
 
     if models[0] == 'all':
@@ -85,7 +132,7 @@ def make_suite(loaders, models):
         # if ispy then use the dll loader to call pykernel
         # don't try to call cl kernel since it will not be
         # available in some environmentes.
-        is_py = callable(model_info['Iq'])
+        is_py = callable(model_info.Iq)
 
         if is_py:  # kernel implemented in python
             test_name = "Model: %s, Kernel: python"%model_name
@@ -123,7 +170,8 @@ def make_suite(loaders, models):
     return suite
 
 
-def _hide_model_case_from_nosetests():
+def _hide_model_case_from_nose():
+    # type: () -> type
     class ModelTestCase(unittest.TestCase):
         """
         Test suit for a particular model with a particular kernel driver.
@@ -134,33 +182,38 @@ def _hide_model_case_from_nosetests():
         """
         def __init__(self, test_name, model_info, test_method_name,
                      platform, dtype):
+            # type: (str, ModelInfo, str, str, DType) -> None
             self.test_name = test_name
             self.info = model_info
             self.platform = platform
             self.dtype = dtype
 
-            setattr(self, test_method_name, self._runTest)
+            setattr(self, test_method_name, self.run_all)
             unittest.TestCase.__init__(self, test_method_name)
 
-        def _runTest(self):
+        def run_all(self):
+            # type: () -> None
             smoke_tests = [
                 # test validity at reasonable values
-                [{}, 0.1, None],
-                [{}, (0.1, 0.1), None],
+                ({}, 0.1, None),
+                ({}, (0.1, 0.1), None),
                 # test validity at q = 0
-                #[{}, 0.0, None],
-                #[{}, (0.0, 0.0), None],
+                #({}, 0.0, None),
+                #({}, (0.0, 0.0), None),
+                # test vector form
+                ({}, [0.1]*2, [None]*2),
+                ({}, [(0.1, 0.1)]*2, [None]*2),
                 # test that ER/VR will run if they exist
-                [{}, 'ER', None],
-                [{}, 'VR', None],
+                ({}, 'ER', None),
+                ({}, 'VR', None),
                 ]
 
-            tests = self.info['tests']
+            tests = self.info.tests
             try:
                 model = build_model(self.info, dtype=self.dtype,
                                     platform=self.platform)
                 for test in smoke_tests + tests:
-                    self._run_one_test(model, test)
+                    self.run_one(model, test)
 
                 if not tests and self.platform == "dll":
                     ## Uncomment the following to make forgetting the test
@@ -174,8 +227,10 @@ def _hide_model_case_from_nosetests():
                 annotate_exception(self.test_name)
                 raise
 
-        def _run_one_test(self, model, test):
-            pars, x, y = test
+        def run_one(self, model, test):
+            # type: (KernelModel, TestCondition) -> None
+            user_pars, x, y = test
+            pars = expand_pars(self.info.parameters, user_pars)
 
             if not isinstance(y, list):
                 y = [y]
@@ -189,8 +244,8 @@ def _hide_model_case_from_nosetests():
             elif x[0] == 'VR':
                 actual = [call_VR(model.info, pars)]
             elif isinstance(x[0], tuple):
-                Qx, Qy = zip(*x)
-                q_vectors = [np.array(Qx), np.array(Qy)]
+                qx, qy = zip(*x)
+                q_vectors = [np.array(qx), np.array(qy)]
                 kernel = model.make_kernel(q_vectors)
                 actual = call_kernel(kernel, pars)
             else:
@@ -204,7 +259,7 @@ def _hide_model_case_from_nosetests():
             for xi, yi, actual_yi in zip(x, y, actual):
                 if yi is None:
                     # smoke test --- make sure it runs and produces a value
-                    self.assertTrue(np.isfinite(actual_yi),
+                    self.assertTrue(not np.isnan(actual_yi),
                                     'invalid f(%s): %s' % (xi, actual_yi))
                 elif np.isnan(yi):
                     self.assertTrue(np.isnan(actual_yi),
@@ -220,6 +275,7 @@ def _hide_model_case_from_nosetests():
     return ModelTestCase
 
 def is_near(target, actual, digits=5):
+    # type: (float, float, int) -> bool
     """
     Returns true if *actual* is within *digits* significant digits of *target*.
     """
@@ -228,6 +284,7 @@ def is_near(target, actual, digits=5):
     return abs(target-actual)/shift < 1.5*10**-digits
 
 def main():
+    # type: () -> int
     """
     Run tests given is sys.argv.
 
@@ -266,10 +323,10 @@ def main():
 usage:
   python -m sasmodels.model_test [-v] [opencl|dll] model1 model2 ...
 
-If -v is included on the command line, then use verboe output.
+If -v is included on the command line, then use verbose output.
 
 If neither opencl nor dll is specified, then models will be tested with
-both opencl and dll; the compute target is ignored for pure python models.
+both OpenCL and dll; the compute target is ignored for pure python models.
 
 If model1 is 'all', then all except the remaining models will be tested.
 
@@ -283,6 +340,7 @@ If model1 is 'all', then all except the remaining models will be tested.
 
 
 def model_tests():
+    # type: () -> Iterator[Callable[[], None]]
     """
     Test runner visible to nosetests.
 
@@ -290,7 +348,7 @@ def model_tests():
     """
     tests = make_suite(['opencl', 'dll'], ['all'])
     for test_i in tests:
-        yield test_i._runTest
+        yield test_i.run_all
 
 
 if __name__ == "__main__":
