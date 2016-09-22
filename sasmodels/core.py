@@ -20,11 +20,15 @@ from . import product
 from . import mixture
 from . import kernelpy
 from . import kerneldll
-try:
-    from . import kernelcl
-    HAVE_OPENCL = True
-except Exception:
+
+if os.environ.get("SAS_OPENCL", "").lower() == "none":
     HAVE_OPENCL = False
+else:
+    try:
+        from . import kernelcl
+        HAVE_OPENCL = True
+    except Exception:
+        HAVE_OPENCL = False
 
 try:
     from typing import List, Union, Optional, Any
@@ -32,18 +36,6 @@ try:
     from .modelinfo import ModelInfo
 except ImportError:
     pass
-
-try:
-    np.meshgrid([])
-    meshgrid = np.meshgrid
-except Exception:
-    # CRUFT: np.meshgrid requires multiple vectors
-    def meshgrid(*args):
-        """Allow meshgrid with a single argument"""
-        if len(args) > 1:
-            return np.meshgrid(*args)
-        else:
-            return [np.asarray(v) for v in args]
 
 # TODO: refactor composite model support
 # The current load_model_info/build_model does not reuse existing model
@@ -57,7 +49,7 @@ except Exception:
 #    load_model_info
 #    build_model
 
-KINDS = ("all", "py", "c", "double", "single", "1d", "2d",
+KINDS = ("all", "py", "c", "double", "single", "opencl", "1d", "2d",
          "nonmagnetic", "magnetic")
 def list_models(kind=None):
     # type: () -> List[str]
@@ -71,6 +63,7 @@ def list_models(kind=None):
         * c: compiled models only
         * single: models which support single precision
         * double: models which require double precision
+        * opencl: controls if OpenCL is supperessed
         * 1d: models which are 1D only, or 2D using abs(q)
         * 2d: models which can be 2D
         * magnetic: models with an sld
@@ -78,8 +71,7 @@ def list_models(kind=None):
     """
     if kind and kind not in KINDS:
         raise ValueError("kind not in " + ", ".join(KINDS))
-    root = dirname(__file__)
-    files = sorted(glob(joinpath(root, 'models', "[a-zA-Z]*.py")))
+    files = sorted(glob(joinpath(generate.MODEL_PATH, "[a-zA-Z]*.py")))
     available_models = [basename(f)[:-3] for f in files]
     selected = [name for name in available_models if _matches(name, kind)]
 
@@ -97,6 +89,8 @@ def _matches(name, kind):
     elif kind == "double" and not info.single:
         return True
     elif kind == "single" and info.single:
+        return True
+    elif kind == "opencl" and info.opencl:
         return True
     elif kind == "2d" and any(p.type == 'orientation' for p in pars):
         return True
@@ -227,9 +221,11 @@ def parse_dtype(model_info, dtype=None, platform=None):
     fast flag set to True.
     """
     # Assign default platform, overriding ocl with dll if OpenCL is unavailable
+    # If opencl=False OpenCL is switched off
+
     if platform is None:
         platform = "ocl"
-    if platform == "ocl" and not HAVE_OPENCL:
+    if platform == "ocl" and not HAVE_OPENCL or not model_info.opencl:
         platform = "dll"
 
     # Check if type indicates dll regardless of which platform is given

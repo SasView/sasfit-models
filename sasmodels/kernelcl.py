@@ -36,7 +36,8 @@ drivers are available by starting python and running:
 
 Once you have done that, it will show the available drivers which you
 can select.  It will then tell you that you can use these drivers
-automatically by setting the PYOPENCL_CTX environment variable.
+automatically by setting the SAS_OPENCL environment variable, which is
+PYOPENCL_CTX equivalent but not conflicting with other pyopnecl programs.
 
 Some graphics cards have multiple devices on the same card.  You cannot
 yet use both of them concurrently to evaluate models, but you can run
@@ -226,6 +227,9 @@ class GpuEnvironment(object):
         #self.context = cl.create_some_context()
 
         self.context = None
+        if 'SAS_OPENCL' in os.environ:
+            #Setting PYOPENCL_CTX as a SAS_OPENCL to create cl context
+            os.environ["PYOPENCL_CTX"] = os.environ["SAS_OPENCL"]
         if 'PYOPENCL_CTX' in os.environ:
             self._create_some_context()
 
@@ -270,7 +274,7 @@ class GpuEnvironment(object):
         # type: () -> cl.Context
         """
         Protected call to cl.create_some_context without interactivity.  Use
-        this if PYOPENCL_CTX is set in the environment.  Sets the *context*
+        this if SAS_OPENCL is set in the environment.  Sets the *context*
         attribute.
         """
         try:
@@ -278,31 +282,29 @@ class GpuEnvironment(object):
         except Exception as exc:
             warnings.warn(str(exc))
             warnings.warn("pyopencl.create_some_context() failed")
-            warnings.warn("the environment variable 'PYOPENCL_CTX' might not be set correctly")
+            warnings.warn("the environment variable 'SAS_OPENCL' might not be set correctly")
 
-    def compile_program(self, name, source, dtype, fast=False):
-        # type: (str, str, np.dtype, bool) -> cl.Program
+    def compile_program(self, name, source, dtype, fast, timestamp):
+        # type: (str, str, np.dtype, bool, float) -> cl.Program
         """
         Compile the program for the device in the given context.
         """
+        # Note: PyOpenCL caches based on md5 hash of source, options and device
+        # so we don't really need to cache things for ourselves.  I'll do so
+        # anyway just to save some data munging time.
         key = "%s-%s%s"%(name, dtype, ("-fast" if fast else ""))
+        # Check timestamp on program
+        program, program_timestamp = self.compiled.get(key, (None, np.inf))
+        if program_timestamp < timestamp:
+            del self.compiled[key]
         if key not in self.compiled:
             context = self.get_context(dtype)
             logging.info("building %s for OpenCL %s", key,
                          context.devices[0].name.strip())
             program = compile_model(self.get_context(dtype),
                                     str(source), dtype, fast)
-            self.compiled[key] = program
-        return self.compiled[key]
-
-    def release_program(self, name):
-        # type: (str) -> None
-        """
-        Free memory associated with the program on the device.
-        """
-        if name in self.compiled:
-            self.compiled[name].release()
-            del self.compiled[name]
+            self.compiled[key] = (program, timestamp)
+        return program
 
 def _get_default_context():
     # type: () -> List[cl.Context]
@@ -398,11 +400,13 @@ class GpuModel(KernelModel):
         # type: (List[np.ndarray]) -> "GpuKernel"
         if self.program is None:
             compile_program = environment().compile_program
+            timestamp = generate.ocl_timestamp(self.info)
             self.program = compile_program(
                 self.info.name,
                 self.source['opencl'],
                 self.dtype,
-                self.fast)
+                self.fast,
+                timestamp)
             variants = ['Iq', 'Iqxy', 'Imagnetic']
             names = [generate.kernel_name(self.info, k) for k in variants]
             kernels = [getattr(self.program, k) for k in names]
@@ -420,7 +424,6 @@ class GpuModel(KernelModel):
         Free the resources associated with the model.
         """
         if self.program is not None:
-            environment().release_program(self.info.name)
             self.program = None
 
     def __del__(self):
@@ -551,25 +554,27 @@ class GpuKernel(Kernel):
             self.real(cutoff),
         ]
         #print("Calling OpenCL")
-        #print("values",values)
+        #call_details.show(values)
         # Call kernel and retrieve results
         last_call = None
         step = 100
-        for start in range(0, call_details.pd_prod, step):
-            stop = min(start+step, call_details.pd_prod)
+        for start in range(0, call_details.num_eval, step):
+            stop = min(start + step, call_details.num_eval)
             #print("queuing",start,stop)
             args[1:3] = [np.int32(start), np.int32(stop)]
             last_call = [kernel(self.queue, self.q_input.global_size,
                                 None, *args, wait_for=last_call)]
         cl.enqueue_copy(self.queue, self.result, self.result_b)
+        #print("result", self.result)
 
         # Free buffers
         for v in (details_b, values_b):
             if v is not None: v.release()
 
-        scale = values[0]/self.result[self.q_input.nq]
+        pd_norm = self.result[self.q_input.nq]
+        scale = values[0]/(pd_norm if pd_norm!=0.0 else 1.0)
         background = values[1]
-        #print("scale",scale,background)
+        #print("scale",scale,values[0],self.result[self.q_input.nq],background)
         return scale*self.result[:self.q_input.nq] + background
         # return self.result[:self.q_input.nq]
 

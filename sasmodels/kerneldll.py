@@ -225,7 +225,7 @@ def make_dll(source, model_info, dtype=F64):
         need_recompile = False
     else:
         dll_time = os.path.getmtime(dll)
-        newest_source = generate.timestamp(model_info)
+        newest_source = generate.dll_timestamp(model_info)
         need_recompile = dll_time < newest_source
     if need_recompile:
         basename = splitext(os.path.basename(dll))[0] + "_"
@@ -379,16 +379,17 @@ class DllKernel(Kernel):
             self.result.ctypes.data,   # results
             self.real(cutoff), # cutoff
         ]
-        #print("kerneldll values", values)
+        #print("Calling DLL")
+        #call_details.show(values)
         step = 100
-        for start in range(0, call_details.pd_prod, step):
-            stop = min(start+step, call_details.pd_prod)
+        for start in range(0, call_details.num_eval, step):
+            stop = min(start + step, call_details.num_eval)
             args[1:3] = [start, stop]
-            #print("calling DLL")
             kernel(*args) # type: ignore
 
         #print("returned",self.q_input.q, self.result)
-        scale = values[0]/self.result[self.q_input.nq]
+        pd_norm = self.result[self.q_input.nq]
+        scale = values[0]/(pd_norm if pd_norm!=0.0 else 1.0)
         background = values[1]
         #print("scale",scale,background)
         return scale*self.result[:self.q_input.nq] + background

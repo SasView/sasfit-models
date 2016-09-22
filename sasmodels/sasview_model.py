@@ -18,20 +18,12 @@ from os.path import basename, splitext
 
 import numpy as np  # type: ignore
 
-# Monkey patch sas.sascalc.fit as sas.models so that sas.models.pluginmodel
-# is available to the plugin modules.
-import sys
-import sas
-import sas.sascalc.fit
-sys.modules['sas.models'] = sas.sascalc.fit
-sas.models = sas.sascalc.fit
-
 from . import core
 from . import custom
 from . import generate
 from . import weights
 from . import modelinfo
-from .details import build_details, dispersion_mesh
+from .details import make_kernel_args, dispersion_mesh
 
 try:
     from typing import Dict, Mapping, Any, Sequence, Tuple, NamedTuple, List, Optional, Union, Callable
@@ -44,6 +36,32 @@ try:
     SasviewModelType = Callable[[int], "SasviewModel"]
 except ImportError:
     pass
+
+SUPPORT_OLD_STYLE_PLUGINS = True
+
+def _register_old_models():
+    # type: () -> None
+    """
+    Place the new models into sasview under the old names.
+
+    Monkey patch sas.sascalc.fit as sas.models so that sas.models.pluginmodel
+    is available to the plugin modules.
+    """
+    import sys
+    import sas
+    import sas.sascalc.fit
+    sys.modules['sas.models'] = sas.sascalc.fit
+    sas.models = sas.sascalc.fit
+
+    import sas.models
+    from sasmodels.conversion_table import CONVERSION_TABLE
+    for new_name, conversion in CONVERSION_TABLE.items():
+        old_name = conversion[0]
+        module_attrs = {old_name: find_model(new_name)}
+        ConstructedModule = type(old_name, (), module_attrs)
+        old_path = 'sas.models.' + old_name
+        setattr(sas.models, old_path, ConstructedModule)
+        sys.modules[old_path] = ConstructedModule
 
 
 # TODO: separate x_axis_label from multiplicity info
@@ -85,6 +103,9 @@ def load_standard_models():
             models.append(MODELS[name])
         except Exception:
             logging.error(traceback.format_exc())
+    if SUPPORT_OLD_STYLE_PLUGINS:
+        _register_old_models()
+
     return models
 
 
@@ -93,6 +114,7 @@ def load_custom_model(path):
     """
     Load a custom model given the model path.
     """
+    #print("load custom", path)
     kernel_module = custom.load_custom_kernel_module(path)
     try:
         model = kernel_module.Model
@@ -431,10 +453,9 @@ class SasviewModel(object):
         Return a list of polydispersity parameters for the model
         """
         # TODO: fix test so that parameter order doesn't matter
-        ret = ['%s.%s' % (p.name, ext)
-               for p in self._model_info.parameters.user_parameters()
-               for ext in ('npts', 'nsigmas', 'width')
-               if p.polydisperse]
+        ret = ['%s.%s' % (p_name, ext)
+               for p_name in self.dispersion.keys()
+               for ext in ('npts', 'nsigmas', 'width')]
         #print(ret)
         return ret
 
@@ -543,7 +564,7 @@ class SasviewModel(object):
         calculator = self._model.make_kernel(q_vectors)
         parameters = self._model_info.parameters
         pairs = [self._get_weights(p) for p in parameters.call_parameters]
-        call_details, values, is_magnetic = build_details(calculator, pairs)
+        call_details, values, is_magnetic = make_kernel_args(calculator, pairs)
         #call_details.show()
         #print("pairs", pairs)
         #print("params", self.params)
@@ -674,6 +695,22 @@ def test_model_list():
         except:
             annotate_exception("when loading "+name)
             raise
+
+def test_old_name():
+    # type: () -> None
+    """
+    Load and run cylinder model from sas.models.CylinderModel
+    """
+    if not SUPPORT_OLD_STYLE_PLUGINS:
+        return
+    try:
+        # if sasview is not on the path then don't try to test it
+        import sas
+    except ImportError:
+        return
+    load_standard_models()
+    from sas.models.CylinderModel import CylinderModel
+    CylinderModel().evalDistribution([0.1, 0.1])
 
 if __name__ == "__main__":
     print("cylinder(0.1,0.1)=%g"%test_model())

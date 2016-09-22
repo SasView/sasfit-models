@@ -25,7 +25,7 @@ orientation of the $q$ vector which is defined as
           effective radius for $S(Q)$ when $P(Q)*S(Q)$ is applied.
 
 For information about polarised and magnetic scattering, see
-the :doc:`magnetic help <../sasgui/perspectives/fitting/mag_help>` documentation.
+the :ref:`magnetism` documentation.
 
 Our model uses the form factor calculations implemented in a c-library provided
 by the NIST Center for Neutron Research (Kline, 2006).
@@ -115,7 +115,7 @@ def profile(sld_core, radius, sld_solvent, n, sld, thickness):
     rho.append(sld_core)
 
     # add in the shells
-    for k in range(n):
+    for k in range(int(n)):
         # Left side of each shells
         z.append(z[-1])
         rho.append(sld[k])
