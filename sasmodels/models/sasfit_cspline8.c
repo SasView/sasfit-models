@@ -3,6 +3,9 @@
 //    by sasfit_convert.py                       //
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_sf.h>
+#include <gsl/gsl_spline.h>
 
 double Iq( double q, double XMIN,  double XMAX,  double Y1,  double Y2,
            double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8,
@@ -25,6 +28,11 @@ double Iq( double q, double XMIN,  double XMAX,  double Y1,  double Y2,
            double Y3,  double Y4,  double Y5,  double Y6,  double Y7,  double Y8,
            double P0)
 {
+    gsl_interp_accel *acc_cspline;
+    acc_cspline = gsl_interp_accel_alloc();
+    gsl_spline * ffcspline8_T;
+    ffcspline8_T = gsl_spline_alloc (gsl_interp_cspline , 10);
+    double x = q;
     double tmp, xcs[10], ycs[10];
     int i;
     if (x < XMIN) return 0;

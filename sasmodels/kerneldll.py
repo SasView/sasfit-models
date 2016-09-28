@@ -94,13 +94,13 @@ if compiler == "unix":
     # Generic unix compile
     # On mac users will need the X code command line tools installed
     #COMPILE = "gcc-mp-4.7 -shared -fPIC -std=c99 -fopenmp -O2 -Wall %s -o %s -lm -lgomp"
-    CC = "cc -shared -fPIC -std=c99 -O2 -Wall".split()
+    CC = "gcc-5 -shared -fPIC -std=c99 -O2 -Wall".split()
     # add openmp support if not running on a mac
     if sys.platform != "darwin":
         CC.append("-fopenmp")
     def compile_command(source, output):
         """unix compiler command"""
-        return CC + [source, "-o", output, "-lm"]
+        return CC + [source, "-o", output, "-lm", "-lgsl"]
 elif compiler == "msvc":
     # Call vcvarsall.bat before compiling to set path, headers, libs, etc.
     # MSVC compiler is available, so use it.  OpenMP requires a copy of
