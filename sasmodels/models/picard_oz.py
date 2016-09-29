@@ -13,17 +13,6 @@ Adapted by Wojciech Potrzebowski, ESS to work with SasView
 
 category = "structure-factor"
 structure_factor = True
-single = False  # double precision only!
-
-#  dp[0] = 2.0*radius_effective();
-#  dp[1] = fabs(charge());
-#  dp[2] = volfraction();
-#  dp[3] = temperature();
-#  dp[4] = salt_concentration();
-#  dp[5] = dielectconst();
-
-
-
 
 name = "picard_oz"
 title = "Picard Ornstein-Zernike solver"
@@ -55,6 +44,11 @@ POTENTIALS = [["Lenard-Jones", "HardSphere"]]
 
 CLOSURES = [["Chain", "PercusYevick"]]
 
+#calculations
+import numpy as np
+from scipy.fftpack import dst, idst
+from numpy import inf
+
 # pylint: disable=bad-whitespace, line-too-long
 #             [ "name", "units", default, [lower, upper], "type", "description" ],
 parameters = [
@@ -63,10 +57,6 @@ parameters = [
     ["denisty",  "",   0.4,    [0, 0.74],    "", "define the Volume density of the liquid"],
     ["energy",   "epsilon/kT",  0.6,   [0, inf],    "", "define the binding energy of the Lennard Jones potential in kT units"],
     ]
-
-#calculations
-import numpy as np
-from scipy.fftpack import dst, idst
 
 
 #global constants
@@ -107,7 +97,7 @@ def inverseHankelTransform(f, delta_r):
 
 #FixPoint Operator (In 'Gamma' space)
 #*******************************************************************************************************
-def fixPointOperatorForGamma(G):
+def fixPointOperatorForGamma(G, boltzmannOfP2Ppotential, isHNC, rho):
     if not isHNC:
         c_new = boltzmannOfP2Ppotential*(1.0 + G) - G - 1.0
     else:
@@ -123,7 +113,7 @@ def fixPointOperatorForGamma(G):
 
 #We know a analytical OZ solution for hard sphere particles and Percus Yevick closure 
 #********************************************************************************************************
-def analyticalRDFsolutionForHS():
+def analyticalRDFsolutionForHS(rho, rho_V):
     sigma = hardSphereRadius
     r = Delta_r*np.arange(numberOfRadialSamplingPoints).astype('float')
     c = np.zeros(numberOfRadialSamplingPoints).astype('float')
@@ -141,7 +131,7 @@ def analyticalRDFsolutionForHS():
     
 #Start here
 #*******************************************************************************************************************************************************************
-def Iq(q, intercept, slope):
+def Iq(q, potential, closure, density, energy):
     #Working Examples:
     #*****************************************************
     #python PicardOZ.py
@@ -160,12 +150,12 @@ def Iq(q, intercept, slope):
     #Do a unit Test:
     #python PicardOZ.py -u  -d 0.3
     #*******************************************************
-    
+
     #LJ or hard sphere potential?
-    if parameters["potential"] == 0:
+    if potential == 0:
         isLennardJonesPotential = "True"
     #Which closure relation was chosen? (Default PY)
-    if parameters["closure"] == 0:
+    if closure == 0:
         isHNC = "True"
     #Should we compare with analytical solution? The unit test to work is a strong indication
     #that the numerical result is true. The only flaw of the comparison is that the same operators are used
@@ -173,8 +163,8 @@ def Iq(q, intercept, slope):
     #what we want to check against.
 
     #We read the potential depth (also for HS)
-    epsilonInkTUnits = parameters["energy"] #epsilon/kT = epsilon*beta
-    rho_V = parameters["density"]
+    epsilonInkTUnits = energy #epsilon/kT = epsilon*beta
+    rho_V = density
 
     #We transform the volume density into the mandatory particle
     #number density. The term 'hardSphereRadius' is not fully consistent,
@@ -209,15 +199,10 @@ def Iq(q, intercept, slope):
     #pl.plot(potential_LJ[hardSphereRadius -2:]); pl.show()
     if isLennardJonesPotential:
         boltzmannOfP2Ppotential = np.exp(-potential_LJ)
-    #boltzmannOfP2Ppotential[0] = 0.0 #exp(-inf), we start at Delta_r
-    
-    #Plot exp(-beta*U)
-    #pl.plot(boltzmannOfP2Ppotential, label = 'exp(-beta u)'); pl.legend(); pl.show()
 
     #Potential defined, start Picard iteration. 
     #*************************************************************************
-    t_start = time.time()
-    
+
     G_0 = np.zeros(numberOfRadialSamplingPoints)
     #Start with Gamma = 0
     G_fp = G_0
@@ -226,13 +211,11 @@ def Iq(q, intercept, slope):
     #application of the fix point operator is so cheap, we don't
     #bother about a stoping criterion.
     for i in range(numberOfIterations):
-      (G_fp, c_fp) = fixPointOperatorForGamma(G_fp)
+      (G_fp, c_fp) = fixPointOperatorForGamma(G_fp, boltzmannOfP2Ppotential,
+                                              isHNC, rho)
       
 
-    t_stop = time.time()
-    print "time used for", numberOfIterations, "iterations:", t_stop - t_start, " sec" 
-    print "time used for one OZ step:", 1000.0*(t_stop - t_start)/float(numberOfIterations), "milliseconds" 
-    
+
     #Calculate S(q) as well (outside the Picard loop, from a math point of view
     #this can be done since the operator C2S transforming c to Sq is continuous, 
     #(Hankel transform is continuous and 1.0/(1.0-rho*c_hat) is continuous, but mind the pole. Hence
