@@ -3,6 +3,8 @@
 //    by sasfit_convert.py                       //
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_sf.h>
 
 double Iq( double q, double XI,  double DUMMY1,  double DUMMY2,  double ETA,
            double P0);
@@ -21,6 +23,7 @@ double Iq( double q, double XI,  double DUMMY1,  double DUMMY2,  double ETA,
            double P0)
 {
     double u,Gz,G0;
+    double z = q;
 // insert your code here
     u=z/XI;
     G0=16*M_PI*sas_pow_4(XI)*ETA*ETA;

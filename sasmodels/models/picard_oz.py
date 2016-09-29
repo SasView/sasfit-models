@@ -51,28 +51,18 @@ description = """\
     solving the OZ equations, see
 """
 
+POTENTIALS = [["Lenard-Jones", "HardSphere"]]
+
+CLOSURES = [["Chain", "PercusYevick"]]
 
 # pylint: disable=bad-whitespace, line-too-long
 #             [ "name", "units", default, [lower, upper], "type", "description" ],
 parameters = [
-    ["potential", "", "Lenard-Jones",   [0, inf],    "volume", "effective radius of charged sphere"],
-    ["chain_closure",   "None",     0.0192, [0, 0.74],   "", "volume fraction of spheres"],
-    ["denisty",        "e",   19.0,    [0, inf],    "", "charge on sphere (in electrons)"],
-    ["energy",   "K",  318.16,   [0, inf],    "", "temperature, in Kelvin, for Debye length calculation"],
+    ["potential", "", 0,   POTENTIALS,    "", "Use Lennard-Jones potential or hard spheres"],
+    ["closure",   "",  0, CLOSURES,   "", "Use Hypernetted Chain Closure or Percus Yevick"],
+    ["denisty",  "",   0.4,    [0, 0.74],    "", "define the Volume density of the liquid"],
+    ["energy",   "epsilon/kT",  0.6,   [0, inf],    "", "define the binding energy of the Lennard Jones potential in kT units"],
     ]
-
-#Definition of the parser
-#**********************************************************************************************************
-def readOptions():
-    parser = OptionParser(usage="Usage: python " + sys.argv[0] + " <Options>")
-    parser.add_option("-l", "--lennardJones", action="store_true", dest="lennardJones", default=False, help="Use Lennard-Jones potential instead of hard spheres [default: %default]")
-    parser.add_option("-n", "--HNC", action="store_true", dest="HNC", default=False, help="Use Hypernetted Chain Closure instead of Percus Yevick [default: %default]")
-    parser.add_option("-d", "--density", dest="density", default='0.4', help="define the Volume density of the liquid. Unitless number in [0,..,0.74] [default: %default]")
-    parser.add_option("-e", "--energy", dest="energy", default='0.6', help="define the binding energy of the Lennard Jones potential in kT units, i.e. epsilon/kT. Unitless positive number [default: %default]")
-    parser.add_option("-u", "--unitTest", action="store_true", dest="unitTest", default=False, help="Compare with analytical solution (HS + PY) [default: %default]")
-
-    options, args = parser.parse_args()
-    return options, args
 
 #calculations
 import numpy as np
@@ -171,33 +161,21 @@ def Iq(q, intercept, slope):
     #python PicardOZ.py -u  -d 0.3
     #*******************************************************
     
-    #Read parse data first
-    #*****************************************************************
-    options, args = readOptions()
     #LJ or hard sphere potential?
-    isLennardJonesPotential = options.lennardJones
+    if parameters["potential"] == 0:
+        isLennardJonesPotential = "True"
     #Which closure relation was chosen? (Default PY)
-    isHNC = options.HNC
+    if parameters["closure"] == 0:
+        isHNC = "True"
     #Should we compare with analytical solution? The unit test to work is a strong indication
     #that the numerical result is true. The only flaw of the comparison is that the same operators are used
     #as for the fixpoint problem (Hankel transform and its inverse). Hence this part is not independent of
     #what we want to check against.
-    doUnitTest = options.unitTest
-    if doUnitTest:
-      if isHNC or isLennardJonesPotential:
-        print "analytical solution is only available for PY with HS, switching off"
-        doUnitTest = False
-      
+
     #We read the potential depth (also for HS)
-    epsilonInkTUnits = float(options.energy) #epsilon/kT = epsilon*beta
-    if epsilonInkTUnits < 0.0:
-        print "binding energy must be positive, exiting.."
-        sys.exit()
-    #Volume density
-    rho_V = float(options.density)
-    if rho_V < 0.0 or rho_V > 0.74:
-        print "Volume density must be in [0,..,0.74], exiting..."
-        sys.exit()
+    epsilonInkTUnits = parameters["energy"] #epsilon/kT = epsilon*beta
+    rho_V = parameters["density"]
+
     #We transform the volume density into the mandatory particle
     #number density. The term 'hardSphereRadius' is not fully consistent,
     #since the 'hardSphereRadius' as in the code is actually the
@@ -250,9 +228,7 @@ def Iq(q, intercept, slope):
     for i in range(numberOfIterations):
       (G_fp, c_fp) = fixPointOperatorForGamma(G_fp)
       
-    if doUnitTest:
-       g_ref = analyticalRDFsolutionForHS()
-       
+
     t_stop = time.time()
     print "time used for", numberOfIterations, "iterations:", t_stop - t_start, " sec" 
     print "time used for one OZ step:", 1000.0*(t_stop - t_start)/float(numberOfIterations), "milliseconds" 
