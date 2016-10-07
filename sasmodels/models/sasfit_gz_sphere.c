@@ -3,8 +3,6 @@
 //    by sasfit_convert.py                       //
 //    Some editting might be required            //
 ///////////////////////////////////////////////////
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_sf.h>
 
 double Iq( double q, double R,  double DUMMY1,  double DUMMY2,  double ETA,
            double P0);
