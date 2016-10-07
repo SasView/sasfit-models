@@ -1,30 +1,42 @@
 r"""
 DLL driver for C kernels
 
-The global attribute *ALLOW_SINGLE_PRECISION_DLLS* should be set to *True* if
-you wish to allow single precision floating point evaluation for the compiled
-models, otherwise it defaults to *False*.
+If the environment variable *SAS_OPENMP* is set, then sasmodels
+will attempt to compile with OpenMP flags so that the model can use all
+available kernels.  This may or may not be available on your compiler
+toolchain.  Depending on operating system and environment.
 
-The compiler command line is stored in the attribute *COMPILE*, with string
-substitutions for %(source)s and %(output)s indicating what to compile and
-where to store it.  The actual command is system dependent.
+Windows does not have provide a compiler with the operating system.
+Instead, we assume that TinyCC is installed and available.  This can
+be done with a simple pip command if it is not already available::
 
-On windows systems, you have a choice of compilers.  *MinGW* is the GNU
-compiler toolchain, available in packages such as anaconda and PythonXY,
-or available stand alone. This toolchain has had difficulties on some
-systems, and may or may not work for you.  In order to build DLLs, *gcc*
-must be on your path.  If the environment variable *SAS_OPENMP* is given
-then -fopenmp is added to the compiler flags.  This requires a version
-of MinGW compiled with OpenMP support.
+    pip install tinycc
 
-An alternative toolchain uses the Microsoft Visual C++ compiler, available
-free from microsoft:
+If Microsoft Visual C++ is available (because VCINSTALLDIR is
+defined in the environment), then that will be used instead.
+Microsoft Visual C++ for Python is available from Microsoft:
 
     `<http://www.microsoft.com/en-us/download/details.aspx?id=44266>`_
 
-Again, this requires that the compiler is available on your path.  This is
-done by running vcvarsall.bat in a windows terminal.  Install locations are
-system dependent, such as:
+If neither compiler is available, sasmodels will check for *MinGW*,
+the GNU compiler toolchain. This available in packages such as Anaconda
+and PythonXY, or available stand alone. This toolchain has had
+difficulties on some systems, and may or may not work for you.
+
+You can control which compiler to use by setting SAS_COMPILER in the
+environment:
+
+  - tinycc (Windows): use the TinyCC compiler shipped with SasView
+  - msvc (Windows): use the Microsoft Visual C++ compiler
+  - mingw (Windows): use the MinGW GNU cc compiler
+  - unix (Linux): use the system cc compiler.
+  - unix (Mac): use the clang compiler. You will need XCode installed, and
+    the XCode command line tools. Mac comes with OpenCL drivers, so generally
+    this will not be needed.
+
+Both *msvc* and *mingw* require that the compiler is available on your path.
+For *msvc*, this can done by running vcvarsall.bat in a windows terminal.
+Install locations are system dependent, such as:
 
     C:\Program Files (x86)\Common Files\Microsoft\Visual C++ for Python\9.0\vcvarsall.bat
 
@@ -32,16 +44,25 @@ or maybe
 
     C:\Users\yourname\AppData\Local\Programs\Common\Microsoft\Visual C++ for Python\9.0\vcvarsall.bat
 
-And again, the environment variable *SAS_OPENMP* controls whether OpenMP is
-used to compile the C code.  This requires the Microsoft vcomp90.dll library,
-which doesn't seem to be included with the compiler, nor does there appear
-to be a public download location.  There may be one on your machine already
-in a location such as:
+OpenMP for *msvc* requires the Microsoft vcomp90.dll library, which doesn't
+seem to be included with the compiler, nor does there appear to be a public
+download location.  There may be one on your machine already in a location
+such as:
 
     C:\Windows\winsxs\x86_microsoft.vc90.openmp*\vcomp90.dll
 
-If you copy this onto your path, such as the python directory or the install
-directory for this application, then OpenMP should be supported.
+If you copy this to somewhere on your path, such as the python directory or
+the install directory for this application, then OpenMP should be supported.
+
+For full control of the compiler, define a function
+*compile_command(source,output)* which takes the name of the source file
+and the name of the output file and returns a compile command that can be
+evaluated in the shell.  For even more control, replace the entire
+*compile(source,output)* function.
+
+The global attribute *ALLOW_SINGLE_PRECISION_DLLS* should be set to *False* if
+you wish to prevent single precision floating point evaluation for the compiled
+models, otherwise set it defaults to *True*.
 """
 from __future__ import print_function
 
@@ -51,7 +72,7 @@ from os.path import join as joinpath, splitext
 import subprocess
 import tempfile
 import ctypes as ct  # type: ignore
-from ctypes import c_void_p, c_int32, c_longdouble, c_double, c_float  # type: ignore
+import _ctypes as _ct
 import logging
 
 import numpy as np  # type: ignore
@@ -89,7 +110,7 @@ elif os.name == 'nt':
 else:
     compiler = "unix"
 
-ARCH = "" if sys.maxint > 2**32 else "x86"  # maxint=2**31-1 on 32 bit
+ARCH = "" if ct.sizeof(ct.c_void_p) > 4 else "x86"  # 4 byte pointers on x86
 if compiler == "unix":
     # Generic unix compile
     # On mac users will need the X code command line tools installed
@@ -219,10 +240,6 @@ def make_dll(source, model_info, dtype=F64):
 
     if not os.path.exists(dll):
         need_recompile = True
-    elif getattr(sys, 'frozen', None) is not None:
-        # TODO: don't suppress time stamp
-        # Currently suppressing recompile when running in a frozen environment
-        need_recompile = False
     else:
         dll_time = os.path.getmtime(dll)
         newest_source = generate.dll_timestamp(model_info)
@@ -279,19 +296,18 @@ class DllModel(KernelModel):
 
     def _load_dll(self):
         # type: () -> None
-        #print("dll", self.dllpath)
         try:
             self._dll = ct.CDLL(self.dllpath)
         except:
             annotate_exception("while loading "+self.dllpath)
             raise
 
-        float_type = (c_float if self.dtype == generate.F32
-                      else c_double if self.dtype == generate.F64
-                      else c_longdouble)
+        float_type = (ct.c_float if self.dtype == generate.F32
+                      else ct.c_double if self.dtype == generate.F64
+                      else ct.c_longdouble)
 
         # int, int, int, int*, double*, double*, double*, double*, double
-        argtypes = [c_int32]*3 + [c_void_p]*4 + [float_type]
+        argtypes = [ct.c_int32]*3 + [ct.c_void_p]*4 + [float_type]
         names = [generate.kernel_name(self.info, variant)
                  for variant in ("Iq", "Iqxy", "Imagnetic")]
         self._kernels = [self._dll[name] for name in names]
@@ -322,17 +338,13 @@ class DllModel(KernelModel):
         """
         Release any resources associated with the model.
         """
+        dll_handle = self._dll._handle
         if os.name == 'nt':
-            #dll = ct.cdll.LoadLibrary(self.dllpath)
-            dll = ct.CDLL(self.dllpath)
-            dll_handle = dll._handle
-            #dll_handle = ct.c_void_p(dll._handle)
-            del dll, self._dll
-            self._dll = None
             ct.windll.kernel32.FreeLibrary(dll_handle)
         else:
-            pass
-
+            _ct.dlclose(dll_handle)
+        del self._dll
+        self._dll = None
 
 class DllKernel(Kernel):
     """
@@ -389,7 +401,7 @@ class DllKernel(Kernel):
 
         #print("returned",self.q_input.q, self.result)
         pd_norm = self.result[self.q_input.nq]
-        scale = values[0]/(pd_norm if pd_norm!=0.0 else 1.0)
+        scale = values[0]/(pd_norm if pd_norm != 0.0 else 1.0)
         background = values[1]
         #print("scale",scale,background)
         return scale*self.result[:self.q_input.nq] + background

@@ -42,7 +42,7 @@ MAX_PD = 4 #: Maximum number of simultaneously polydisperse parameters
 # depends on the some polydisperse parameter with the current implementation
 COMMON_PARAMETERS = [
     ("scale", "", 1, (0.0, np.inf), "", "Source intensity"),
-    ("background", "1/cm", 1e-3, (0.0, np.inf), "", "Source background"),
+    ("background", "1/cm", 1e-3, (-np.inf, np.inf), "", "Source background"),
 ]
 assert (len(COMMON_PARAMETERS) == 2
         and COMMON_PARAMETERS[0][0] == "scale"
@@ -767,7 +767,7 @@ class ModelInfo(object):
     of *Iq* and *Iqxy* if they need to be defined.
     """
     #: Full path to the file defining the kernel, if any.
-    filename = None         # type: Optiona[str]
+    filename = None         # type: Optional[str]
     #: Id of the kernel used to load it from the filesystem.
     id = None               # type: str
     #: Display name of the model, which defaults to the model id but with

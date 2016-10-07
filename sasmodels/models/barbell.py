@@ -1,18 +1,16 @@
-#barbell model
-# Note: model title and parameter table are inserted automatically
 r"""
+Definition
+----------
+
 Calculates the scattering from a barbell-shaped cylinder.  Like
 :ref:`capped-cylinder`, this is a sphereocylinder with spherical end
 caps that have a radius larger than that of the cylinder, but with the center
 of the end cap radius lying outside of the cylinder. See the diagram for
 the details of the geometry and restrictions on parameter values.
 
-Definition
-----------
-
 .. figure:: img/barbell_geometry.jpg
 
-    Barbell geometry, where $r$ is *radius*, $R$ is *bell_radius* and
+    Barbell geometry, where $r$ is *radius*, $R$ is *radius_bell* and
     $L$ is *length*. Since the end cap radius $R \geq r$ and by definition
     for this geometry $h < 0$, $h$ is then defined by $r$ and $R$ as
     $h = - \sqrt{R^2 - r^2}$
@@ -74,15 +72,23 @@ The 2D scattering intensity is calculated similar to the 2D cylinder model.
     Definition of the angles for oriented 2D barbells.
 
 .. figure:: img/cylinder_angle_projection.jpg
+    :width: 600px
 
     Examples of the angles for oriented pp against the detector plane.
 
 References
 ----------
 
-H Kaya, *J. Appl. Cryst.*, 37 (2004) 37 223-230
+.. [#] H Kaya, *J. Appl. Cryst.*, 37 (2004) 37 223-230
+.. [#] H Kaya and N R deSouza, *J. Appl. Cryst.*, 37 (2004) 508-509 (addenda
+   and errata)
 
-H Kaya and N R deSouza, *J. Appl. Cryst.*, 37 (2004) 508-509 (addenda and errata)
+Authorship and Verification
+----------------------------
+
+* **Author:** NIST IGOR/DANSE **Date:** pre 2010
+* **Last Modified by:** Paul Butler **Date:** March 20, 2016
+* **Last Reviewed by:** Paul Butler **Date:** March 20, 2016
 """
 from numpy import inf
 
@@ -102,7 +108,7 @@ category = "shape:cylinder"
 #             ["name", "units", default, [lower, upper], "type","description"],
 parameters = [["sld",         "1e-6/Ang^2",   4, [-inf, inf], "sld",         "Barbell scattering length density"],
               ["sld_solvent", "1e-6/Ang^2",   1, [-inf, inf], "sld",         "Solvent scattering length density"],
-              ["bell_radius", "Ang",         40, [0, inf],    "volume",      "Spherical bell radius"],
+              ["radius_bell", "Ang",         40, [0, inf],    "volume",      "Spherical bell radius"],
               ["radius",      "Ang",         20, [0, inf],    "volume",      "Cylindrical bar radius"],
               ["length",      "Ang",        400, [0, inf],    "volume",      "Cylinder bar length"],
               ["theta",       "degrees",     60, [-inf, inf], "orientation", "In plane angle"],
@@ -115,7 +121,7 @@ source = ["lib/polevl.c", "lib/sas_J1.c", "lib/gauss76.c", "barbell.c"]
 # parameters for demo
 demo = dict(scale=1, background=0,
             sld=6, sld_solvent=1,
-            bell_radius=40, radius=20, length=400,
+            radius_bell=40, radius=20, length=400,
             theta=60, phi=60,
             radius_pd=.2, radius_pd_n=5,
             length_pd=.2, length_pd_n=5,
