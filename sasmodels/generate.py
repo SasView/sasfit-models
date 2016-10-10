@@ -213,6 +213,9 @@ RST_UNITS = {
     "Ang": "|Ang|",
     "1/Ang": "|Ang^-1|",
     "1/Ang^2": "|Ang^-2|",
+    "Ang^3": "|Ang^3|",
+    "1e15/cm^3": "|1e15cm^3|",
+    "Ang^3/mol": "|Ang^3|/mol",
     "1e-6/Ang^2": "|1e-6Ang^-2|",
     "degrees": "degree",
     "1/cm": "|cm^-1|",
@@ -908,10 +911,13 @@ def make_html(model_info):
     return rst2html.rst2html("".join((RST_ROLES, RST_PROLOG, rst)))
 
 def view_html(model_name):
-    from . import rst2html
     from . import modelinfo
     kernel_module = load_kernel_module(model_name)
     info = modelinfo.make_model_info(kernel_module)
+    view_html_from_info(info)
+
+def view_html_from_info(info):
+    from . import rst2html
     url = "file://"+dirname(info.filename)+"/"
     rst2html.wxview(make_html(info), url=url)
 

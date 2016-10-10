@@ -79,6 +79,7 @@ Options (* for default):
     -accuracy=Low accuracy of the resolution calculation Low, Mid, High, Xhigh
     -edit starts the parameter explorer
     -default/-demo* use demo vs default parameters
+    -html shows the model docs instead of running the model
 
 Any two calculation engines can be selected for comparison:
 
@@ -771,7 +772,7 @@ NAME_OPTIONS = set([
     'rel', 'abs',
     'linear', 'log', 'q4',
     'hist', 'nohist',
-    'edit',
+    'edit', 'html',
     'demo', 'default',
     ])
 VALUE_OPTIONS = [
@@ -881,6 +882,7 @@ def parse_opts(argv):
         'use_demo'  : True,
         'zero'      : False,
         "sasfit_model" : ""
+        'html'      : False,
     }
     engines = []
     for arg in flags:
@@ -927,6 +929,7 @@ def parse_opts(argv):
         elif arg == '-edit':    opts['explore'] = True
         elif arg == '-demo':    opts['use_demo'] = True
         elif arg == '-default':    opts['use_demo'] = False
+        elif arg == '-html':    opts['html'] = True
     # pylint: enable=bad-whitespace
 
     sasfit_name = opts['sasfit_model']
@@ -1033,10 +1036,22 @@ def parse_opts(argv):
 
     return opts
 
+def show_docs(opts):
+    # type: (Dict[str, Any]) -> None
+    """
+    show html docs for the model
+    """
+    import wx  # type: ignore
+    from .generate import view_html_from_info
+    app = wx.App() if wx.GetApp() is None else None
+    view_html_from_info(opts['def'])
+    if app: app.MainLoop()
+
+
 def explore(opts):
     # type: (Dict[str, Any]) -> None
     """
-    Explore the model using the Bumps GUI.
+    explore the model using the bumps gui.
     """
     import wx  # type: ignore
     from bumps.names import FitProblem  # type: ignore
@@ -1129,7 +1144,9 @@ def main(*argv):
     """
     opts = parse_opts(argv)
     if opts is not None:
-        if opts['explore']:
+        if opts['html']:
+            show_docs(opts)
+        elif opts['explore']:
             explore(opts)
         else:
             compare(opts)
