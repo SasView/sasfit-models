@@ -33,6 +33,8 @@ parameters = [
 
 source = [ "lib/sas_pow.c",  "sasfit_coreshellmicrogel.c" ]
 
+single = False
+
 demo = dict(
 	W_CORE = 10.0,
 	SIGMA_CORE = 3.0,

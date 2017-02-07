@@ -121,7 +121,7 @@ if compiler == "unix":
         CC.append("-fopenmp")
     def compile_command(source, output):
         """unix compiler command"""
-        return CC + [source, "-o", output, "-lm", "-lgsl"]
+        return CC + [source, "-o", output, "-lm"]
 elif compiler == "msvc":
     # Call vcvarsall.bat before compiling to set path, headers, libs, etc.
     # MSVC compiler is available, so use it.  OpenMP requires a copy of

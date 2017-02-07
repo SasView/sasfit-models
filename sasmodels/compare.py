@@ -881,8 +881,8 @@ def parse_opts(argv):
         'explore'   : False,
         'use_demo'  : True,
         'zero'      : False,
-        "sasfit_model" : ""
-        'html'      : False,
+        "sasfit_model" : "",
+        'html'      : False
     }
     engines = []
     for arg in flags:
