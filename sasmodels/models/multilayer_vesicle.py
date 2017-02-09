@@ -15,6 +15,29 @@ a multilayer vesicle.
 
 See the :ref:`core-shell-sphere` model for more documentation.
 
+The 1D scattering intensity is calculated in the following way (Guinier, 1955)
+
+.. math::
+
+    P(q) = \frac{\text{scale.volfraction}}{V_t} F^2(q) + \text{background}
+
+where
+
+.. math::
+
+     F(q) = (\rho_{shell}-\rho_{solv}) \sum_{i=1}^{n\_pairs} \left[
+     3V(R_i)\frac{\sin(qR_i)-qR_i\cos(qR_i)}{(qR_i)^3} \\
+      - 3V(R_i+t_s)\frac{\sin(q(R_i+t_s))-q(R_i+t_s)\cos(q(R_i+t_s))}{(q(R_i+t_s))^3}
+     \right]
+
+
+where $R_i = r_c + (i-1)(t_s + t_w)$
+   
+where $V_t$ is the volume of the whole particle, $V(R)$ is the volume of a sphere
+of radius $R$, $r_c$ is the radius of the core, $\rho_{shell}$ is the scattering length 
+density of a shell, $\rho_{solv}$ is the scattering length density of the solvent.
+
+
 The 2D scattering intensity is the same as 1D, regardless of the orientation
 of the q vector which is defined as:
 
@@ -22,11 +45,13 @@ of the q vector which is defined as:
 
     q = \sqrt{q_x^2 + q_y^2}
 
-.. note:
-    The outer most radius
-    $radius + n_pairs * thick_shell + (n_pairs - 1) * thick_solvent$
-    is used for both the volume fraction normalization and for the 
-    effective radius for *S(Q)* when $P(Q) * S(Q)$ is applied.
+
+The outer most radius
+
+$radius + n\_pairs * thick\_shell + (n\_pairs- 1) * thick\_solvent$
+
+is used for both the volume fraction normalization and for the 
+effective radius for *S(Q)* when $P(Q) * S(Q)$ is applied.
 
 For information about polarised and magnetic scattering, see
 the :ref:`magnetism` documentation.
@@ -81,7 +106,7 @@ parameters = [
     ]
 # pylint: enable=bad-whitespace, line-too-long
 
-source = ["lib/sph_j1c.c", "multilayer_vesicle.c"]
+source = ["lib/sas_3j1x_x.c", "multilayer_vesicle.c"]
 
 polydispersity = ["radius", "n_pairs"]
 

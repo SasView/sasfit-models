@@ -20,6 +20,7 @@ import numpy as np  # type: ignore
 
 from . import core
 from . import custom
+from . import product
 from . import generate
 from . import weights
 from . import modelinfo
@@ -48,7 +49,7 @@ def _register_old_models():
     is available to the plugin modules.
     """
     import sys
-    import sas
+    import sas   # needed in order to set sas.models
     import sas.sascalc.fit
     sys.modules['sas.models'] = sas.sascalc.fit
     sas.models = sas.sascalc.fit
@@ -56,6 +57,8 @@ def _register_old_models():
     import sas.models
     from sasmodels.conversion_table import CONVERSION_TABLE
     for new_name, conversion in CONVERSION_TABLE.items():
+        # CoreShellEllipsoidModel => core_shell_ellipsoid:1
+        new_name = new_name.split(':')[0]
         old_name = conversion[0]
         module_attrs = {old_name: find_model(new_name)}
         ConstructedModule = type(old_name, (), module_attrs)
@@ -124,6 +127,14 @@ def load_custom_model(path):
             model.name = splitext(basename(path))[0]
         if not hasattr(model, 'filename'):
             model.filename = kernel_module.__file__
+            # For old models, treat .pyc and .py files interchangeably.
+            # This is needed because of the Sum|Multi(p1,p2) types of models
+            # and the convoluted way in which they are created.
+            if model.filename.endswith(".py"):
+                logging.info("Loading %s as .pyc", model.filename)
+                model.filename = model.filename+'c'
+        if not hasattr(model, 'id'):
+            model.id = splitext(basename(model.filename))[0]
     except AttributeError:
         model_info = modelinfo.make_model_info(kernel_module)
         model = _make_model_from_info(model_info)
@@ -158,6 +169,13 @@ def _make_standard_model(name):
     model_info = modelinfo.make_model_info(kernel_module)
     return _make_model_from_info(model_info)
 
+
+def MultiplicationModel(form_factor, structure_factor):
+    # type: ("SasviewModel", "SasviewModel") -> "SasviewModel"
+    model_info = product.make_product_info(form_factor._model_info,
+                                           structure_factor._model_info)
+    ConstructedModel = _make_model_from_info(model_info)
+    return ConstructedModel()
 
 def _make_model_from_info(model_info):
     # type: (ModelInfo) -> SasviewModelType
@@ -211,7 +229,7 @@ def _generate_model_attributes(model_info):
     orientation_params = []
     magnetic_params = []
     fixed = []
-    for p in model_info.parameters.user_parameters():
+    for p in model_info.parameters.user_parameters({}, is2d=True):
         if p.type == 'orientation':
             orientation_params.append(p.name)
             orientation_params.append(p.name+".width")
@@ -335,7 +353,7 @@ class SasviewModel(object):
         self.params = collections.OrderedDict()
         self.dispersion = collections.OrderedDict()
         self.details = {}
-        for p in self._model_info.parameters.user_parameters():
+        for p in self._model_info.parameters.user_parameters({}, is2d=True):
             if p.name in hidden:
                 continue
             self.params[p.name] = p.default
@@ -563,6 +581,18 @@ class SasviewModel(object):
         else:
             raise TypeError("evalDistribution expects q or [qx, qy], not %r"
                             % type(qdist))
+
+    def get_composition_models(self):
+        """
+            Returns usable models that compose this model
+        """
+        s_model = None
+        p_model = None
+        if hasattr(self._model_info, "composition") \
+           and self._model_info.composition is not None:
+            p_model = _make_model_from_info(self._model_info.composition[1][0])()
+            s_model = _make_model_from_info(self._model_info.composition[1][1])()
+        return p_model, s_model
 
     def calculate_Iq(self, qx, qy=None):
         # type: (Sequence[float], Optional[Sequence[float]]) -> np.ndarray

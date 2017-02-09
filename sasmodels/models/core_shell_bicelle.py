@@ -39,8 +39,8 @@ $\alpha$ is the angle between the $Q$ vector and the cylinder axis, to give:
 
 .. math::
 
-    I(Q,\alpha) = \frac{\text{scale}}{V} \cdot
-        F(Q,\alpha)^2 + \text{background}
+    I(Q,\alpha) = \frac{\text{scale}}{V_t} \cdot
+        F(Q,\alpha)^2.sin(\alpha) + \text{background}
 
 where
 
@@ -48,9 +48,9 @@ where
 
         \begin{align}    
     F(Q,\alpha) = &\bigg[ 
-    (\rho_c - \rho_f) V_c \frac{J_1(QRsin \alpha)}{QRsin\alpha}\frac{2 \cdot sin(QLcos\alpha/2)}{QLcos\alpha} \\
-    &+(\rho_f - \rho_r) V_{c+f} \frac{J_1(QRsin\alpha)}{QRsin\alpha}\frac{2 \cdot sin(Q(L/2+t_f)cos\alpha)}{Q(L+2t_f)cos\alpha} \\
-    &+(\rho_r - \rho_s) V_t \frac{J_1(Q(R+t_r)sin\alpha)}{Q(R+t_r)sin\alpha}\frac{2 \cdot sin(Q(L/2+t_f)cos\alpha)}{Q(L+2t_f)cos\alpha}
+    (\rho_c - \rho_f) V_c \frac{2J_1(QRsin \alpha)}{QRsin\alpha}\frac{sin(QLcos\alpha/2)}{Q(L/2)cos\alpha} \\
+    &+(\rho_f - \rho_r) V_{c+f} \frac{2J_1(QRsin\alpha)}{QRsin\alpha}\frac{sin(Q(L/2+t_f)cos\alpha)}{Q(L/2+t_f)cos\alpha} \\
+    &+(\rho_r - \rho_s) V_t \frac{2J_1(Q(R+t_r)sin\alpha)}{Q(R+t_r)sin\alpha}\frac{sin(Q(L/2+t_f)cos\alpha)}{Q(L/2+t_f)cos\alpha}
     \bigg]
     \end{align} 
 
@@ -70,10 +70,6 @@ use the c-library from NIST.
 
     Definition of the angles for the oriented core shell bicelle tmodel.
 
-.. figure:: img/cylinder_angle_projection.jpg
-    :width: 600px
-
-    Examples of the angles for oriented pp against the detector plane.
 
 References
 ----------
@@ -88,7 +84,7 @@ Authorship and Verification
 
 * **Author:** NIST IGOR/DANSE **Date:** pre 2010
 * **Last Modified by:** Paul Butler **Date:** September 30, 2016
-* **Last Reviewed by:** Richard Heenan **Date:** October 5, 2016
+* **Last Reviewed by:** Richard Heenan **Date:** January 4, 2017
 """
 
 from numpy import inf, sin, cos
@@ -144,7 +140,7 @@ parameters = [
 
 # pylint: enable=bad-whitespace, line-too-long
 
-source = ["lib/Si.c", "lib/polevl.c", "lib/sas_J1.c", "lib/gauss76.c",
+source = ["lib/sas_Si.c", "lib/polevl.c", "lib/sas_J1.c", "lib/gauss76.c",
           "core_shell_bicelle.c"]
 
 demo = dict(scale=1, background=0,
@@ -159,41 +155,4 @@ demo = dict(scale=1, background=0,
             theta=90,
             phi=0)
 
-qx, qy = 0.4 * cos(90), 0.5 * sin(0)
-tests = [
-    # Accuracy tests based on content in test/utest_other_models.py
-    [{'radius': 20.0,
-      'thick_rim': 10.0,
-      'thick_face': 10.0,
-      'length': 400.0,
-      'sld_core': 1.0,
-      'sld_face': 4.0,
-      'sld_rim': 4.0,
-      'sld_solvent': 1.0,
-      'background': 0.0,
-     }, 0.001, 353.550],
-
-    [{'radius': 20.0,
-      'thick_rim': 10.0,
-      'thick_face': 10.0,
-      'length': 400.0,
-      'sld_core': 1.0,
-      'sld_face': 4.0,
-      'sld_rim': 4.0,
-      'sld_solvent': 1.0,
-      'theta': 90.0,
-      'phi': 0.0,
-      'background': 0.00,
-     }, (qx, qy), 24.9167],
-
-    # Additional tests with larger range of parameters
-    [{'radius': 3.0,
-      'thick_rim': 100.0,
-      'thick_face': 100.0,
-      'length': 1200.0,
-      'sld_core': 5.0,
-      'sld_face': 41.0,
-      'sld_rim': 42.0,
-      'sld_solvent': 21.0,
-     }, 0.05, 1670.1828],
-    ]
+#qx, qy = 0.4 * cos(pi/2.0), 0.5 * sin(0)

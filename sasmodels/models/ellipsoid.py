@@ -56,11 +56,7 @@ $S(q)$ when $P(q) \cdot S(q)$ is applied.
 
 The $\theta$ and $\phi$ parameters are not used for the 1D output.
 
-.. _ellipsoid-geometry:
 
-.. figure:: img/ellipsoid_angle_projection.jpg
-
-    The angles for oriented ellipsoid, shown here as oblate, $a$ = $R_p$ and $b$ = $R_e$
 
 Validation
 ----------
@@ -138,7 +134,7 @@ parameters = [["sld", "1e-6/Ang^2", 4, [-inf, inf], "sld",
                "Out of plane angle"],
              ]
 
-source = ["lib/sph_j1c.c", "lib/gauss76.c", "ellipsoid.c"]
+source = ["lib/sas_3j1x_x.c", "lib/gauss76.c", "ellipsoid.c"]
 
 def ER(radius_polar, radius_equatorial):
     import numpy as np
