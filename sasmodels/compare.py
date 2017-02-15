@@ -567,6 +567,31 @@ def eval_ctypes(model_info, data, dtype='double', cutoff=0.):
     calculator.engine = "OMP%s"%DTYPE_MAP[dtype]
     return calculator
 
+def eval_sasfit_opencl(model_info, data, dtype='single', cutoff=0.):
+    """
+    Returns a model calculator for SasFit corrected models
+    """
+    try:
+        model = core.build_model(model_info, dtype=dtype, platform="ocl")
+    except Exception as exc:
+        print(exc)
+        print("... trying again with single precision")
+        model = core.build_model(model_info, dtype='single', platform="ocl")
+    calculator = DirectModel(data, model, cutoff=cutoff)
+    calculator.engine = "SasFit-OCL%s" % DTYPE_MAP[dtype]
+    return calculator
+
+def eval_sasfit_ctypes(model_info, data, dtype='double', cutoff=0.):
+    """
+    Return a model calculator using the DLL calculation engine.
+    """
+    if dtype == 'quad':
+        dtype = 'longdouble'
+    model = core.build_model(model_info, dtype=dtype, platform="dll")
+    calculator = DirectModel(data, model, cutoff=cutoff)
+    calculator.engine = "SasFit-OMP%s"%DTYPE_MAP[dtype]
+    return calculator
+
 def time_calculation(calculator, pars, evals=1):
     # type: (Calculator, ParameterSet, int) -> Tuple[np.ndarray, float]
     """
@@ -615,7 +640,7 @@ def make_data(opts):
         index = slice(None, None)
     return data, index
 
-def make_engine(model_info, data, dtype, cutoff):
+def make_engine(model_info, data, dtype, cutoff, sasfit_model_info):
     # type: (ModelInfo, Data, str, float) -> Calculator
     """
     Generate the appropriate calculation engine for the given datatype.
@@ -625,6 +650,12 @@ def make_engine(model_info, data, dtype, cutoff):
     """
     if dtype == 'sasview':
         return eval_sasview(model_info, data)
+    elif dtype.endswith('_sasfit!'):
+        return eval_sasfit_ctypes(sasfit_model_info, data, dtype=dtype[:-8],
+                                  cutoff=cutoff)
+    elif dtype.endswith('_sasfit'):
+        return eval_sasfit_opencl(sasfit_model_info, data, dtype=dtype[:-7],
+                                  cutoff=cutoff)
     elif dtype.endswith('!'):
         return eval_ctypes(model_info, data, dtype=dtype[:-1], cutoff=cutoff)
     else:
@@ -819,6 +850,7 @@ NAME_OPTIONS = set([
     'plot', 'noplot',
     'half', 'fast', 'single', 'double',
     'single!', 'double!', 'quad!', 'sasview',
+    'single_sasfit!', 'double_sasfit!', 'double_sasfit', 'single_sasfit',
     'lowq', 'midq', 'highq', 'exq', 'zero',
     '2d', '1d',
     'preset', 'random',
@@ -833,7 +865,7 @@ NAME_OPTIONS = set([
     ])
 VALUE_OPTIONS = [
     # Note: random is both a name option and a value option
-    'cutoff', 'random', 'nq', 'res', 'accuracy', 'title',
+    'cutoff', 'random', 'nq', 'res', 'accuracy', 'title','sasfit',
     ]
 
 def columnize(items, indent="", width=79):
@@ -950,6 +982,7 @@ def parse_opts(argv):
         'zero'      : False,
         'html'      : False,
         'title'     : None,
+        "sasfit_model" : "",
     }
     engines = []
     for arg in flags:
@@ -972,6 +1005,7 @@ def parse_opts(argv):
         elif arg.startswith('-random='):   opts['seed'] = int(arg[8:])
         elif arg.startswith('-title'):     opts['title'] = arg[7:]
         elif arg == '-random':  opts['seed'] = np.random.randint(1000000)
+        elif arg.startswith('-sasfit='): opts['sasfit_model'] = arg[8:]
         elif arg == '-preset':  opts['seed'] = -1
         elif arg == '-mono':    opts['mono'] = True
         elif arg == '-poly':    opts['mono'] = False
@@ -987,8 +1021,12 @@ def parse_opts(argv):
         elif arg == '-fast':    engines.append(arg[1:])
         elif arg == '-single':  engines.append(arg[1:])
         elif arg == '-double':  engines.append(arg[1:])
+        elif arg == '-single_sasfit':  engines.append(arg[1:])
+        elif arg == '-double_sasfit':  engines.append(arg[1:])
         elif arg == '-single!': engines.append(arg[1:])
         elif arg == '-double!': engines.append(arg[1:])
+        elif arg == '-single_sasfit!': engines.append(arg[1:])
+        elif arg == '-double_sasfit!': engines.append(arg[1:])
         elif arg == '-quad!':   engines.append(arg[1:])
         elif arg == '-sasview': engines.append(arg[1:])
         elif arg == '-edit':    opts['explore'] = True
@@ -996,6 +1034,17 @@ def parse_opts(argv):
         elif arg == '-default':    opts['use_demo'] = False
         elif arg == '-html':    opts['html'] = True
     # pylint: enable=bad-whitespace
+
+    sasfit_name = opts['sasfit_model']
+    #TODO: Empty safit model_info
+    sasfit_model_info = ""
+    if sasfit_name:
+        try:
+            sasfit_model_info = core.load_model_info(sasfit_name)
+        except ImportError as exc:
+            print(str(exc))
+            print("Could not find model; use one of:\n    " + models)
+            sys.exit(1)
 
     if MODEL_SPLIT in name:
         name, name2 = name.split(MODEL_SPLIT, 2)
@@ -1113,11 +1162,11 @@ def parse_opts(argv):
     # Create the computational engines
     data, _ = make_data(opts)
     if n1:
-        base = make_engine(model_info, data, engines[0], opts['cutoff'])
+        base = make_engine(model_info, data, engines[0], opts['cutoff'], sasfit_model_info)
     else:
         base = None
     if n2:
-        comp = make_engine(model_info2, data, engines[1], opts['cutoff'])
+        comp = make_engine(model_info2, data, engines[1], opts['cutoff'], sasfit_model_info)
     else:
         comp = None
 
