@@ -128,7 +128,7 @@ if compiler == "unix":
         #return CC + [source, "-o", output, "-lm"]
         return CC + [source, "-o", output, "-lm", "-lsasfit_fuzzysphere",
                      "-lsasfit_common_stat", "-lsasfit", "-lgsl",
-                     "-lgslcblas", "-lm"]
+                     "-lgslcblas", "-lm", "-fopenmp"]
 elif compiler == "msvc":
     # Call vcvarsall.bat before compiling to set path, headers, libs, etc.
     # MSVC compiler is available, so use it.  OpenMP requires a copy of
