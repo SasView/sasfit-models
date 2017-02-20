@@ -116,7 +116,7 @@ if compiler == "unix":
     # On mac users will need the X code command line tools installed
     #COMPILE = "gcc-mp-4.7 -shared -fPIC -std=c99 -fopenmp -O2 -Wall %s -o %s -lm -lgomp"
     #CC = "gcc-5 -shared -fPIC -std=c99 -O2 -Wall".split()
-    CC = "gcc-5 -shared -fPIC -std=c99 -O2 -Wall -Isasfit_src/sasfit_common/include " \
+    CC = "gcc -shared -fPIC -std=c99 -O2 -Wall -Isasfit_src/sasfit_common/include " \
          "-Isasfit_src/f2c -Isasfit_plugins -Isasfit_src/gsl/darwin_x86_64/include " \
          "-Lsasfit_src/plugins/fuzzysphere/lib -Lsasfit_src/lib " \
          "-Lsasfit_src/gsl/darwin_x86_64/lib ".split()
@@ -128,7 +128,7 @@ if compiler == "unix":
         #return CC + [source, "-o", output, "-lm"]
         return CC + [source, "-o", output, "-lm", "-lsasfit_fuzzysphere",
                      "-lsasfit_common_stat", "-lsasfit", "-lgsl",
-                     "-lgslcblas", "-lm", "-fopenmp"]
+                     "-lgslcblas", "-lm"]
 elif compiler == "msvc":
     # Call vcvarsall.bat before compiling to set path, headers, libs, etc.
     # MSVC compiler is available, so use it.  OpenMP requires a copy of
