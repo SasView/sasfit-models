@@ -100,7 +100,7 @@ def parse_parameter(name, units='', default=np.NaN,
                 low, high = user_limits
                 limits = (float(low), float(high))
             except Exception:
-                raise ValueError("invalid limits for %s: %r"%(name,user_limits))
+                raise ValueError("invalid limits for %s: %r"%(name, user_limits))
             if low >= high:
                 raise ValueError("require lower limit < upper limit")
 
@@ -229,10 +229,13 @@ class Parameter(object):
     The available kernel parameters are defined as a list, with each parameter
     defined as a sublist with the following elements:
 
-    *name* is the name that will be used in the call to the kernel
-    function and the name that will be displayed to the user.  Names
+    *name* is the name that will be displayed to the user.  Names
     should be lower case, with words separated by underscore.  If
-    acronyms are used, the whole acronym should be upper case.
+    acronyms are used, the whole acronym should be upper case. For vector
+    parameters, the name will be followed by *[len]* where *len* is an
+    integer length of the vector, or the name of the parameter which
+    controls the length.  The attribute *id* will be created from name
+    without the length.
 
     *units* should be one of *degrees* for angles, *Ang* for lengths,
     *1e-6/Ang^2* for SLDs.
@@ -338,6 +341,10 @@ class Parameter(object):
 
     def as_call_reference(self, prefix=""):
         # type: (str) -> str
+        """
+        Return *prefix* + parameter name.  For struct references, use "v."
+        as the prefix.
+        """
         # Note: if the parameter is a struct type, then we will need to use
         # &prefix+id.  For scalars and vectors we can just use prefix+id.
         return prefix + self.id
@@ -416,7 +423,7 @@ class ParameterTable(object):
 
         self.npars = sum(p.length for p in self.kernel_parameters)
         self.nmagnetic = sum(p.length for p in self.kernel_parameters
-                             if p.type=='sld')
+                             if p.type == 'sld')
         self.nvalues = 2 + self.npars
         if self.nmagnetic:
             self.nvalues += 3 + 3*self.nmagnetic
@@ -453,7 +460,7 @@ class ParameterTable(object):
         # true if has 2D parameters
         self.has_2d = any(p.type in ('orientation', 'magnetic')
                           for p in self.kernel_parameters)
-        self.magnetism_index = [k for k,p in enumerate(self.call_parameters)
+        self.magnetism_index = [k for k, p in enumerate(self.call_parameters)
                                 if p.id.startswith('M0:')]
 
         self.pd_1d = set(p.name for p in self.call_parameters
@@ -540,9 +547,9 @@ class ParameterTable(object):
                     Parameter('M0:'+p.id, '1e-6/Ang^2', 0., [-np.inf, np.inf],
                               'magnetic', 'magnetic amplitude for '+p.description),
                     Parameter('mtheta:'+p.id, 'degrees', 0., [-90., 90.],
-                               'magnetic', 'magnetic latitude for '+p.description),
+                              'magnetic', 'magnetic latitude for '+p.description),
                     Parameter('mphi:'+p.id, 'degrees', 0., [-180., 180.],
-                               'magnetic', 'magnetic longitude for '+p.description),
+                              'magnetic', 'magnetic longitude for '+p.description),
                 ])
         #print("call parameters", full_list)
         return full_list
@@ -602,7 +609,8 @@ class ParameterTable(object):
 
         # Using the call_parameters table, we already have expanded forms
         # for each of the vector parameters; put them in a lookup table
-        expanded_pars = dict((p.name, p) for p in self.call_parameters)
+        # Note: p.id and p.name are currently identical for the call parameters
+        expanded_pars = dict((p.id, p) for p in self.call_parameters)
 
         def append_group(name):
             """add the named parameter, and related magnetic parameters if any"""
@@ -678,9 +686,9 @@ def _find_source_lines(model_info, kernel_module):
         return None
 
     if (model_info.Iq is None
-        and model_info.Iqxy is None
-        and model_info.Imagnetic is None
-        and model_info.form_volume is None):
+            and model_info.Iqxy is None
+            and model_info.Imagnetic is None
+            and model_info.form_volume is None):
         return
 
     # find the defintion lines for the different code blocks
@@ -713,14 +721,14 @@ def make_model_info(kernel_module):
     #print("make parameter table", kernel_module.parameters)
     parameters = make_parameter_table(getattr(kernel_module, 'parameters', []))
     demo = expand_pars(parameters, getattr(kernel_module, 'demo', None))
-    filename = abspath(kernel_module.__file__)
+    filename = abspath(kernel_module.__file__).replace('.pyc', '.py')
     kernel_id = splitext(basename(filename))[0]
     name = getattr(kernel_module, 'name', None)
     if name is None:
         name = " ".join(w.capitalize() for w in kernel_id.split('_'))
 
     info.id = kernel_id  # string used to load the kernel
-    info.filename = abspath(kernel_module.__file__)
+    info.filename = filename
     info.name = name
     info.title = getattr(kernel_module, 'title', name+" model")
     info.description = getattr(kernel_module, 'description', 'no description')
@@ -729,8 +737,6 @@ def make_model_info(kernel_module):
     info.composition = None
     info.docs = kernel_module.__doc__
     info.category = getattr(kernel_module, 'category', None)
-    info.single = getattr(kernel_module, 'single', True)
-    info.opencl = getattr(kernel_module, 'opencl', True)
     info.structure_factor = getattr(kernel_module, 'structure_factor', False)
     info.profile_axes = getattr(kernel_module, 'profile_axes', ['x', 'y'])
     info.source = getattr(kernel_module, 'source', [])
@@ -744,6 +750,9 @@ def make_model_info(kernel_module):
     info.Imagnetic = getattr(kernel_module, 'Imagnetic', None) # type: ignore
     info.profile = getattr(kernel_module, 'profile', None) # type: ignore
     info.sesans = getattr(kernel_module, 'sesans', None) # type: ignore
+    # Default single and opencl to True for C models.  Python models have callable Iq.
+    info.opencl = getattr(kernel_module, 'opencl', not callable(info.Iq))
+    info.single = getattr(kernel_module, 'single', not callable(info.Iq))
 
     # multiplicity info
     control_pars = [p.id for p in parameters.kernel_parameters if p.is_control]
@@ -837,6 +846,10 @@ class ModelInfo(object):
     #: This is True by default, but models such as :ref:`bcc-paracrystal` set
     #: it to False because they require double precision calculations.
     single = None           # type: bool
+    #: True if the model can be run as an opencl model.  If for some reason
+    #: the model cannot be run in opencl (e.g., because the model passes
+    #: functions by reference), then set this to false.
+    opencl = None           # type: bool
     #: True if the model is a structure factor used to model the interaction
     #: between form factor models.  This will default to False if it is not
     #: provided in the file.
