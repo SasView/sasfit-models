@@ -1,27 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Program to convert sasfit form factor files to sasmodel template
-
-In principle the template should provide already working model
-but in some cases some information may need to be filled in manually
+Program to convert sasfit plugin models to sasmodels template
 
 The script will perform following:
-1) Remove sasfit specific includes
-2) Translate sasfit parameters to sasmodels parameter table
-3) Convert sasfit function headers to Iq, Iqxy
+1) Read in sasfit file header information
+2) Generate sasmodels python file
+3) Generate category hierarchy
 4) Translates sasfit errors handling into parameter ranges
 
 The script returns converted c file and python template file.
 The template file should in principle be ready to use but
 some additional information ,may need to be filled in
 """
-#TODO: Get the default values for the model parameters
-#TODO: Retrive parameter description automatically
-#TODO: Add categroy as an input parameter?
-#TODO: Units
-#TODO: Don't read EMPTY parameter in
-#TODO: Add support for FQ and volume
+
 
 __author__ = "Wojtek Potrzebowski"
 __maintainer__ = "Wojtek Potrzebowski"
@@ -33,50 +25,12 @@ from re import search
 from string import capwords
 from collections import OrderedDict
 
-
-exclude_list = ["#include", "param->p",
-                "sasfit_get_param",
-                "SASFIT_ASSERT_PTR", "SASFIT_CHECK_COND1",
-                "SASFIT_CHECK_COND", "SASFIT_CHECK_SUB_ERR"]
-
-substitution_dict = OrderedDict()
-
-#Data types and GSL functions will be replcaced here
-substitution_dict = OrderedDict([("scalar","double"),
-                                ("gsl_pow_2","sas_pow_2"),
-                                ("gsl_pow_3","sas_pow_3"),
-                                ("gsl_pow_4","sas_pow_4"),
-                                ("gsl_pow_5","sas_pow_5"),
-                                ("gsl_pow_6","sas_pow_6"),
-                                ("gsl_pow_7","sas_pow_7"),
-                                ("gsl_pow_8","sas_pow_8"),
-                                ("gsl_pow_9","sas_pow_9"),
-                                ("gsl_pow_int", "sas_pow_int"),
-                                ("gsl_sf_bessel_J0","sas_J0"),
-                                ("gsl_sf_bessel_J1","sas_J1"),
-                                ("gsl_sf_bessel_JN","sas_JN"),
-                                ("gsl_sf_bessel_j1","sph_j1"),
-                                ("gsl_sf_gamma","sas_gamma"),
-                                ("gsl_sf_Si","Si"),
-                                ("gsl_sf_erf","sas_erf")])
-
-#Data types and GSL functions will be replcaced here
-libinclude_dict = {"gsl_pow_2":["sas_pow.c"],
-                    "gsl_pow_3":["sas_pow.c"],
-                    "gsl_pow_4":["sas_pow.c"],
-                    "gsl_pow_5":["sas_pow.c"],
-                    "gsl_pow_6":["sas_pow.c"],
-                    "gsl_pow_7":["sas_pow.c"],
-                    "gsl_pow_8":["sas_pow.c"],
-                    "gsl_pow_9":["sas_pow.c"],
-                    "gsl_pow_int": ["sas_pow.c"],
-                    "gsl_sf_bessel_J0":["polevl.c","sas_J0.c"],
-                    "gsl_sf_bessel_J1":["polevl.c","sas_J1.c"],
-                    "gsl_sf_bessel_JN":["polevl.c", "sas_JN.c"],
-                    "gsl_sf_gamma":["sas_gamma.c"],
-                    "gsl_sf_bessel_j1": "sph_j1c.c",
-                    "gsl_sf_Si":["Si.c"],
-                    "gsl_sf_erf": ["polevl.c", "sas_erf.c"]}
+#TODO: Look for pattern:  /* ################ start ff_fuzzysphere ################
+#TODO: and then parse parmeters
+#TODO: finish off on /* ################ stop ff_fuzzysphere ################ */
+#TODO: Default values as before?
+#TODO: In cfile create I(q) F(q), form_volume()
+#TODO: How to handle volume parameters
 
 def extract_parameters_definition( model_name, tcl_filename ):
     """
