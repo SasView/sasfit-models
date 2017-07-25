@@ -19,11 +19,10 @@ __author__ = "Wojtek Potrzebowski"
 __maintainer__ = "Wojtek Potrzebowski"
 __email__ = "Wojciech.Potrzebowski@esss.se"
 
-import os
 import optparse
-from re import search
 from string import split
 from BeautifulSoup import BeautifulSoup, Comment
+from collections import OrderedDict
 
 #TODO: Look for pattern:  /* ################ start ff_fuzzysphere ################
 #TODO: and then parse parmeters
@@ -42,6 +41,8 @@ def parse_header_file(model_name, header_filename):
     def_lines = []
     collect_def_lines = False
     model_name = "ff_"+model_name
+    parameters = OrderedDict()
+
     for line in open(header_filename).readlines():
         if "################ start "+model_name in line:
             collect_def_lines = True
@@ -82,7 +83,7 @@ def parse_header_file(model_name, header_filename):
     bs = BeautifulSoup("".join(parameters_html))
 
     #TODO: Preserve original sasfit order
-    parameters = {}
+
     for row in bs.findAll('tr'):
         aux = row.findAll('td')
         parameters[aux[0].string[3:]] = aux[1].string
@@ -157,8 +158,7 @@ def generate_python_file(model_name, brief_desc, note,
     output_python_lines +=")\n"
     output_python_file.writelines(output_python_lines)
 
-def generate_c_file(output_c_file, model_name, defgroup, ingroup, brief_desc, note,
-                          functions, parameters_html):
+def generate_c_file(model_name, parameters, output_c_filename):
     """
     Generates c file read by sasmodels
     :param output_c_file:
@@ -172,6 +172,7 @@ def generate_c_file(output_c_file, model_name, defgroup, ingroup, brief_desc, no
     :return:
     """
 
+    output_c_file = open(output_c_filename, "w")
     #DO regular expression and remove if it is in line
     c_intro_lines = "///////////////////////////////////////////////////\n"
     c_intro_lines += "//    This is automatically generated file       //\n"
@@ -179,23 +180,59 @@ def generate_c_file(output_c_file, model_name, defgroup, ingroup, brief_desc, no
     c_intro_lines += "//    Some editting may still be required        //\n"
     c_intro_lines += "///////////////////////////////////////////////////\n\n"
 
-    output_intro_lines.append(c_intro_lines)
+    output_c_file.writelines(c_intro_lines)
 
-
-
-    print "Parameters", parameters
     Iq_lines = "double Iq( double q,"
-    Fq_lines = "double Fq( double q, "
-    Fq_func = "Fq( q, "
+    Fq_lines = "double Fq( double q,"
+    Iqxy_lines = "double Iqxy( double qx, double qy,"
     form_volume_lines = "double form_volume( "
     form_volume_func = "form_volume("
     # Replace string in line when need
     out_c_lines = []
 
 
-    output_c_file.writelines(output_intro_lines)
+    #TODO: Should parameters be an ordered dict?
+    for index, param in enumerate(parameters.keys()[:-1]):
+        Fq_lines += " double "+param+", "
+        Iq_lines += " double "+param+", "
+        Iqxy_lines += " double "+param+", "
+    Fq_lines+=" double "+parameters.keys()[-1]+")"
+    Iq_lines+=" double "+parameters.keys()[-1]+")"
+    Iqxy_lines+=" double "+parameters.keys()[-1]+")"
 
-    output_c_file.writelines(out_c_lines)
+    output_c_file.writelines(Fq_lines+";\n")
+    output_c_file.writelines(Iq_lines+";\n")
+    output_c_file.writelines(Iqxy_lines+";\n\n")
+
+    Fq_lines+=" {\n"
+    Fq_lines+="sasfit_param param;\n"
+
+    for index, param in enumerate(parameters.keys()):
+        Fq_lines+="param p["+str(index)+"] = "+param+"\n"
+
+    Fq_lines+="return sasfit_ff_"+model_name+"_f(q, &param);\n}\n\n"
+
+    Iq_lines+=" {\n"
+    Iq_lines+="sasfit_param param;\n"
+
+    for index, param in enumerate(parameters.keys()):
+        Iq_lines+="param p["+str(index)+"] = "+param+"\n"
+
+    Iq_lines+="return sasfit_ff_"+model_name+"(q, &param);\n}\n\n"
+
+
+    Iqxy_lines+="{\n"
+    Iqxy_lines+="\tdouble q = sqrt(qx*qx + qy*qy);\n"
+    Iqxy_lines+="\treturn Iq( q,"
+    for param in parameters.keys()[:-1]:
+        Iqxy_lines+=" "+param+","
+    Iqxy_lines+=" "+parameters.keys()[-1]+");\n"
+    Iqxy_lines+="}\n\n"
+
+    output_c_file.writelines(Fq_lines)
+    output_c_file.writelines(Iq_lines)
+    output_c_file.writelines(Iqxy_lines)
+
 def convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
                           functions, parameters,
                           output_c_file, output_python_file):
@@ -208,6 +245,7 @@ def convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
     """
     generate_python_file(model_name, brief_desc, note,
                          parameters, output_python_file)
+    generate_c_file(model_name, parameters, output_c_file)
 
 if __name__=="__main__":
     doc = """
