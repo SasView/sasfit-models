@@ -23,6 +23,7 @@ import optparse
 from string import split
 from BeautifulSoup import BeautifulSoup, Comment
 from collections import OrderedDict
+from re import search
 
 #TODO: Look for pattern:  /* ################ start ff_fuzzysphere ################
 #TODO: and then parse parmeters
@@ -90,8 +91,36 @@ def parse_header_file(model_name, header_filename):
 
     return defgroup, ingroup, brief_desc, note, functions, parameters
 
+def extrat_volume_parameters(model_name, parameters, model_source_file):
+    """
+    Based on given model parameters the model source file is parsed and
+    volume parameters are extracted
+    :param model_name:
+    :param model_source_file:
+    :param parameters:
+    :return:
+    """
+    def_lines = []
+    collect_def_lines = False
+    model_name = "ff_"+model_name
+    volume_parameters = OrderedDict()
+
+    source_lines = open(model_source_file).readlines()
+    for index, line in enumerate(source_lines):
+        if "sasfit_"+model_name+"_v" in line:
+            collect_def_lines = True
+        if collect_def_lines:
+            def_lines.append(line.strip("\n"))
+        if "reuturn"+model_name in line and "}" in source_lines[index+1]:
+            collect_def_lines = False
+    for param in parameters.keys():
+        for def_line in def_lines:
+            if param in def_line:
+                volume_parameters[param] = parameters[param]
+
+    return volume_parameters
 def generate_python_file(model_name, brief_desc, note,
-                         parameters, output_python_filename):
+                         parameters, volume_parameters, output_python_filename):
     """
     Python file header generator
     :param output_python_file:
@@ -139,7 +168,13 @@ def generate_python_file(model_name, brief_desc, note,
     index = 0
     for param in parameters.keys():
         #print "Param def", param, param_def
-        output_python_lines += " [ \""+param+"\", \t\"\", \t"\
+        if param in volume_parameters.keys():
+            output_python_lines += " [ \""+param+"\", \t\"\", \t"\
+                               +str(parameters_values[index])+", " \
+                                "\t[-inf, inf], \t\"volume\", " \
+                                "\t\""+parameters[param]+"\"],\n"
+        else:
+            output_python_lines += " [ \""+param+"\", \t\"\", \t"\
                                +str(parameters_values[index])+", " \
                                 "\t[-inf, inf], \t\"\", " \
                                 "\t\""+parameters[param]+"\"],\n"
@@ -158,7 +193,8 @@ def generate_python_file(model_name, brief_desc, note,
     output_python_lines +=")\n"
     output_python_file.writelines(output_python_lines)
 
-def generate_c_file(model_name, parameters, output_c_filename):
+def generate_c_file(model_name, parameters, volume_parameters,
+                    output_c_filename):
     """
     Generates c file read by sasmodels
     :param output_c_file:
@@ -185,13 +221,9 @@ def generate_c_file(model_name, parameters, output_c_filename):
     Iq_lines = "double Iq( double q,"
     Fq_lines = "double Fq( double q,"
     Iqxy_lines = "double Iqxy( double qx, double qy,"
-    form_volume_lines = "double form_volume( "
-    form_volume_func = "form_volume("
+    fv_lines = "double form_volume( double q, "
     # Replace string in line when need
-    out_c_lines = []
 
-
-    #TODO: Should parameters be an ordered dict?
     for index, param in enumerate(parameters.keys()[:-1]):
         Fq_lines += " double "+param+", "
         Iq_lines += " double "+param+", "
@@ -202,13 +234,20 @@ def generate_c_file(model_name, parameters, output_c_filename):
 
     output_c_file.writelines(Fq_lines+";\n")
     output_c_file.writelines(Iq_lines+";\n")
-    output_c_file.writelines(Iqxy_lines+";\n\n")
+    output_c_file.writelines(Iqxy_lines+";\n")
+
+    #TODO: Instead of parameters there should be volume paremeters here
+    for index, param in enumerate(volume_parameters.keys()[:-1]):
+        fv_lines += " double "+param+", "
+    fv_lines+=" double "+volume_parameters.keys()[-1]+")"
+
+    output_c_file.writelines(fv_lines+";\n\n")
 
     Fq_lines+=" {\n"
     Fq_lines+="sasfit_param param;\n"
 
     for index, param in enumerate(parameters.keys()):
-        Fq_lines+="param p["+str(index)+"] = "+param+"\n"
+        Fq_lines+="param p["+str(index)+"] = "+param+";\n"
 
     Fq_lines+="return sasfit_ff_"+model_name+"_f(q, &param);\n}\n\n"
 
@@ -216,10 +255,18 @@ def generate_c_file(model_name, parameters, output_c_filename):
     Iq_lines+="sasfit_param param;\n"
 
     for index, param in enumerate(parameters.keys()):
-        Iq_lines+="param p["+str(index)+"] = "+param+"\n"
+        Iq_lines+="param p["+str(index)+"] = "+param+";\n"
 
     Iq_lines+="return sasfit_ff_"+model_name+"(q, &param);\n}\n\n"
 
+    fv_lines+=" {\n"
+    fv_lines+="sasfit_param param;\n"
+    fv_lines+="int dist;\n"
+
+    for index, param in enumerate(volume_parameters.keys()):
+        fv_lines+="param p["+str(index)+"] = "+param+";\n"
+
+    fv_lines+="return sasfit_ff_"+model_name+"_v(q, &param, dist);\n}\n\n"
 
     Iqxy_lines+="{\n"
     Iqxy_lines+="\tdouble q = sqrt(qx*qx + qy*qy);\n"
@@ -232,9 +279,10 @@ def generate_c_file(model_name, parameters, output_c_filename):
     output_c_file.writelines(Fq_lines)
     output_c_file.writelines(Iq_lines)
     output_c_file.writelines(Iqxy_lines)
+    output_c_file.writelines(fv_lines)
 
 def convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
-                          functions, parameters,
+                          functions, parameters, volume_parameters,
                           output_c_file, output_python_file):
     """
     Main conversion function
@@ -244,8 +292,8 @@ def convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
     :return:
     """
     generate_python_file(model_name, brief_desc, note,
-                         parameters, output_python_file)
-    generate_c_file(model_name, parameters, output_c_file)
+                         parameters, volume_parameters, output_python_file)
+    generate_c_file(model_name, parameters, volume_parameters, output_c_file)
 
 if __name__=="__main__":
     doc = """
@@ -257,8 +305,10 @@ if __name__=="__main__":
     option_parser_class = optparse.OptionParser
     parser = option_parser_class( usage = usage, version='0.1' )
 
-    parser.add_option("-f", "--sasfit_file", dest="sasfit_file",
-                      help="SASFit header file [OBLIGATORY]")
+    parser.add_option("-f", "--sasfit_file", dest="sasfit_header",
+                      help="SASFit plugin header file [OBLIGATORY]")
+    parser.add_option("-s", "--sasfit_source_file", dest="sasfit_source",
+                      help="SASFit plugin source file [OBLIGATORY]")
     parser.add_option("-m", "--model_name", dest="model_name",
                       help="Model name or 'all' [OBLIGATORY]")
     parser.add_option("-o", "--output_file", dest="output_file",
@@ -270,10 +320,12 @@ if __name__=="__main__":
     model_name = options.model_name
 
     defgroup, ingroup, brief_desc, note, functions, parameters = \
-        parse_header_file(options.model_name, options.sasfit_file)
+        parse_header_file(options.model_name, options.sasfit_header)
 
-    print brief_desc, note
+    volume_parameters = extrat_volume_parameters(options.model_name, parameters,
+                                          options.sasfit_source)
+    print volume_parameters
     convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
-                          functions, parameters,
+                          functions, parameters, volume_parameters,
                           output_c_file, output_python_file)
     print functions
