@@ -25,12 +25,7 @@ from BeautifulSoup import BeautifulSoup, Comment
 from collections import OrderedDict
 from re import search
 
-#TODO: Look for pattern:  /* ################ start ff_fuzzysphere ################
-#TODO: and then parse parmeters
-#TODO: finish off on /* ################ stop ff_fuzzysphere ################ */
-#TODO: Default values as before?
-#TODO: In cfile create I(q) F(q), form_volume()
-#TODO: How to handle volume parameters
+#TODO: Fix form volume
 
 def parse_header_file(model_name, header_filename):
     """
@@ -216,6 +211,8 @@ def generate_c_file(model_name, parameters, volume_parameters,
     c_intro_lines += "//    Some editting may still be required        //\n"
     c_intro_lines += "///////////////////////////////////////////////////\n\n"
 
+    c_intro_lines += "#include <sasfit_common.h>\n"
+    c_intro_lines += "#include <sasfit_"+model_name+".h>\n\n"
     output_c_file.writelines(c_intro_lines)
 
     Iq_lines = "double Iq( double q,"
@@ -247,7 +244,7 @@ def generate_c_file(model_name, parameters, volume_parameters,
     Fq_lines+="sasfit_param param;\n"
 
     for index, param in enumerate(parameters.keys()):
-        Fq_lines+="param p["+str(index)+"] = "+param+";\n"
+        Fq_lines+="param.p["+str(index)+"] = "+param+";\n"
 
     Fq_lines+="return sasfit_ff_"+model_name+"_f(q, &param);\n}\n\n"
 
@@ -255,7 +252,7 @@ def generate_c_file(model_name, parameters, volume_parameters,
     Iq_lines+="sasfit_param param;\n"
 
     for index, param in enumerate(parameters.keys()):
-        Iq_lines+="param p["+str(index)+"] = "+param+";\n"
+        Iq_lines+="param.p["+str(index)+"] = "+param+";\n"
 
     Iq_lines+="return sasfit_ff_"+model_name+"(q, &param);\n}\n\n"
 
@@ -264,7 +261,7 @@ def generate_c_file(model_name, parameters, volume_parameters,
     fv_lines+="int dist;\n"
 
     for index, param in enumerate(volume_parameters.keys()):
-        fv_lines+="param p["+str(index)+"] = "+param+";\n"
+        fv_lines+="param.p["+str(index)+"] = "+param+";\n"
 
     fv_lines+="return sasfit_ff_"+model_name+"_v(q, &param, dist);\n}\n\n"
 
