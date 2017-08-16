@@ -76,6 +76,8 @@ def parse_header_file(model_name, header_filename):
             functions.append(def_lines[count+3].strip("\r"))
         count += 1
 
+    #Removing quote signs that cause problems
+    brief_desc = brief_desc.replace("\"","")
     bs = BeautifulSoup("".join(parameters_html))
 
     #TODO: Preserve original sasfit order
@@ -112,10 +114,10 @@ def extrat_volume_parameters(model_name, parameters, model_source_file):
         for def_line in def_lines:
             if param in def_line:
                 volume_parameters[param] = parameters[param]
-
     return volume_parameters
 def generate_python_file(model_name, brief_desc, note,
-                         parameters, volume_parameters, output_python_filename):
+                         parameters, volume_parameters,
+                         output_c_filename, output_python_filename):
     """
     Python file header generator
     :param output_python_file:
@@ -179,7 +181,7 @@ def generate_python_file(model_name, brief_desc, note,
 
     #FIXME: It should refer to c_file not model name
     output_python_lines +="source = [ "
-    output_python_lines += " \"sasfit_" + model_name + ".c\" ]\n\n"
+    output_python_lines += " \"" + output_c_filename + "\" ]\n\n"
 
     output_python_lines +="demo = dict(\n"
     for index, param in enumerate(parameters.keys()):
@@ -218,7 +220,7 @@ def generate_c_file(model_name, parameters, volume_parameters,
     Iq_lines = "double Iq( double q,"
     Fq_lines = "double Fq( double q,"
     Iqxy_lines = "double Iqxy( double qx, double qy,"
-    fv_lines = "double form_volume( double q, "
+    fv_lines = "double form_volume( "
     # Replace string in line when need
 
     for index, param in enumerate(parameters.keys()[:-1]):
@@ -257,6 +259,7 @@ def generate_c_file(model_name, parameters, volume_parameters,
     Iq_lines+="return sasfit_ff_"+model_name+"(q, &param);\n}\n\n"
 
     fv_lines+=" {\n"
+    fv_lines+="double q;\n"
     fv_lines+="sasfit_param param;\n"
     fv_lines+="int dist;\n"
 
@@ -289,7 +292,9 @@ def convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
     :return:
     """
     generate_python_file(model_name, brief_desc, note,
-                         parameters, volume_parameters, output_python_file)
+                         parameters, volume_parameters,
+                         output_c_file, output_python_file)
+
     generate_c_file(model_name, parameters, volume_parameters, output_c_file)
 
 if __name__=="__main__":
@@ -321,7 +326,7 @@ if __name__=="__main__":
 
     volume_parameters = extrat_volume_parameters(options.model_name, parameters,
                                           options.sasfit_source)
-    print volume_parameters
+    print parameters
     convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
                           functions, parameters, volume_parameters,
                           output_c_file, output_python_file)
