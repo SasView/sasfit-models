@@ -115,6 +115,23 @@ def extrat_volume_parameters(model_name, parameters, model_source_file):
             if param in def_line:
                 volume_parameters[param] = parameters[param]
     return volume_parameters
+def check_for_pameter_redefinition(parameters, model_source_file):
+    """
+    Checking if file has DEFINE statements other than related to parameters
+    :param parameters:
+    :param model_source_file:
+    :return:
+    """
+    extra_define_lines =[]
+    source_lines = open(model_source_file).readlines()
+    for index, line in enumerate(source_lines):
+        if "#define" in line:
+            paramter = line.strip("\n").split(" ")[1].split("\t")[0]
+            if paramter not in parameters and "param->p" not in line:
+                extra_define_lines.append(line)
+    extra_define_lines.append(line+"\n")
+    return extra_define_lines
+
 def generate_python_file(model_name, brief_desc, note,
                          parameters, volume_parameters,
                          output_c_filename, output_python_filename):
@@ -190,7 +207,7 @@ def generate_python_file(model_name, brief_desc, note,
     output_python_lines +=")\n"
     output_python_file.writelines(output_python_lines)
 
-def generate_c_file(model_name, parameters, volume_parameters,
+def generate_c_file(model_name, parameters, volume_parameters, extra_define_lines,
                     output_c_filename):
     """
     Generates c file read by sasmodels
@@ -217,6 +234,8 @@ def generate_c_file(model_name, parameters, volume_parameters,
     c_intro_lines += "#include <sasfit_"+model_name+".h>\n\n"
     output_c_file.writelines(c_intro_lines)
 
+    output_c_file.writelines(extra_define_lines)
+
     Iq_lines = "double Iq( double q,"
     Fq_lines = "double Fq( double q,"
     Iqxy_lines = "double Iqxy( double qx, double qy,"
@@ -236,12 +255,14 @@ def generate_c_file(model_name, parameters, volume_parameters,
     output_c_file.writelines(Iqxy_lines+";\n")
 
     #TODO: Instead of parameters there should be volume paremeters here
-    for index, param in enumerate(volume_parameters.keys()[:-1]):
-        fv_lines += " double "+param+", "
-    fv_lines+=" double "+volume_parameters.keys()[-1]+")"
+    try:
+        for index, param in enumerate(volume_parameters.keys()[:-1]):
+            fv_lines += " double "+param+", "
+        fv_lines+=" double "+volume_parameters.keys()[-1]+")"
 
-    output_c_file.writelines(fv_lines+";\n\n")
-
+        output_c_file.writelines(fv_lines+";\n\n")
+    except:
+        pass
     Fq_lines+=" {\n"
     Fq_lines+="sasfit_param param;\n"
 
@@ -258,15 +279,18 @@ def generate_c_file(model_name, parameters, volume_parameters,
 
     Iq_lines+="return sasfit_ff_"+model_name+"(q, &param);\n}\n\n"
 
-    fv_lines+=" {\n"
-    fv_lines+="double q;\n"
-    fv_lines+="sasfit_param param;\n"
-    fv_lines+="int dist;\n"
+    try:
+        fv_lines+=" {\n"
+        fv_lines+="double q;\n"
+        fv_lines+="sasfit_param param;\n"
+        fv_lines+="int dist;\n"
 
-    for index, param in enumerate(volume_parameters.keys()):
-        fv_lines+="param.p["+str(index)+"] = "+param+";\n"
+        for index, param in enumerate(volume_parameters.keys()):
+            fv_lines+="param.p["+str(index)+"] = "+param+";\n"
 
-    fv_lines+="return sasfit_ff_"+model_name+"_v(q, &param, dist);\n}\n\n"
+        fv_lines+="return sasfit_ff_"+model_name+"_v(q, &param, dist);\n}\n\n"
+    except:
+        pass
 
     Iqxy_lines+="{\n"
     Iqxy_lines+="\tdouble q = sqrt(qx*qx + qy*qy);\n"
@@ -283,7 +307,7 @@ def generate_c_file(model_name, parameters, volume_parameters,
 
 def convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
                           functions, parameters, volume_parameters,
-                          output_c_file, output_python_file):
+                          extra_def_lines, output_c_file, output_python_file):
     """
     Main conversion function
     :param sasfit_file:
@@ -295,7 +319,8 @@ def convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
                          parameters, volume_parameters,
                          output_c_file, output_python_file)
 
-    generate_c_file(model_name, parameters, volume_parameters, output_c_file)
+    generate_c_file(model_name, parameters, volume_parameters, extra_def_lines,
+                    output_c_file)
 
 if __name__=="__main__":
     doc = """
@@ -327,7 +352,11 @@ if __name__=="__main__":
     volume_parameters = extrat_volume_parameters(options.model_name, parameters,
                                           options.sasfit_source)
     print parameters
+
+    extra_def_lines = check_for_pameter_redefinition(parameters,
+                                                     options.sasfit_source)
+
     convert_sasfit_plugin(model_name, defgroup, ingroup, brief_desc, note,
                           functions, parameters, volume_parameters,
-                          output_c_file, output_python_file)
+                          extra_def_lines, output_c_file, output_python_file)
     print functions

@@ -1,11 +1,11 @@
-prefix=/Users/wojciechpotrzebowski/SASFit_code/SASfit/src/gsl/darwin_x86_64
-exec_prefix=/Users/wojciechpotrzebowski/SASFit_code/SASfit/src/gsl/darwin_x86_64
-libdir=/Users/wojciechpotrzebowski/SASFit_code/SASfit/src/gsl/darwin_x86_64/lib
-includedir=/Users/wojciechpotrzebowski/SASFit_code/SASfit/src/gsl/darwin_x86_64/include
+prefix=/Users/wojciechpotrzebowski/SASFit_code/SASfit_native/src/gsl/darwin_x86_64
+exec_prefix=/Users/wojciechpotrzebowski/SASFit_code/SASfit_native/src/gsl/darwin_x86_64
+libdir=/Users/wojciechpotrzebowski/SASFit_code/SASfit_native/src/gsl/darwin_x86_64/lib
+includedir=/Users/wojciechpotrzebowski/SASFit_code/SASfit_native/src/gsl/darwin_x86_64/include
 GSL_CBLAS_LIB=-lgslcblas
 
 Name: GSL
 Description: GNU Scientific Library
-Version: 2.1
-Libs: -L/Users/wojciechpotrzebowski/SASFit_code/SASfit/src/gsl/darwin_x86_64/lib -lgsl ${GSL_CBLAS_LIB}  -lm 
-Cflags: -I/Users/wojciechpotrzebowski/SASFit_code/SASfit/src/gsl/darwin_x86_64/include
+Version: 2.4
+Libs: -L/Users/wojciechpotrzebowski/SASFit_code/SASfit_native/src/gsl/darwin_x86_64/lib -lgsl ${GSL_CBLAS_LIB}  -lm 
+Cflags: -I/Users/wojciechpotrzebowski/SASFit_code/SASfit_native/src/gsl/darwin_x86_64/include

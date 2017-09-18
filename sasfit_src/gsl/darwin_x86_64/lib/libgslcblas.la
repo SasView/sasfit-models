@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/Users/wojciechpotrzebowski/SASFit_code/SASfit/src/gsl/darwin_x86_64/lib'
+libdir='/Users/wojciechpotrzebowski/SASFit_code/SASfit_native/src/gsl/darwin_x86_64/lib'
