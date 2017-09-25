@@ -116,23 +116,27 @@ if COMPILER == "unix":
     # On mac users will need the X code command line tools installed
     #COMPILE = "gcc-mp-4.7 -shared -fPIC -std=c99 -fopenmp -O2 -Wall %s -o %s -lm -lgomp"
     #CC = "gcc-5 -shared -fPIC -std=c99 -O2 -Wall".split()
-    CC = "gcc -shared -fPIC -std=c99 -O2 -Wall -Isasfit_src/sasfit_common/include " \
+    CC = "gcc -c -fPIC -std=c99 -O2 -Wall -Isasfit_src/sasfit_common/include " \
          "-Isasfit_src/f2c -Isasfit_plugins -Isasfit_src/gsl/darwin_x86_64/include " \
-         "-Lsasfit_src/plugins/fuzzysphere/lib -Lsasfit_src/lib " \
-         "-Lsasfit_src/gsl/darwin_x86_64/lib ".split()
+         .split()
     #CC = "gcc-5 -std=c99 -O2 -Wall -Isasfit_src/sasfit_common/include " \
     #     "-Isasfit_src/f2c -Isasfit_plugins -Isasfit_src/gsl/darwin_x86_64/include " \
     #     "-Lsasfit_src/plugins/fuzzysphere/lib -Lsasfit_src/lib " \
     #     "-Lsasfit_src/gsl/darwin_x86_64/lib ".split()
 
+    BUILD = "lld -Lsasfit_src/plugins/fuzzysphere/lib -Lsasfit_src/lib " \
+         "-Lsasfit_src/gsl/darwin_x86_64/lib ".split()
     # add openmp support if not running on a mac
     if sys.platform != "darwin":
         CC.append("-fopenmp")
     def compile_command(source, output):
         """unix compiler command"""
-        #return CC + [source, "-o", output, "-lm"]
-        return CC + [source, "-o", output, "-lm", "-lsasfit_fuzzysphere",
-                     "-lsasfit", "-lm"]
+        return CC + [source, "-o", output[:-2]+"o"]
+
+    def build_command(source, output):
+        """unix compiler command"""
+        return BUILD + [source[:-1]+"o", "-o", output, "-lm", "-lsasfit_fuzzysphere_stat",
+                     "-lsasfit_common_stat"]
 elif COMPILER == "msvc":
     # Call vcvarsall.bat before compiling to set path, headers, libs, etc.
     # MSVC compiler is available, so use it.  OpenMP requires a copy of
@@ -191,6 +195,19 @@ def compile(source, output):
         # need shell=True on windows to keep console box from popping up
         shell = (os.name == 'nt')
         subprocess.check_output(command, shell=shell, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError("compile failed.\n%s\n%s"%(command_str, exc.output))
+    if not os.path.exists(output):
+        raise RuntimeError("compile failed.  File is in %r"%source)
+
+    bcommand = build_command(source=source, output=output)
+    command_str = " ".join('"%s"'%p if ' ' in p else p for p in bcommand)
+    print("Compile command", command_str)
+    logging.info(command_str)
+    try:
+        # need shell=True on windows to keep console box from popping up
+        shell = (os.name == 'nt')
+        subprocess.check_output(bcommand, shell=shell, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as exc:
         raise RuntimeError("compile failed.\n%s\n%s"%(command_str, exc.output))
     if not os.path.exists(output):
@@ -266,7 +283,7 @@ def make_dll(source, model_info, dtype=F64):
         # comment the following to keep the generated c file
         # Note: if there is a syntax error then compile raises an error
         # and the source file will not be deleted.
-        #os.unlink(filename)
+        os.unlink(filename)
         #print("saving compiled file in %r"%filename)
     return dll
 
