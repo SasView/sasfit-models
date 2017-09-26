@@ -1,0 +1,4 @@
+cp src/lib/* ~/SASVIEW_WORKSPACE/sasfit_sasview/sasfit_src/lib
+cp src/plugins/fuzzysphere/lib/* ~/SASVIEW_WORKSPACE/sasfit_sasview/sasfit_src/plugins/fuzzysphere/lib/
+cp plugins/sasfit_fuzzysphere.so ~/SASVIEW_WORKSPACE/sasfit_sasview/sasfit_plugins
+cp -r src/gsl/darwin_x86_64/lib/* ~/SASVIEW_WORKSPACE/sasfit_sasview/sasfit_src/gsl/darwin_x86_64/lib
