@@ -44,10 +44,12 @@ def make_product_info(p_info, s_info):
     # make sure volume fraction is the second parameter of the
     # structure factor calculator.  Structure factors should not
     # have any magnetic parameters
+    if not len(s_info.parameters.kernel_parameters) >= 2:
+        raise TypeError("S needs {} and {} as its first parameters".format(ER_ID, VF_ID))
     if not s_info.parameters.kernel_parameters[0].id == ER_ID:
-        raise TypeError("S needs %s as first parameter"%ER_ID)
+        raise TypeError("S needs {} as first parameter".format(ER_ID))
     if not s_info.parameters.kernel_parameters[1].id == VF_ID:
-        raise TypeError("S needs %s as second parameter"%VF_ID)
+        raise TypeError("S needs {} as second parameter".format(VF_ID))
     if not s_info.parameters.magnetism_index == []:
         raise TypeError("S should not have SLD parameters")
     p_id, p_name, p_pars = p_info.id, p_info.name, p_info.parameters
@@ -67,23 +69,28 @@ def make_product_info(p_info, s_info):
 
     translate_name = dict((old.id, new.id) for old, new
                           in zip(s_pars.kernel_parameters[1:], s_list))
-    demo = {}
-    demo.update(p_info.demo.items())
-    demo.update((translate_name[k], v) for k, v in s_info.demo.items()
-                if k not in ("background", "scale") and not k.startswith(ER_ID))
     combined_pars = p_pars.kernel_parameters + s_list
     parameters = ParameterTable(combined_pars)
     parameters.max_pd = p_pars.max_pd + s_pars.max_pd
+    def random():
+        combined_pars = p_info.random()
+        s_names = set(par.id for par in s_pars.kernel_parameters[1:])
+        s = s_info.random()
+        combined_pars.update((translate_name[k], v)
+                    for k, v in s_info.random().items()
+                    if k in s_names)
+        return combined_pars
 
     model_info = ModelInfo()
-    model_info.id = '*'.join((p_id, s_id))
-    model_info.name = '*'.join((p_name, s_name))
+    model_info.id = '@'.join((p_id, s_id))
+    model_info.name = '@'.join((p_name, s_name))
     model_info.filename = None
     model_info.title = 'Product of %s and %s'%(p_name, s_name)
     model_info.description = model_info.title
     model_info.docs = model_info.title
     model_info.category = "custom"
     model_info.parameters = parameters
+    model_info.random = random
     #model_info.single = p_info.single and s_info.single
     model_info.structure_factor = False
     model_info.variant_info = None
@@ -92,12 +99,26 @@ def make_product_info(p_info, s_info):
     # Iq, Iqxy, form_volume, ER, VR and sesans
     # Remember the component info blocks so we can build the model
     model_info.composition = ('product', [p_info, s_info])
-    model_info.demo = demo
+    model_info.control = p_info.control
+    model_info.hidden = p_info.hidden
+    if getattr(p_info, 'profile', None) is not None:
+        profile_pars = set(p.id for p in p_info.parameters.kernel_parameters)
+        def profile(**kwargs):
+            # extract the profile args
+            kwargs = dict((k, v) for k, v in kwargs.items() if k in profile_pars)
+            return p_info.profile(**kwargs)
+    else:
+        profile = None
+    model_info.profile = profile
+    model_info.profile_axes = p_info.profile_axes
 
-    ## Show the parameter table with the demo values
+    # TODO: delegate random to p_info, s_info
+    #model_info.random = lambda: {}
+
+    ## Show the parameter table
     #from .compare import get_pars, parlist
     #print("==== %s ====="%model_info.name)
-    #values = get_pars(model_info, use_demo=True)
+    #values = get_pars(model_info)
     #print(parlist(model_info, values, is2d=True))
     return model_info
 
@@ -120,9 +141,20 @@ def _tag_parameter(par):
 class ProductModel(KernelModel):
     def __init__(self, model_info, P, S):
         # type: (ModelInfo, KernelModel, KernelModel) -> None
+        #: Combined info plock for the product model
         self.info = model_info
+        #: Form factor modelling individual particles.
         self.P = P
+        #: Structure factor modelling interaction between particles.
         self.S = S
+        #: Model precision. This is not really relevant, since it is the
+        #: individual P and S models that control the effective dtype,
+        #: converting the q-vectors to the correct type when the kernels
+        #: for each are created. Ideally this should be set to the more
+        #: precise type to avoid loss of precision, but precision in q is
+        #: not critical (single is good enough for our purposes), so it just
+        #: uses the precision of the form factor.
+        self.dtype = P.dtype  # type: np.dtype
 
     def make_kernel(self, q_vectors):
         # type: (List[np.ndarray]) -> Kernel

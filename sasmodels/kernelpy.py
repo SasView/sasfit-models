@@ -8,6 +8,8 @@ summing the results.  The interface to :class:`PyModel` matches those for
 """
 from __future__ import division, print_function
 
+import logging
+
 import numpy as np  # type: ignore
 from numpy import pi, sin, cos  #type: ignore
 
@@ -17,7 +19,7 @@ from .kernel import KernelModel, Kernel
 
 try:
     from typing import Union, Callable
-except:
+except ImportError:
     pass
 else:
     DType = Union[None, str, np.dtype]
@@ -30,6 +32,8 @@ class PyModel(KernelModel):
         # Make sure Iq and Iqxy are available and vectorized
         _create_default_functions(model_info)
         self.info = model_info
+        self.dtype = np.dtype('d')
+        logging.info("load python model " + self.info.name)
 
     def make_kernel(self, q_vectors):
         q_input = PyInput(q_vectors, dtype=F64)
@@ -235,7 +239,8 @@ def _loops(parameters, form, form_volume, nq, call_details, values, cutoff):
             # exclude all q for that NaN.  Even better would be to have an
             # INVALID expression like the C models, but that is too expensive.
             Iq = np.asarray(form(), 'd')
-            if np.isnan(Iq).any(): continue
+            if np.isnan(Iq).any():
+                continue
 
             # update value and norm
             weight *= spherical_correction
@@ -299,4 +304,3 @@ def _create_vector_Iqxy(model_info):
             return Iq(np.sqrt(qx**2 + qy**2), *args)
         default_Iqxy.vectorized = True
         model_info.Iqxy = default_Iqxy
-

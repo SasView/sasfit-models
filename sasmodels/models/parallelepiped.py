@@ -19,13 +19,11 @@ Definition
 
    Parallelepiped with the corresponding definition of sides.
 
-.. note::
-
-The three dimensions of the parallelepiped (strictly here a cuboid) may be given in 
-$any$ size order. To avoid multiple fit solutions, especially
-with Monte-Carlo fit methods, it may be advisable to restrict their ranges. There may 
-be a number of closely similar "best fits", so some trial and error, or fixing of some 
-dimensions at expected values, may help.
+The three dimensions of the parallelepiped (strictly here a cuboid) may be
+given in *any* size order. To avoid multiple fit solutions, especially
+with Monte-Carlo fit methods, it may be advisable to restrict their ranges.
+There may be a number of closely similar "best fits", so some trial and
+error, or fixing of some dimensions at expected values, may help.
 
 The 1D scattering intensity $I(q)$ is calculated as:
 
@@ -63,10 +61,8 @@ with
     \phi_Q(\mu,a) &= \int_0^1
         \left\{S\left[\frac{\mu}{2}\cos\left(\frac{\pi}{2}u\right)\right]
                S\left[\frac{\mu a}{2}\sin\left(\frac{\pi}{2}u\right)\right]
-               \right\}^2 du
-
-    S(x) &= \frac{\sin x}{x}
-
+               \right\}^2 du \\
+    S(x) &= \frac{\sin x}{x} \\
     \mu &= qB
 
 The scattering intensity per unit volume is returned in units of |cm^-1|.
@@ -114,13 +110,13 @@ $A$ along $z$ and $B$ along $x$.
     detector plane.
 
 On introducing "Orientational Distribution" in the angles, "distribution of theta" and "distribution of phi" parameters will
-appear. These are actually rotations about axes $\delta_1$ and $\delta_2$ of the parallelepiped, perpendicular to the $a$ x $c$ and $b$ x $c$ faces. 
-(When $\theta = \phi = 0$ these are parallel to the $Y$ and $X$ axes of the instrument.) The third orientation distribution, in $\psi$, is 
-about the $c$ axis of the particle, perpendicular to the $a$ x $b$ face. Some experimentation may be required to 
-understand the 2d patterns fully. (Earlier implementations had numerical integration issues in some circumstances when orientation 
-distributions passed through 90 degrees, such situations, with very broad distributions, should still be approached with care.) 
+appear. These are actually rotations about axes $\delta_1$ and $\delta_2$ of the parallelepiped, perpendicular to the $a$ x $c$ and $b$ x $c$ faces.
+(When $\theta = \phi = 0$ these are parallel to the $Y$ and $X$ axes of the instrument.) The third orientation distribution, in $\psi$, is
+about the $c$ axis of the particle, perpendicular to the $a$ x $b$ face. Some experimentation may be required to
+understand the 2d patterns fully. (Earlier implementations had numerical integration issues in some circumstances when orientation
+distributions passed through 90 degrees, such situations, with very broad distributions, should still be approached with care.)
 
-    
+
 For a given orientation of the parallelepiped, the 2D form factor is
 calculated as
 
@@ -134,10 +130,8 @@ with
 
 .. math::
 
-    \cos\alpha &= \hat A \cdot \hat q,
-
-    \cos\beta  &= \hat B \cdot \hat q,
-
+    \cos\alpha &= \hat A \cdot \hat q, \\
+    \cos\beta  &= \hat B \cdot \hat q, \\
     \cos\gamma &= \hat C \cdot \hat q
 
 and the scattering intensity as:
@@ -240,6 +234,18 @@ def ER(length_a, length_b, length_c):
     return 0.5 * (ddd) ** (1. / 3.)
 
 # VR defaults to 1.0
+
+
+def random():
+    import numpy as np
+    length = 10**np.random.uniform(1, 4.7, size=3)
+    pars = dict(
+        length_a=length[0],
+        length_b=length[1],
+        length_c=length[2],
+    )
+    return pars
+
 
 # parameters for demo
 demo = dict(scale=1, background=0,

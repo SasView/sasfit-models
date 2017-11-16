@@ -15,7 +15,7 @@ scattering length.
 
 
 .. figure::
-    mag_img/mag_vector.bmp
+    mag_img/mag_vector.png
 
 The magnetic scattering length density is then
 
@@ -35,7 +35,7 @@ No spin-flips (+ +) and (- -)
 Spin-flips    (+ -) and (- +)
 
 .. figure::
-    mag_img/M_angles_pic.bmp
+    mag_img/M_angles_pic.png
 
 If the angles of the $Q$ vector and the spin-axis $x'$ to the $x$ - axis are
 $\phi$ and $\theta_{up}$, respectively, then, depending on the spin state of the
@@ -76,7 +76,7 @@ The user input parameters are:
 
 ===========   ================================================================
  M0_sld        = $D_M M_0$
- Up_theta      = $\theta_{up}$
+ Up_theta      = $\theta_\mathrm{up}$
  M_theta       = $\theta_M$
  M_phi         = $\phi_M$
  Up_frac_i     = (spin up)/(spin up + spin down) neutrons *before* the sample
@@ -86,9 +86,7 @@ The user input parameters are:
 .. note::
     The values of the 'Up_frac_i' and 'Up_frac_f' must be in the range 0 to 1.
 
-.. note::
-    This help document was last changed by Steve King, 02May2015
+*Document History*
 
-* Document History *
-
+| 2015-05-02 Steve King
 | 2017-05-08 Paul Kienzle

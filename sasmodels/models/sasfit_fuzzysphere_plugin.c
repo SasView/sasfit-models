@@ -41,7 +41,7 @@ scalar results = sasfit_ff_fuzzysphere(q, &param);
 //}
 if (param.errStatus!=FALSE) {
     //sasfit_err("#Error occured: >%s<\n",&param.errStr);
-    printf("Error occurs: %s\n",param.errStr);
+    printf("Error occurs : %s\n",param.errStr);
 }
 
 return results;

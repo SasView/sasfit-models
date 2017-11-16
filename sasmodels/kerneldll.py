@@ -134,7 +134,8 @@ if COMPILER == "unix":
         #return CC + [source, "-o", output, "-lm"]
         return CC + [source, "-o", output,
                      "-lsasfit_fuzzysphere_stat",
-                     "-lsasfit", "-lm", "-lgsl", "-lgslcblas",]
+                     "-lsasfit",
+                    "-lgsl", "-lgslcblas", "-lm"]
 elif COMPILER == "msvc":
     # Call vcvarsall.bat before compiling to set path, headers, libs, etc.
     # MSVC compiler is available, so use it.  OpenMP requires a copy of
