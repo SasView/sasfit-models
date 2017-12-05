@@ -8,8 +8,8 @@ double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
            double ETA_SH,  double ETA_SOL,  double P0);
 double Fq( double q,  double A,  double B,  double C,  double T,  double ETA_C,
            double ETA_SH,  double ETA_SOL,  double P0);
-double form_volume(  double A,  double B,  double C,  double T,  double ETA_C,
-                     double ETA_SH,  double ETA_SOL,  double P0);
+double form_volume(  double q, double A,  double B,  double C,  double T,  double ETA_C,
+                     double ETA_SH,  double ETA_SOL,  double P0, int distr);
 double Iqxy( double qx, double qy, double A, double B, double C, double T,
              double ETA_C, double ETA_SH, double ETA_SOL, double P0);
 /*
@@ -39,41 +39,55 @@ double Iqxy( double qx, double qy, double A, double B, double C, double T,
 */
 // define shortcuts for local A, B, C, T, ETA_C, ETA_SH, ETA_SOL, P0eters/variables
 double sasfit_ff_triax_ellip_shell_core(double y,  double A,  double B,
-                                        double C,  double T,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double P0)
+                                        double C,  double T,  double ETA_C,
+                                        double ETA_SH,  double ETA_SOL,  double P0)
 {
-    double q, p, x, u_c, u_sh;
-    double f_c, f_sh;
+    double q, p, x;
+    q = ETA_SH;
+    p = ETA_SOL;
+    x = P0;
+    double f_c, f_sh, u_c, u_sh;
+
     if (fabs(A*B*C) + fabs(T) == 0.0) return 0.0;
+
     u_c = q*sqrt(( pow(A*cos(x*M_PI/2.),2.) + pow(B*sin(x*M_PI/2.),
                    2.) )*(1.-y*y) + pow(C*y,2.));
     u_sh = q*sqrt(( pow((A+T)*cos(x*M_PI/2.),2.) + pow((B+T)*sin(x*M_PI/2.),
                     2.) ) * (1.-y*y) + pow((C+T)*y,2.));
     f_c  = 4./3.*M_PI*A*B*C*(ETA_C-ETA_SH);
+
     if (u_c != 0.0)
     {
         f_c  = f_c * 3*(sin(u_c) -u_c *cos(u_c) )/pow(u_c ,3);
     }
     f_sh  = 4./3.*M_PI*(A+T)*(B+T)*(C+T)*(ETA_SH-ETA_SOL);
+
     if (u_sh != 0.0)
     {
         f_sh  = f_sh * 3*(sin(u_sh)-u_sh*cos(u_sh))/pow(u_sh,3);
     }
+
     return pow(f_sh+f_c, p);
 }
-double sasfit_ff_triax_ellip_shell_core_x(double x,  double A,  double B,
+double sasfit_ff_triax_ellip_shell_core_x(double q,  double A,  double B,
         double C,  double T,  double ETA_C,  double ETA_SH,  double ETA_SOL,  double P0)
 {
-    double res;
-    res = sasfit_integrate(0.0, 1.0, sasfit_ff_triax_ellip_shell_core, A, B, C, T,
+    double res = 0.0;
+    for (int j=0;j<76;j++) {
+        res += Gauss76Wt[j]*sasfit_ff_triax_ellip_shell_core(q, A, B, C, T,
                            ETA_C, ETA_SH, ETA_SOL, P0);
+    }
     return res;
 }
 double Iq( double q, double A,  double B,  double C,  double T,  double ETA_C,
            double ETA_SH,  double ETA_SOL,  double P0)
 {
-    double res;
-    res = sasfit_integrate(0.0, 1.0, sasfit_ff_triax_ellip_shell_core_x, A, B, C, T,
+    double res = 0.0;
+    for (int j=0;j<76;j++) {
+        res += Gauss76Wt[j]*sasfit_ff_triax_ellip_shell_core(q, A, B, C, T,
                            ETA_C, ETA_SH, ETA_SOL, P0);
+    }
+
     return res;
 }
 double Fq( double q,  double A,  double B,  double C,  double T,  double ETA_C,
@@ -82,11 +96,13 @@ double Fq( double q,  double A,  double B,  double C,  double T,  double ETA_C,
 // insert your code here
     return 0.0;
 }
-double form_volume(  double A,  double B,  double C,  double T,  double ETA_C,
-                     double ETA_SH,  double ETA_SOL,  double P0)
+double form_volume(  double q, double A,  double B,  double C,  double T,  double ETA_C,
+                     double ETA_SH,  double ETA_SOL,  double P0, int distr)
 {
     double V;
-    switch ( dist )
+    double x = q;
+
+    switch ( distr )
     {
     case 0:
         V = (x + T) * (B + T) * (C + T);

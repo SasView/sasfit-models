@@ -72,7 +72,6 @@ Options (* for default):
     -noise=0 sets the measurement error dI/I
     -res=0 sets the resolution width dQ/Q if calculating with resolution
     -lowq*/-midq/-highq/-exq use q values up to 0.05, 0.2, 1.0, 10.0
-    -q=min:max alternative specification of qrange
     -nq=128 sets the number of Q points in the data set
     -1d*/-2d computes 1d or 2d data
     -zero indicates that q=0 should be included
@@ -88,7 +87,6 @@ Options (* for default):
     -cutoff=1e-5* cutoff value for including a point in polydispersity
     -magnetic/-nonmagnetic* suppress magnetism
     -accuracy=Low accuracy of the resolution calculation Low, Mid, High, Xhigh
-    -neval=1 sets the number of evals for more accurate timing
 
     === precision options ===
     -calc=default uses the default calcution precision
@@ -533,7 +531,7 @@ def _format_par(name, value=0., pd=0., n=0, nsigma=3., pdtype='gaussian',
         line += " +/- %g  (%d points in [-%g,%g] sigma %s)"\
                 % (pd, n, nsigma, nsigma, pdtype)
     if M0 != 0.:
-        line += "  M0:%.3f  mtheta:%.1f  mphi:%.1f" % (M0, mtheta, mphi)
+        line += "  M0:%.3f  mphi:%.1f  mtheta:%.1f" % (M0, mphi, mtheta)
     return line
 
 def suppress_pd(pars, suppress=True):
@@ -739,31 +737,6 @@ def eval_ctypes(model_info, data, dtype='double', cutoff=0.):
     calculator.engine = "OMP%s"%DTYPE_MAP[str(model.dtype)]
     return calculator
 
-def eval_sasfit_opencl(model_info, data, dtype='single', cutoff=0.):
-    """
-    Returns a model calculator for SasFit corrected models
-    """
-    try:
-        model = core.build_model(model_info, dtype=dtype, platform="ocl")
-    except Exception as exc:
-        print(exc)
-        print("... trying again with single precision")
-        model = core.build_model(model_info, dtype='single', platform="ocl")
-    calculator = DirectModel(data, model, cutoff=cutoff)
-    calculator.engine = "SasFit-OCL%s" % DTYPE_MAP[dtype]
-    return calculator
-
-def eval_sasfit_ctypes(model_info, data, dtype='double', cutoff=0.):
-    """
-    Return a model calculator using the DLL calculation engine.
-    """
-    if dtype == 'quad':
-        dtype = 'longdouble'
-    model = core.build_model(model_info, dtype=dtype, platform="dll")
-    calculator = DirectModel(data, model, cutoff=cutoff)
-    calculator.engine = "SasFit-OMP%s"%DTYPE_MAP[dtype]
-    return calculator
-
 def time_calculation(calculator, pars, evals=1):
     # type: (Calculator, ParameterSet, int) -> Tuple[np.ndarray, float]
     """
@@ -793,7 +766,7 @@ def make_data(opts):
     *opts* contains the options, with 'qmax', 'nq', 'res',
     'accuracy', 'is2d' and 'view' parsed from the command line.
     """
-    qmin, qmax, nq, res = opts['qmin'], opts['qmax'], opts['nq'], opts['res']
+    qmax, nq, res = opts['qmax'], opts['nq'], opts['res']
     if opts['is2d']:
         q = np.linspace(-qmax, qmax, nq)  # type: np.ndarray
         data = empty_data2D(q, resolution=res)
@@ -802,16 +775,17 @@ def make_data(opts):
         index = ~data.mask
     else:
         if opts['view'] == 'log' and not opts['zero']:
-            q = np.logspace(math.log10(qmin), math.log10(qmax), nq)
+            qmax = math.log10(qmax)
+            q = np.logspace(qmax-3, qmax, nq)
         else:
-            q = np.linspace(qmin, qmax, nq)
+            q = np.linspace(0.001*qmax, qmax, nq)
         if opts['zero']:
             q = np.hstack((0, q))
         data = empty_data1D(q, resolution=res)
         index = slice(None, None)
     return data, index
 
-def make_engine(model_info, data, dtype, cutoff, sasfit_model_info):
+def make_engine(model_info, data, dtype, cutoff):
     # type: (ModelInfo, Data, str, float) -> Calculator
     """
     Generate the appropriate calculation engine for the given datatype.
@@ -821,12 +795,6 @@ def make_engine(model_info, data, dtype, cutoff, sasfit_model_info):
     """
     if dtype == 'sasview':
         return eval_sasview(model_info, data)
-    elif dtype.endswith('_sasfit!'):
-        return eval_sasfit_ctypes(sasfit_model_info, data, dtype=dtype[:-8],
-                                  cutoff=cutoff)
-    elif dtype.endswith('_sasfit'):
-        return eval_sasfit_opencl(sasfit_model_info, data, dtype=dtype[:-7],
-                                  cutoff=cutoff)
     elif dtype is None or not dtype.endswith('!'):
         return eval_opencl(model_info, data, dtype=dtype, cutoff=cutoff)
     else:
@@ -863,6 +831,7 @@ def compare(opts, limits=None):
         if opts['pars'] is None:
             return
         result = run_models(opts, verbose=True)
+        np.savetxt("Iq.txt",np.array(result['base_value']),delimiter=",")
         if opts['plot']:
             limits = plot_models(opts, result, limits=limits, setnum=k)
     if opts['plot']:
@@ -985,15 +954,14 @@ def plot_models(opts, result, limits=(np.Inf, -np.Inf), setnum=0):
             err, errstr, errview = resid, "abs err", "linear"
         else:
             err, errstr, errview = abs(relerr), "rel err", "log"
-            if (err == 0.).all():
-                errview = 'linear'
         if 0:  # 95% cutoff
             sorted = np.sort(err.flatten())
             cutoff = sorted[int(sorted.size*0.95)]
             err[err > cutoff] = cutoff
         #err,errstr = base/comp,"ratio"
-        plot_theory(data, None, resid=err, view=view, use_data=use_data)
-        plt.yscale(errview)
+        plot_theory(data, None, resid=err, view=errview, use_data=use_data)
+        if view == 'linear':
+            plt.xscale('linear')
         plt.title("max %s = %.3g"%(errstr, abs(err).max()))
         #cbar_title = errstr if errview=="linear" else "log "+errstr
     #if is2D:
@@ -1026,15 +994,14 @@ def plot_models(opts, result, limits=(np.Inf, -np.Inf), setnum=0):
 OPTIONS = [
     # Plotting
     'plot', 'noplot',
-    'single_sasfit!', 'double_sasfit!', 'double_sasfit', 'single_sasfit',
     'linear', 'log', 'q4',
     'rel', 'abs',
     'hist', 'nohist',
     'title=',
 
     # Data generation
-    'data=', 'noise=', 'res=', 'nq=', 'q=',
-    'lowq', 'midq', 'highq', 'exq', 'zero',
+    'data=', 'noise=', 'res=',
+    'nq=', 'lowq', 'midq', 'highq', 'exq', 'zero',
     '2d', '1d',
 
     # Parameter set
@@ -1046,12 +1013,12 @@ OPTIONS = [
     'poly', 'mono', 'cutoff=',
     'magnetic', 'nonmagnetic',
     'accuracy=',
-    'neval=',  # for timing...
 
     # Precision options
     'calc=',
     'half', 'fast', 'single', 'double', 'single!', 'double!', 'quad!',
     'sasview',  # TODO: remove sasview 3.x support
+    'timing=',
 
     # Output options
     'help', 'html', 'edit',
@@ -1101,7 +1068,7 @@ def get_pars(model_info, use_demo=False):
                 pars[p.id + ext] = val
 
     # Plug in values given in demo
-    if use_demo and model_info.demo:
+    if use_demo:
         pars.update(model_info.demo)
     return pars
 
@@ -1154,7 +1121,6 @@ def parse_opts(argv):
         'plot'      : True,
         'view'      : 'log',
         'is2d'      : False,
-        'qmin'      : None,
         'qmax'      : 0.05,
         'nq'        : 128,
         'res'       : 0.0,
@@ -1173,7 +1139,6 @@ def parse_opts(argv):
         'zero'      : False,
         'html'      : False,
         'title'     : None,
-        "sasfit_model" : "",
         'datafile'  : None,
         'sets'      : 0,
         'engine'    : 'default',
@@ -1193,8 +1158,6 @@ def parse_opts(argv):
         elif arg == '-lowq':    opts['qmax'] = 0.05
         elif arg == '-zero':    opts['zero'] = True
         elif arg.startswith('-nq='):       opts['nq'] = int(arg[4:])
-        elif arg.startswith('-q='):
-            opts['qmin'], opts['qmax'] = [float(v) for v in arg[3:].split(':')]
         elif arg.startswith('-res='):      opts['res'] = float(arg[5:])
         elif arg.startswith('-noise='):    opts['noise'] = float(arg[7:])
         elif arg.startswith('-sets='):     opts['sets'] = int(arg[6:])
@@ -1206,7 +1169,6 @@ def parse_opts(argv):
         elif arg.startswith('-calc='):     opts['engine'] = arg[6:]
         elif arg.startswith('-neval='):    opts['evals'] = arg[7:]
         elif arg == '-random':  opts['seed'] = np.random.randint(1000000)
-        elif arg.startswith('-sasfit='): opts['sasfit_model'] = arg[8:]
         elif arg == '-preset':  opts['seed'] = -1
         elif arg == '-mono':    opts['mono'] = True
         elif arg == '-poly':    opts['mono'] = False
@@ -1218,35 +1180,20 @@ def parse_opts(argv):
         elif arg == '-nohist':  opts['show_hist'] = False
         elif arg == '-rel':     opts['rel_err'] = True
         elif arg == '-abs':     opts['rel_err'] = False
-        elif arg == '-half':    engines.append(arg[1:])
-        elif arg == '-fast':    engines.append(arg[1:])
-        elif arg == '-single':  engines.append(arg[1:])
-        elif arg == '-double':  engines.append(arg[1:])
-        elif arg == '-single_sasfit':  engines.append(arg[1:])
-        elif arg == '-double_sasfit':  engines.append(arg[1:])
-        elif arg == '-single!': engines.append(arg[1:])
-        elif arg == '-double!': engines.append(arg[1:])
-        elif arg == '-single_sasfit!': engines.append(arg[1:])
-        elif arg == '-double_sasfit!': engines.append(arg[1:])
-        elif arg == '-quad!':   engines.append(arg[1:])
-        elif arg == '-sasview': engines.append(arg[1:])
+        elif arg == '-half':    opts['engine'] = 'half'
+        elif arg == '-fast':    opts['engine'] = 'fast'
+        elif arg == '-single':  opts['engine'] = 'single'
+        elif arg == '-double':  opts['engine'] = 'double'
+        elif arg == '-single!': opts['engine'] = 'single!'
+        elif arg == '-double!': opts['engine'] = 'double!'
+        elif arg == '-quad!':   opts['engine'] = 'quad!'
+        elif arg == '-sasview': opts['engine'] = 'sasview'
         elif arg == '-edit':    opts['explore'] = True
         elif arg == '-demo':    opts['use_demo'] = True
         elif arg == '-default': opts['use_demo'] = False
         elif arg == '-html':    opts['html'] = True
         elif arg == '-help':    opts['html'] = True
     # pylint: enable=bad-whitespace
-
-    sasfit_name = opts['sasfit_model']
-    #TODO: Empty safit model_info
-    sasfit_model_info = ""
-    if sasfit_name:
-        try:
-            sasfit_model_info = core.load_model_info(sasfit_name)
-        except ImportError as exc:
-            print(str(exc))
-            print("Could not find model; use one of:\n    " + models)
-            sys.exit(1)
 
     # Magnetism forces 2D for now
     if opts['magnetic']:
@@ -1259,8 +1206,6 @@ def parse_opts(argv):
         opts['sets'] = 1
 
     # Create the computational engines
-    if opts['qmin'] is None:
-        opts['qmin'] = 0.001*opts['qmax']
     if opts['datafile'] is not None:
         data = load_data(os.path.expanduser(opts['datafile']))
     else:

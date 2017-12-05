@@ -29,7 +29,7 @@ parameters = [
 ]
  #pylint: enable=bad-whitespace, line-too-long
 
-source = [  "sasfit_triax_ellip_shell.c" ]
+source = ["lib/gauss76.c", "sasfit_triax_ellip_shell.c" ]
 
 demo = dict(
 	A = 10.0,
